@@ -1,4 +1,4 @@
-# 프로젝트 이름
+# LOV2LY
 
 LOV2LY 도서 판매 App
 
