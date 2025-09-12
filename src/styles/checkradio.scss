@@ -1,0 +1,111 @@
+@import "./var.scss";
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: $gray-700;
+  user-select: none;
+  font-weight: 500;
+  margin-right: 0.7rem;
+  &:hover .checkbox-custom,
+  &:hover .radio-custom {
+    border-color: $main-color;
+  }
+
+  &:has(input:disabled) {
+    cursor: not-allowed;
+    color: $gray-500;
+
+    .checkbox-custom,
+    .radio-custom {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.checkbox-input,
+.radio-input {
+  display: none;
+}
+
+// 체크박스 스타일
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid $gray-300;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box; // 크기 고정
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background-color: #fff;
+  position: relative;
+
+  .checkbox-input:focus-visible + & {
+    box-shadow: 0 0 0 3px rgba($main-color, 0.3);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    top: 0.5px;
+    border: 1px solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0; // 처음엔 안 보이게
+    transition: opacity 0.15s ease;
+  }
+}
+
+.checkbox-input:checked + .checkbox-custom {
+  background-color: $main-color;
+  border-color: $main-color;
+
+  &::after {
+    opacity: 1; // 체크 시에만 보이게
+  }
+}
+
+// 라디오 스타일
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid $gray-300;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box; // ✅ 크기 고정
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  background-color: white;
+  position: relative;
+
+  .radio-input:focus-visible + & {
+    box-shadow: 0 0 0 3px rgba($main-color, 0.3);
+  }
+
+  &::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: $main-color;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+}
+
+.radio-input:checked + .radio-custom {
+  border-color: $main-color;
+
+  &::after {
+    opacity: 1;
+  }
+}

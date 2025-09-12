@@ -1,0 +1,57 @@
+@import "./var.scss";
+
+.header-user-dropdown {
+  position: relative;
+  cursor: pointer;
+
+  .header-user-icon {
+    color: $gray-500;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    cursor: default;
+    top: 48px;
+    right: 0;
+    width: 220px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 1000;
+
+    .dropdown-user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .dropdown-user-avatar {
+        color: $gray-500;
+      }
+
+      .dropdown-user-text {
+        display: flex;
+        flex-direction: column;
+
+        .dropdown-user-name {
+          font-weight: bold;
+          font-size: 0.875rem;
+        }
+
+        .dropdown-user-email {
+          font-size: 0.75rem;
+          color: $gray-500;
+        }
+      }
+    }
+
+    .dropdown-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+}

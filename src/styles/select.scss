@@ -1,0 +1,35 @@
+@import "./var.scss";
+
+.select-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.select-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.select-field {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  cursor: pointer;
+  background-color: #fff;
+
+  &:focus {
+    border-color: $main-color;
+  }
+
+  &.select-error {
+    border-color: $red-500;
+  }
+}
+
+.select-error-message {
+  font-size: 0.75rem;
+  color: $red-500;
+}

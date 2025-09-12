@@ -1,0 +1,116 @@
+@import "./var.scss";
+
+.footer {
+  background-color: $main-color;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  color: #555;
+  padding: 2rem 1rem;
+  color: #fff;
+
+  .footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    gap: 3rem;
+    justify-content: space-between;
+    flex-wrap: wrap; // 반응형
+  }
+
+  .footer-left {
+    flex: 2;
+    line-height: 1.6;
+
+    .footer-company-info {
+      display: flex;
+      flex-wrap: wrap;
+      //   gap: 0.25rem 0.5rem; // 줄 간격
+
+      span {
+        position: relative;
+        white-space: nowrap; // 줄바꿈 방지 (필요시 제거)
+
+        &:not(:last-child)::after {
+          position: relative;
+          top: -2px;
+          content: "|";
+          font-size: 0.6rem;
+          margin-left: 0.5rem;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .footer-note {
+      margin-top: 1rem;
+      color: $sub-color-hover;
+      font-size: 0.8rem;
+    }
+
+    .footer-copy {
+      margin-top: 1rem;
+      color: $sub-color-hover;
+      font-size: 0.75rem;
+    }
+  }
+
+  .footer-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .footer-section {
+      h4 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: $sub-color-hover;
+      }
+
+      div {
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .footer-apps {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+
+      .footer-app-link {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        color: $sub-color-hover;
+
+        &:hover {
+          font-weight: 550;
+        }
+
+        .footer-app-icon {
+          width: 20px;
+          height: 20px;
+          flex-shrink: 0;
+        }
+      }
+
+      .footer-divider {
+        color: $sub-color-hover;
+      }
+    }
+  }
+
+  // 반응형
+  @media (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+    }
+
+    .footer-right {
+      margin-top: 2rem;
+    }
+  }
+}

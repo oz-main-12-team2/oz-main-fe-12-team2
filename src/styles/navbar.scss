@@ -1,0 +1,70 @@
+@import "./var.scss";
+
+.navbar {
+  width: 100%;
+  margin-top: 1rem;
+
+  .navbar-list {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .navbar-item {
+    .navbar-link {
+      color: $main-color;
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-decoration: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+
+      &:hover {
+        color: $main-color-hover;
+      }
+    }
+  }
+}
+
+// ==========================
+// 모바일 전용 스타일
+// ===========================
+
+@media (max-width: 768px) {
+  .navbar {
+    margin-top: 0; // 모바일에서 여백 제거
+    width: 100%;
+
+    .navbar-list {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0;
+    }
+
+    .navbar-item {
+      width: 100%;
+
+      .navbar-link {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 0;
+        border-bottom: 1px solid #eee;
+        color: $main-color;
+        
+        &:hover {
+          background-color: #f3f4f6;
+          color: $main-color-hover;
+        }
+      }
+    }
+  }
+}
