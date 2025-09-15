@@ -49,14 +49,15 @@ function LoginPage() {
                     </div>
                 </div>
                 
-                <h1>소셜로그인</h1>
+                <p className='social-login-title'>소셜로그인</p>
+                
                 <div className='social-login'>
-                    <Button className='naver-login'>
+                    <Link to="#" className='naver-login'>
                         <img src={naverlogin} alt='네이버로그인' />
-                    </Button>
-                    <Button className='google-login'>
+                    </Link>
+                    <Link to="#" className='google-login'>
                         <img src={googlelogin} alt='구글로그인' />
-                    </Button>
+                    </Link>
                 </div>
             </div>
         </div>
