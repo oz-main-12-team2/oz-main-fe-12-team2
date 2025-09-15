@@ -1,0 +1,16 @@
+@import "./var.scss";
+
+.book-list-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+// 비어 있을 때 중앙 정렬
+.book-list-row-empty {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: $gray-500;
+}
