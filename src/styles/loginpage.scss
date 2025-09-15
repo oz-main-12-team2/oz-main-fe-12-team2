@@ -1,9 +1,9 @@
 @import "./var.scss";
 
 .login-logo {
-    height: 15rem;
-    width: 15rem;
-    margin: 5% auto;
+    height: 200px;
+    width: 200px;
+    margin: 0 auto;
     display: block;
 }
 
@@ -51,17 +51,10 @@
         }
     }
 
-    .social-login-title {
-        display: flex;
-        justify-content: center;
-        padding-top: 2rem;
-        padding-bottom: 1rem;
-        font-size: $font-2xl;
-    }
-
     .social-login {
         display: flex;
         justify-content: space-between;
+        margin-top: 3rem;
 
         .naver-login {
             border: 0px;

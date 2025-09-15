@@ -48,9 +48,7 @@ function LoginPage() {
                         <Link to="/signup">회원가입</Link>
                     </div>
                 </div>
-                
-                <p className='social-login-title'>소셜로그인</p>
-                
+
                 <div className='social-login'>
                     <Link to="#" className='naver-login'>
                         <img src={naverlogin} alt='네이버로그인' />
