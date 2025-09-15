@@ -33,7 +33,7 @@
       position: relative;
       top: 1px;
     }
-    
+
     a {
       padding: 0.8rem 1.5rem;
       text-decoration: none;
@@ -87,7 +87,7 @@
 }
 
 // dashboard
-.dashboard {
+.dashboard-page {
   .dashboard-title {
     font-size: 1.4rem;
     font-weight: 700;
@@ -121,6 +121,30 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin: 0;
+    }
+  }
+}
+
+.products-page {
+  .products-page-title {
+    font-size: $font-xl;
+    margin-bottom: 1rem;
+  }
+
+  .products-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    padding-right: 1rem;
+  }
+
+  .book-card-row-actions {
+    display: flex;
+    flex-direction: column;
+    min-width: 100px;
+
+    .btn {
+      min-height: 40px;
     }
   }
 }

@@ -34,6 +34,18 @@
       margin: 0 0 0.25rem 0;
     }
 
+    .book-category {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.5rem;
+      font-weight: 500;
+      color: $main-color;
+      background-color: rgba($main-color, 0.1); // 살짝 연한 배경
+      border-radius: 12px;
+      width: fit-content;
+      margin-bottom: 0.3rem;
+    }
+
     .book-author,
     .book-stock {
       font-size: 0.7rem;

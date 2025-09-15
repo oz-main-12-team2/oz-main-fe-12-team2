@@ -1,6 +1,6 @@
 function Dashboard() {
   return (
-    <div className="dashboard">
+    <div className="dashboard-page">
       <h2 className="dashboard-title">대시보드</h2>
 
       <div className="stats-grid">
