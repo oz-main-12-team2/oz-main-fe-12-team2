@@ -4,6 +4,7 @@ import { useRoutes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUp";
+import adminRoutes from "./admin/adminRoutes";
 
 function App() {
   // 라우트 배열
@@ -12,6 +13,8 @@ function App() {
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
 
+    // 관리자라우트
+    adminRoutes,
     // { path: "*", element: <NotFoundPage /> }, // 404낫파운드 추가 예정
   ]);
 
