@@ -1,0 +1,84 @@
+@import "./var.scss";
+
+.login-logo {
+    height: 300px;
+    width: 300px;
+    margin: 5% auto;
+    display: block;
+}
+
+.login-container {
+    width: 35%;
+    margin: 0 auto;
+
+    input {
+        padding: 0.75rem 1.25rem;
+    }
+
+    .password-input {
+        position: relative;
+        margin-top: 15px;
+        .login-eye-icon {
+            color: rgba($color: #000000, $alpha: 0.5);
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            height: 40px;
+            width: 32px;
+            position: absolute;
+            cursor: pointer;
+        }
+    }
+
+    .login-account-options {
+        
+        display: flex;
+        flex-direction: column;
+
+        .login-button {
+            Button {
+                width: 100%;
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .account-options {
+            color: $gray-500;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .social-login {
+        display: flex;
+        justify-content: space-between;
+
+        .naver-login {
+            border: 0px;
+            border-radius: 30px;
+
+            img {
+                height: 50px;
+                width: 100%;
+            }
+        }
+
+        .google-login {
+            border: 0px;
+            border-radius: 30px;
+            
+            img {
+                height: 50px;
+                width: 100%;
+            }
+        }
+    }
+}
+
+// Button {
+//     width: 100%;
+//     margin-top: 15px;
+//     margin-bottom: 15px;
+// }
