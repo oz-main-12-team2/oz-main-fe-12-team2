@@ -1,0 +1,16 @@
+@import "./var.scss";
+
+.book-list-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); // 반응형
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+// 비어 있을 때 중앙 정렬
+.book-list-col-empty {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+  color: $gray-500;
+}
