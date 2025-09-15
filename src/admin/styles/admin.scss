@@ -1,0 +1,126 @@
+@import "../../styles/var.scss";
+
+.admin-layout {
+  display: flex;
+  height: 100vh;
+}
+
+// 사이드바 시작
+.admin-sidebar {
+  width: 240px;
+  background-color: $main-color-hover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+
+  .logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .nav-icon {
+      font-size: 1.2rem;
+      position: relative;
+      top: 1px;
+    }
+    
+    a {
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover {
+        background-color: $main-color;
+      }
+    }
+  }
+}
+// 사이드바 끝
+
+// 메인 시작
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+//대시보드 헤더
+.admin-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  h1 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .button-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+// ===== Content =====
+.admin-content {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+// dashboard
+.dashboard {
+  .dashboard-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-card {
+    border-radius: 12px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: $gray-500;
+    }
+
+    .stat-info {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+}
