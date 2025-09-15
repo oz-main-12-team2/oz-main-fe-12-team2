@@ -120,6 +120,6 @@ function MainPage() {
       <Footer />
     </div>
   );
-}
+};
 
 export default MainPage;
