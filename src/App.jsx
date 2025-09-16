@@ -5,6 +5,7 @@ import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUp";
 import FindPasswordPage from "./pages/FindPassword";
+import ResetPasswordPage from "./pages/ResetPassword";
 import adminRoutes from "./admin/adminRoutes";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
     { path: "/find-password", element: <FindPasswordPage /> },
+    { path: "/reset-password", element: <ResetPasswordPage /> },
 
     // 관리자라우트
     adminRoutes,
