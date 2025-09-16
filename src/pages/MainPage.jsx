@@ -4,7 +4,17 @@ import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
 import {BookListRow} from "../components/common/BookListRow.jsx";
 import {BookListCol} from "../components/common/BookListCol.jsx";
+import "../styles/cdh/mainpage/book-daily-best.scss"
 import Loading from "../components/common/Loading";
+
+// 일간 베스트 횡스크롤
+// const dailyBestBooks = [
+//   { id: 1, title: "책1", author: "작가1"},
+//   { id: 2, title: "책2", author: "작가2"},
+//   { id: 3, title: "책3", author: "작가3"},
+//   { id: 4, title: "책4", author: "작가4"},
+//   { id: 5, title: "책5", author: "작가5"},
+// ]
 
 function MainPage() {
   // 로그인 상태 ( 임시( true/false ) 추후 auth.js와 연동필요 )
@@ -38,7 +48,7 @@ function MainPage() {
     const newBooks = Array.from({ length: 10 }, (_, idx) => ({
       id: pageNum * 10 + idx,
       title: `도서 ${pageNum * 10 + idx}`,
-      imge: "public/img/로고.png",
+      imge: "src/assets/로고.png",
     }));
 
     setAllBooks((prev) => [...prev, ...newBooks]);
@@ -57,6 +67,13 @@ function MainPage() {
       { id: 1, title: "베스트1", image: "이미지링크"},
       { id: 2, title: "베스트2", image: "이미지링크"},
       { id: 3, title: "베스트3", image: "이미지링크"},
+      { id: 4, title: "베스트4", image: "이미지링크"},
+      { id: 5, title: "베스트5", image: "이미지링크"},
+      { id: 6, title: "베스트5", image: "이미지링크"},
+      { id: 7, title: "베스트5", image: "이미지링크"},
+      { id: 8, title: "베스트5", image: "이미지링크"},
+      { id: 9, title: "베스트5", image: "이미지링크"},
+      { id: 10, title: "베스트5", image: "이미지링크"},
     ]);
 
       fetchBooks(1);
@@ -111,21 +128,24 @@ function MainPage() {
 
       {/* 메인 배너 */}
       <section className="main-banner">
-        <img src="public/img/로고.png" alt="메인 베너" />
+        <img src="src/assets/로고.png" alt="메인 베너" />
       </section>
 
       {/* Best10 */}
-      <section className="best10">
+      <section className="book-daily-best">
         <h2>Best 10 (일간 베스트)</h2>
-        <BookListRow books={bestBooks} />
+        <BookListRow
+          books={bestBooks}
+          onCardClick={(book) => console.log("클릭한 책:", book)}
+        />
       </section>
+
 
       {/* 전체 상품 리스트 (무한 스크롤) */}
       <section className="book-list">
         <h2>전체 도서</h2>
         <BookListCol books={allBooks} />
         {loading && <Loading />}
-        {/* 감지용 */}
         <div ref={observerRef} style={{height: "20px"}} />
       </section>
 

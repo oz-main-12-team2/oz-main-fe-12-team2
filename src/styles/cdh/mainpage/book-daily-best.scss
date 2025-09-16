@@ -1,0 +1,28 @@
+@import "../var.scss";
+
+// 메인 페이지 일간 베스트 전용 스타일
+.book-daily-best {
+  .book-list-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    overflow-x: auto;       // 가로 스크롤
+    scroll-behavior: smooth;
+
+    // 카드가 줄어들지 않도록 고정
+    & > * {
+      flex: 0 0 auto;
+      width: 15rem;         // 원하는 카드 너비
+    }
+
+    &::-webkit-scrollbar {
+      height: 0.75rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #a85151;
+      border-radius: 4px;
+    }
+  }
+}
