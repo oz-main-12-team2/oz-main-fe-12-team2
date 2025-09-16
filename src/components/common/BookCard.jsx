@@ -2,7 +2,8 @@ import "../../styles/bookcardcol.scss";
 import "../../styles/bookcardrow.scss";
 
 // 기본 이미지 대체
-const DEFAULT_IMAGE = "/no-image.png";
+const DEFAULT_IMAGE = "/no-image.jpg";
+
 
 // 세로형 카드 (상품리스트)
 export function BookCardCol({ book, onClick }) {
@@ -52,6 +53,7 @@ export function BookCardRow({ book, onClick, children }) {
 
       <div className="book-card-row-content">
         <h3 className="book-title">{book.name}</h3>
+        <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
         <p className="book-price">{(book.price ?? 0).toLocaleString()}원</p>
         <p className="book-stock">재고: {book.stock}권</p>
