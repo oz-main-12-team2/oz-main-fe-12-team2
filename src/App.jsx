@@ -4,6 +4,7 @@ import { useRoutes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUp";
+import FindPasswordPage from "./pages/FindPassword";
 import adminRoutes from "./admin/adminRoutes";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     { path: "/", element: <MainPage /> },
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
+    { path: "/find-password", element: <FindPasswordPage /> },
 
     // 관리자라우트
     adminRoutes,
