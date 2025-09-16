@@ -4,6 +4,7 @@ import "../../styles/bookcardrow.scss";
 // 기본 이미지 대체
 const DEFAULT_IMAGE = "/no-image.jpg";
 
+
 // 세로형 카드 (상품리스트)
 export function BookCardCol({ book, onClick }) {
   // 이미지 로드 실패 시 대체이미지로 변경
