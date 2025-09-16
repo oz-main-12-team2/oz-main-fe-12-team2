@@ -1,6 +1,7 @@
 import AdminLayout from "./AdminLayout";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
+import Users from "./pages/Users";
 
 const adminRoutes = {
   path: "/admin",
@@ -8,6 +9,7 @@ const adminRoutes = {
   children: [
     { index: true, element: <Dashboard /> }, // /admin
     { path: "products", element: <Products /> },   // /admin/products
+    { path: "users", element: <Users /> },   // /admin/users
   ],
 };
 
