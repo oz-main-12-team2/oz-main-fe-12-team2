@@ -126,25 +126,101 @@
 }
 
 .products-page {
+  padding: 1rem;
+
   .products-page-title {
-    font-size: $font-xl;
+    font-size: 1.5rem;
+    font-weight: bold;
     margin-bottom: 1rem;
   }
 
-  .products-actions {
-    display: flex;
-    justify-content: flex-end;
+  .products-table-wrap {
+    overflow-x: auto;
     margin-bottom: 1rem;
-    padding-right: 1rem;
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 0.75rem;
+        text-align: left;
+      }
+
+      th {
+        background: #f9fafb;
+        font-weight: 600;
+      }
+
+      tr:nth-child(even) {
+        background: #f3f4f6;
+      }
+
+      tr:hover {
+        background: #e0f2fe;
+      }
+    }
+  }
+}
+
+.product-detail {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 1rem 0;
+
+  .product-detail-left {
+    flex: 1;
+    max-width: 300px;
+
+    img.product-detail-image {
+      width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
   }
 
-  .book-card-row-actions {
+  .product-detail-right {
+    flex: 2;
     display: flex;
     flex-direction: column;
-    min-width: 70px;
+    gap: 0.75rem;
 
-    .btn {
-      min-height: 35px;
+    .product-detail-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .product-detail-category {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: $main-color;
+      background-color: rgba($main-color, 0.1); // 살짝 연한 배경
+      border-radius: 12px;
+      width: fit-content;
+      margin-bottom: 0.3rem;
+    }
+
+    .product-detail-meta {
+      font-size: 0.95rem;
+      color: #4b5563;
+    }
+
+    .product-detail-price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .product-detail-stock {
+      font-size: 0.9rem;
+      color: #374151;
     }
   }
 }
@@ -162,7 +238,7 @@
 
   .users-header {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
     margin-bottom: 1rem;
 
@@ -210,6 +286,7 @@
 
     tr:hover td {
       background-color: #e0f2fe;
+      cursor: pointer;
     }
   }
 }
