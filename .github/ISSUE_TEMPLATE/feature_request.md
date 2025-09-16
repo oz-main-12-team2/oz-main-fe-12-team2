@@ -1,7 +1,7 @@
 ---
-name: ✨ Feature Request
+name: ✨ Feat Request
 about: 새로운 기능이나 개선 요청을 제안할 때 사용하는 템플릿
-title: "[Feature]: "
+title: "[Feat]: "
 labels: enhancement
 assignees: ''
 ---
