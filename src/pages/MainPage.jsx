@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Header from "../components/layout/Header";
 import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
-import {BookListRow} from "../components/common/BookListRow";
-import {BookListCol} from "../components/common/BookListCol";
+import {BookListRow} from "../components/common/BookListRow.jsx";
+import {BookListCol} from "../components/common/BookListCol.jsx";
 import Loading from "../components/common/Loading";
 
 function MainPage() {
@@ -12,15 +12,21 @@ function MainPage() {
 
   // 베스트 책
   const [bestBooks, setBestBooks] = useState([]);
-
+  
   // 전체 책 ( 무한 스크롤 )
   const [allBooks, setAllBooks] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  // 마지막 요소 감지용 ref
+  // observer target
   const observerRef = useRef(null);
+
+  // localStorage에서 로그인 상태 확인용
+  useEffect(() => {
+    const LoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(LoggedIn);
+  }, []);
 
   // 더미 데이터 로드 함수( API 연동 시 fetch )
   const fetchBooks = async (pageNum) => {
@@ -32,7 +38,7 @@ function MainPage() {
     const newBooks = Array.from({ length: 10 }, (_, idx) => ({
       id: pageNum * 10 + idx,
       title: `도서 ${pageNum * 10 + idx}`,
-      imge: "이미지링크",
+      imge: "public/img/로고.png",
     }));
 
     setAllBooks((prev) => [...prev, ...newBooks]);
@@ -72,12 +78,19 @@ function MainPage() {
     const option = { threshold: 1.0 };
     const observer = new IntersectionObserver(handleObserver, option);
 
-    if (observerRef.current) observer.observe(observerRef.current);
+    // ref의 현재 값을 지역 변수에 저장.
+    // const currentObserverElement = observerRef.current;
 
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+    // 클린업 함수에서 저장된 변수를 사용
     return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
     };
-  }, [handleObserver]);
+  }, [handleObserver]); // handleObserver가 변경될 때 이펙트를 다시 실행
 
   // page 변경 시 데이터 부르기
   useEffect(() => {
@@ -91,20 +104,20 @@ function MainPage() {
       <div className="base-container">
         <h2>MainPage</h2>
       </div>
+      <div>
       <Header />
       {/* 로그인 시 NavBar 표시 */}
       {isLoggedIn && <NavBar />}
 
       {/* 메인 배너 */}
       <section className="main-banner">
-        <img src=".../img/로고.png" alt="메인 베너" />
+        <img src="public/img/로고.png" alt="메인 베너" />
       </section>
 
       {/* Best10 */}
       <section className="best10">
         <h2>Best 10 (일간 베스트)</h2>
-        <BookListRow 
-        books={bestBooks} />
+        <BookListRow books={bestBooks} />
       </section>
 
       {/* 전체 상품 리스트 (무한 스크롤) */}
@@ -112,11 +125,11 @@ function MainPage() {
         <h2>전체 도서</h2>
         <BookListCol books={allBooks} />
         {loading && <Loading />}
-
         {/* 감지용 */}
         <div ref={observerRef} style={{height: "20px"}} />
       </section>
 
+      </div>
       <Footer />
     </div>
   );
