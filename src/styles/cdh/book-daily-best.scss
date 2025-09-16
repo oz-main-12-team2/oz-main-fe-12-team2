@@ -1,7 +1,24 @@
 @import "../var.scss";
 
+// 베너 이미지
+.main-banner {
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.textimg1 { // 일간베스트 위에 이미지
+  height: 5rem;
+  width: 50rem;
+}
+
 // 메인 페이지 일간 베스트 전용 스타일
 .book-daily-best {
+  width: 100%;
+  margin-top: 1rem;
+
   .book-list-row {
     display: flex;
     flex-direction: row;
@@ -10,19 +27,15 @@
     overflow-x: auto;       // 가로 스크롤
     scroll-behavior: smooth;
 
+    // 스크롤 바 숨김
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
     // 카드가 줄어들지 않도록 고정
     & > * {
       flex: 0 0 auto;
       width: 15rem;         // 원하는 카드 너비
-    }
-
-    &::-webkit-scrollbar {
-      height: 0.75rem;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #a85151;
-      border-radius: 4px;
     }
   }
 }
