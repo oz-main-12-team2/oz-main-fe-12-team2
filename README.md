@@ -13,12 +13,17 @@ LOV2LY/
 │   ├── favicon.svg
 │   └── logo.svg
 ├── src/                   # 소스 코드
+│   ├── admin/             # 관리자 페이지 관련 코드
+│   │   ├── components/    # 관리자 전용 UI 컴포넌트
+│   │   ├── pages/         # 관리자 페이지 컴포넌트
+│   │   ├── AdminLayout.jsx# 관리자 레이아웃 컴포넌트
+│   │   └── adminRoutes.jsx# 관리자 라우터 설정
 │   ├── api/               # API 요청 관련 코드
 │   ├── assets/            # 이미지, 폰트 등 리소스
 │   ├── components/        # 재사용 가능한 UI 컴포넌트
 │   │   ├── common/        # 공용 컴포넌트
 │   │   └── layout/        # 레이아웃 컴포넌트
-│   ├── pages/             # 페이지 컴포넌트
+│   ├── pages/             # 사용자 페이지 컴포넌트
 │   ├── stores/            # 상태 관리 (Zustand)
 │   ├── styles/            # 전역 스타일 파일
 │   ├── utils/             # 유틸리티 함수 모음
@@ -31,16 +36,12 @@ LOV2LY/
 ├── package-lock.json      # 의존성 버전 고정
 ├── README.md              # 프로젝트 설명 파일
 └── vite.config.js         # Vite 설정 파일
-
+```
 ---
+## Git 브랜치 & PR & 커밋 가이드
+# 브랜치 전략
 
-\===== Git 브랜치 & PR & 커밋 가이드 =====
-
-1. 브랜치 전략
-
----
-
-* 항상 dev 브랜치에서 시작:
+항상 dev 브랜치에서 시작
 
   ```bash
   git checkout dev
