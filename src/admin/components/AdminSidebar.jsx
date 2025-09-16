@@ -1,11 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FiLayout, FiUsers, FiBox, FiShoppingCart } from "react-icons/fi";
+import {
+  LuLayoutDashboard,
+  LuUsers,
+  LuBookOpen,
+  LuShoppingCart,
+} from "react-icons/lu";
 
 function AdminSidebar() {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
-    navigate("/");
+    navigate("/admin");
   };
 
   return (
@@ -15,19 +20,19 @@ function AdminSidebar() {
       </div>
       <nav>
         <Link to="/admin">
-          <FiLayout className="nav-icon" />
+          <LuLayoutDashboard className="nav-icon" />
           <span>대시보드</span>
         </Link>
         <Link to="/admin/users">
-          <FiUsers className="nav-icon" />
+          <LuUsers className="nav-icon" />
           <span>회원관리</span>
         </Link>
         <Link to="/admin/products">
-          <FiBox className="nav-icon" />
+          <LuBookOpen className="nav-icon" />
           <span>상품관리</span>
         </Link>
         <Link to="/admin/orders">
-          <FiShoppingCart className="nav-icon" />
+          <LuShoppingCart className="nav-icon" />
           <span>주문관리</span>
         </Link>
       </nav>
