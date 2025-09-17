@@ -25,17 +25,30 @@
     gap: 0.75rem;
     padding: 0.5rem;
     overflow-x: auto;       // 가로 스크롤
+    overflow-y: hidden;
     scroll-behavior: smooth;
+    white-space: nowrap;
 
-    // 스크롤 바 숨김
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    // 카드가 줄어들지 않도록 고정
-    & > * {
+    .book-item {
       flex: 0 0 auto;
-      width: 15rem;         // 원하는 카드 너비
+      width: 200px;
+      height: 280px;
+      margin-right: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      display: flex;
+      justify-self: center;
+      align-items: center;
+    }
+    // // 스크롤 바 숨김
+    // &::-webkit-scrollbar {
+    //   display: none;
+    // }
+
+    // // 카드가 줄어들지 않도록 고정
+    // & > * {
+    //   flex: 0 0 auto;
+    //   width: 15rem;         // 원하는 카드 너비
     }
   }
-}
+// }
