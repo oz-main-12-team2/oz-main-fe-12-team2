@@ -1,6 +1,6 @@
 @import "../var.scss";
 
-// 베너 이미지
+// 메인 배너
 .main-banner {
   padding: 0;
   border: 0;
@@ -9,25 +9,34 @@
   align-items: center;
 }
 
-.textimg1 { // 일간베스트 위에 이미지
+.textimg1 {
   height: 5rem;
   width: 50rem;
 }
 
-// 메인 페이지 일간 베스트 전용 스타일
+// 일간 베스트 스타일
 .book-daily-best {
   width: 100%;
   margin-top: 1rem;
 
   .book-list-row {
     display: flex;
-    flex-direction: row;
     gap: 0.75rem;
-    padding: 0.5rem;
-    overflow-x: auto;       // 가로 스크롤
+    overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
     white-space: nowrap;
+
+    /* 스크롤바 숨김 - 크롬, 사파리, 오페라 */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* IE, Edge */
+    -ms-overflow-style: none;
+
+    /* Firefox */
+    scrollbar-width: none;
 
     .book-item {
       flex: 0 0 auto;
@@ -37,18 +46,8 @@
       background: #f5f5f5;
       border-radius: 8px;
       display: flex;
-      justify-self: center;
+      justify-content: center;
       align-items: center;
     }
-    // // 스크롤 바 숨김
-    // &::-webkit-scrollbar {
-    //   display: none;
-    // }
-
-    // // 카드가 줄어들지 않도록 고정
-    // & > * {
-    //   flex: 0 0 auto;
-    //   width: 15rem;         // 원하는 카드 너비
-    }
   }
-// }
+}
