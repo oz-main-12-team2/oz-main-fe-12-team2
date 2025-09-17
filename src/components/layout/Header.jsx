@@ -61,7 +61,6 @@ function Header() {
             placeholder="도서 검색"
           />
         </div> */}
-
         {/* 우측 영역 */}
         <div className="header-right">
           {/* PC 아이콘 + 로그인 */}
