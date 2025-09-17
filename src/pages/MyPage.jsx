@@ -6,11 +6,31 @@ import { Link } from "react-router-dom"
 import { useState } from 'react';
 import Modal from '../components/common/Modal';
 import FormGroup from '../components/common/FormGroup';
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 function MyPage() {
     const [isEditDataModalOpen, setIsEditDataModalOpen] = useState(false);
     const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
     const [deleteMemeberModalOpen, setDeleteMemberModalOpen] = useState(false);
+
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+
+    const [showEditPassword, setShowEditPassword] = useState(false);
+
+    const handleChange = (e) => {
+        setEmail(e.target.value);
+        if (error) setError("");
+    };
+
+    const handleBlur = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            setError("이메일을 입력해주세요.");
+        } else if (!emailRegex.test(email)) {
+            setError("올바른 이메일 형식을 입력해주세요.");
+        }
+    };
 
     return (
         <>
@@ -99,7 +119,7 @@ function MyPage() {
                 >
                     <div className='edit-data-form'>
                         <div className='edit-data-email'>
-                            <FormGroup type="email" label="이메일" />
+                            <FormGroup type="email" label="이메일" value={email} onChange={handleChange} onBlur={handleBlur} error={error} />
                         </div>
                         <div className='edit-data-username'>
                             <FormGroup type="text" label="유저이름" />
@@ -144,7 +164,24 @@ function MyPage() {
                 >
                     <div className='edit-password-form'>
                         <div className='edit-password'>
-                            <FormGroup type="password" label="비밀번호" />
+                            <FormGroup type={showEditPassword ? "text" : "password"} label="비밀번호" />
+                            {showEditPassword ? (
+                                <FaRegEye
+                                    className='login-eye-icon'
+                                    role='button'
+                                    aria-label='비밀번호 가리기'
+                                    tabIndex={0}
+                                    onClick={() => setShowEditPassword(false)}
+                                />
+                            ): (
+                                <FaRegEyeSlash
+                                    className='login-eye-icon'
+                                    role='button'
+                                    aria-label='비밀번호 보기'
+                                    tabIndex={0}
+                                    onClick={() => setShowEditPassword(true)}
+                                />
+                            )}
                         </div>
                     </div>
                     <hr />
