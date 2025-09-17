@@ -1,0 +1,241 @@
+@import "./var.scss";
+
+.mypage-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* 사이드바 고정, 콘텐츠 유동 */
+    gap: 1.5rem;
+    min-height: 100vh; /* 화면 꽉 차게 */
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr; /* 모바일에서 세로 스택 */
+    }
+
+    .mypage-sidebar {
+        background-color: #d9d9d9;
+        height: 100vh;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center; // 세로 중앙
+
+        .mypage-logo {
+            height: 200px;
+            width: 200px;
+            margin-bottom: 2rem;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+
+            span {
+                font-size: $font-2xl;
+            }
+
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .mypage-content {
+        width: 100%;
+        min-width: 80vw;
+        max-width: 960px;   /* 필요시 폭 제한 */
+        margin: 0;          /* auto 없애고 */
+        padding-left: 10rem; /* 살짝 안쪽 여백만 줌 */
+    }
+
+    .mypage-title,
+    .mypage-greeting,
+    .mypage-info {
+        text-align: left;
+    }
+
+    .mypage-title {
+        font-size: 5rem;
+        margin-bottom: 5rem;
+    }
+
+    .mypage-greeting {
+        font-size: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    .mypage-info {
+        font-size: $font-2xl;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px 16px;
+        margin-top: 12px;
+
+        .mypage-email, .mypage-address {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            font-size: $font-xl;
+        }
+
+        @media (max-width: 320px) {
+            font-size: $font-xs;
+        }
+    }
+
+    .mypage-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+        flex-wrap: wrap; /* 줄바꿈 허용 */
+
+        /* 버튼이 너무 빽빽하면 모바일에서 한 줄씩 꽉 차게 */
+        @media (max-width: 480px) {
+            & > * {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    }
+
+    .modal-content {
+        display: flex;
+        flex-direction: column;   /* 세로 정렬 */
+        align-items: center;      /* 가로축 가운데 */
+        justify-content: center;  /* 필요하면 세로축도 가운데 */
+        text-align: center;       /* 텍스트 가운데 정렬 */
+    }
+
+    .modal-title {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        margin: 0 0 1rem;        /* 필요시 간격 조절 */
+        padding-right: 36px;     /* X가 겹치지 않게 우측 여백(아이콘 크기에 맞춰 조정) */
+        line-height: 1.2;        /* 세로 가운데 보정 */
+    }
+
+    /* 실제 제목 텍스트 */
+    .modal-title .edit-data-title {
+        display: inline-block;   /* 정확한 가운데 정렬 유지 */
+        font-weight: 600;        /* 스타일은 취향대로 */
+    }
+
+    /* 닫기(X) 아이콘을 오른쪽 끝에 고정 */
+    .modal-title .edit-data-close {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;             /* 클릭 영역 확보 */
+        height: 32px;
+        cursor: pointer;
+        border-radius: 6px;       /* 접근성/호버감 */
+    }
+
+    .modal-title .edit-data-close:hover {
+        background: rgba(0,0,0,0.06); /* 선택 */
+    }
+
+    /* 아이콘 크기 보정 (IoMdClose) */
+    .modal-title .edit-data-close svg {
+        font-size: 20px;         /* 필요시 조절 */
+    }
+
+    .modal-body {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal-footer {
+        width: 100%;
+        display: flex;
+        justify-content: center;  /* 버튼들 가운데 정렬 */
+        gap: 10px;                /* 버튼 사이 간격 */
+    }
+
+    /* ===== 모달 내 폼(오버라이드 전용, 공통 컴포넌트는 그대로) ===== */
+    .edit-data-form,
+    .edit-password-form {
+        /* modal-content/ modal-body가 center 정렬이라 폼 영역만 왼쪽 정렬로 덮어씀 */
+        width: 100%;
+        text-align: left;
+        align-self: stretch; /* modal-content의 align-items: center 영향 최소화 */
+    }
+
+    /* 라벨-인풋을 한 줄로: FormGroup 내부 클래스에 스코프 오버라이드 */
+    .edit-data-form .input-wrap,
+    .edit-password-form .input-wrap {
+        display: grid;
+        grid-template-columns: 120px 1fr; /* 라벨 120px, 인풋 유동 */
+        align-items: center;
+        column-gap: 12px;
+        row-gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .edit-data-form .input-label,
+    .edit-password-form .input-label {
+        text-align: center;
+        font-weight: 500;
+        /* 필요시 min-width 대신 그리드 컬럼이 폭 보장 */
+    }
+
+    .edit-data-form .input-field,
+    .edit-password-form .input-field {
+        width: 100%;
+        /* 그리드 2번째 컬럼이므로 자동으로 한 줄 정렬 */
+    }
+
+    /* 에러 메시지는 인풋 아래 줄로 */
+    .edit-data-form .input-error-message,
+    .edit-password-form .input-error-message {
+        grid-column: 2 / 3;   /* 인풋 칸 아래에 위치 */
+        margin-top: 4px;
+    }
+
+    /* 모바일에서는 세로 스택 */
+    @media (max-width: 520px) {
+        .edit-data-form .input-wrap,
+        .edit-password-form .input-wrap {
+            grid-template-columns: 1fr;
+        }
+        .edit-data-form .input-label,
+        .edit-password-form .input-label {
+            text-align: left;
+        }
+        .edit-data-form .input-error-message,
+        .edit-password-form .input-error-message {
+            grid-column: 1 / -1; /* 전체 너비로 */
+        }
+    }
+
+    .delete-user-form {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .delete-user-attribute {
+            font-size: $font-2xl;
+            color: #a5a5a5;
+        }
+
+        .delete-user-content {
+            font-size: $font-2xl;
+        }
+
+        .warning {
+            color: $red-500;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+    }
+}
