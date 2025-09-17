@@ -15,80 +15,81 @@ function MainPage() {
   const [hasMore, setHasMore] = useState(true);
 
   // ====== 무한루프 캐러셀 컴포넌트 ======
-const BookListRowLoop = ({ books, onCardClick }) => {
-  const rowRef = useRef(null);
+  const BookListRowLoop = ({ books, onCardClick }) => {
+    const rowRef = useRef(null);
+    const itemWidth = 200 + 12; // 카드 width + margin-right
+    const cloneCount = books.length; // 앞뒤로 복제할 개수
 
-  const itemWidth = 200 + 12; // 카드 width + margin-right
-  const cloneCount = books.length; // 앞뒤로 복제할 개수
+    useEffect(() => {
+      const container = rowRef.current;
+      if (!container || books.length === 0) return;
 
-  useEffect(() => {
-    const container = rowRef.current;
-    if (!container || books.length === 0) return;
+      // 초기 위치를 원본 데이터 시작 위치로 이동
+      container.scrollLeft = itemWidth * cloneCount;
 
-    // 초기 위치를 원본 데이터 시작 위치로 이동
-    container.scrollLeft = itemWidth * cloneCount;
+      const handleWheel = (e) => {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
 
-    const handleWheel = (e) => {
-      e.preventDefault();
-      container.scrollLeft += e.deltaY;
+        const totalWidth = itemWidth * books.length;
+        const maxScroll = totalWidth * 2; // 앞뒤 복제 1번씩
 
-      const totalWidth = itemWidth * books.length;
-      const maxScroll = totalWidth * 2; // 앞뒤 복제 1번씩
+        // 무한루프 처리
+        if (container.scrollLeft <= 0) {
+          container.scrollLeft += totalWidth;
+        } else if (container.scrollLeft >= maxScroll) {
+          container.scrollLeft -= totalWidth;
+        }
+      };
 
-      // 무한루프 처리
-      if (container.scrollLeft <= 0) {
-        // 앞쪽 끝 => 뒤쪽 원본으로 점프
-        container.scrollLeft += totalWidth;
-      } else if (container.scrollLeft >= maxScroll) {
-        // 뒤쪽 끝 => 앞쪽 원본으로 점프
-        container.scrollLeft -= totalWidth;
-      }
-    };
+      container.addEventListener("wheel", handleWheel, { passive: false });
 
-    container.addEventListener("wheel", handleWheel, { passive: false });
+      return () => {
+        container.removeEventListener("wheel", handleWheel);
+      };
+    }, [books]);
 
-    return () => {
-      container.removeEventListener("wheel", handleWheel);
-    };
-  }, [books]);
+    if (books.length === 0) return null;
 
-  if (books.length === 0) return null;
+    return (
+      <div className="book-list-row" ref={rowRef}>
+        {/* 앞쪽 복제 */}
+        {books.map((book, i) => (
+          <div key={`clone-left-${i}`} className="book-item">
+            <img src={book.image} alt={book.title} />
+            <p>{book.title}</p>
+          </div>
+        ))}
 
-  return (
-    <div className="book-list-row" ref={rowRef}>
-      {/* 앞쪽 복제 */}
-      {books.map((book, i) => (
-        <div key={`clone-left-${i}`} className="book-item">
-          <img src={book.image} alt={book.title} />
-          <p>{book.title}</p>
-        </div>
-      ))}
+        {/* 원본 데이터 */}
+        {books.map((book, i) => (
+          <div
+            key={`main-${i}`}
+            className="book-item"
+            onClick={() => onCardClick(book)}
+          >
+            <img src={book.image} alt={book.title} />
+            <p>{book.title}</p>
+          </div>
+        ))}
 
-      {/* 원본 데이터 */}
-      {books.map((book, i) => (
-        <div key={`main-${i}`} className="book-item" onClick={() => onCardClick(book)}>
-          <img src={book.image} alt={book.title} />
-          <p>{book.title}</p>
-        </div>
-      ))}
-
-      {/* 뒤쪽 복제 */}
-      {books.map((book, i) => (
-        <div key={`clone-right-${i}`} className="book-item">
-          <img src={book.image} alt={book.title} />
-          <p>{book.title}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
+        {/* 뒤쪽 복제 */}
+        {books.map((book, i) => (
+          <div key={`clone-right-${i}`} className="book-item">
+            <img src={book.image} alt={book.title} />
+            <p>{book.title}</p>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   // ====== 무한 스크롤 관련 ======
   const observerRef = useRef(null);
 
   useEffect(() => {
-    const LoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(LoggedIn);
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
   }, []);
 
   const fetchBooks = async (pageNum) => {
@@ -103,7 +104,6 @@ const BookListRowLoop = ({ books, onCardClick }) => {
     }));
 
     setAllBooks((prev) => [...prev, ...newBooks]);
-
     if (pageNum === 5) setHasMore(false);
 
     setLoading(false);
@@ -154,51 +154,40 @@ const BookListRowLoop = ({ books, onCardClick }) => {
     <div>
       <div className="base-container">
         <h2>MainPage</h2>
-        <div>
-          <Header />
+        <Header />
 
-          {/* 카테고리 */}
-          <div className="Category-container">
-            <h3>도서 전체</h3> <br />
-            <NavBar />
-          </div>
-
-          {/* 로그인 시 NavBar */}
-          {isLoggedIn && <NavBar />}
-          <br />
-
-          {/* 메인 배너 */}
-          <section className="main-banner">
-            <img
-              src="src/assets/로고.png"
-              alt="메인 베너"
-              className="textimg1"
-            />
-          </section>
-          <br />
-
-          {/* Best10 */}
-          <section className="book-daily-best">
-            <h2>Best 10 (일간 베스트)</h2>
-            <hr />
-            <br />
-            <BookListRowLoop
-              books={bestBooks}
-              onCardClick={(book) => console.log("클릭한 책:", book)}
-            />
-          </section>
-          <br />
-
-          {/* 전체 상품 리스트 (무한 스크롤) */}
-          <section className="book-list">
-            <h2>전체 도서</h2>
-            <hr />
-            <br />
-            <BookListCol books={allBooks} />
-            {loading && <Loading />}
-            <div ref={observerRef} style={{ height: "20px" }} />
-          </section>
+        {/* 카테고리 */}
+        <div className="Category-container">
+          <h3>도서 전체</h3>
+          <NavBar />
         </div>
+
+        {/* 로그인 시 NavBar 표시 */}
+        {isLoggedIn && <NavBar />}
+
+        {/* 메인 배너 */}
+        <section className="main-banner">
+          <img src="src/assets/로고.png" alt="메인 베너" className="textimg1" />
+        </section>
+
+        {/* Best10 */}
+        <section className="book-daily-best">
+          <h2>Best 10 (일간 베스트)</h2>
+          <hr />
+          <BookListRowLoop
+            books={bestBooks}
+            onCardClick={(book) => console.log("클릭한 책:", book)}
+          />
+        </section>
+
+        {/* 전체 상품 리스트 (무한 스크롤) */}
+        <section className="book-list">
+          <h2>전체 도서</h2>
+          <hr />
+          <BookListCol books={allBooks} />
+          {loading && <Loading />}
+          <div ref={observerRef} style={{ height: "20px" }} />
+        </section>
       </div>
       <Footer />
     </div>
