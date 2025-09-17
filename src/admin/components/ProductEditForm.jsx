@@ -31,7 +31,7 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
         <option value="카테고리3">카테고리3</option>
         <option value="카테고리4">카테고리4</option>
       </Select>
-
+      
       <FormGroup
         label="저자"
         type="text"
