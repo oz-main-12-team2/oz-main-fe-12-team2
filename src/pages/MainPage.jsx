@@ -100,7 +100,7 @@ function MainPage() {
     const newBooks = Array.from({ length: 10 }, (_, idx) => ({
       id: pageNum * 10 + idx,
       title: `도서 ${pageNum * 10 + idx}`,
-      image: "src/assets/로고.png",
+      image: "src/assets/logo.png",
     }));
 
     setAllBooks((prev) => [...prev, ...newBooks]);
@@ -111,16 +111,16 @@ function MainPage() {
 
   useEffect(() => {
     setBestBooks([
-      { id: 1, title: "베스트1", image: "이미지링크" },
-      { id: 2, title: "베스트2", image: "이미지링크" },
-      { id: 3, title: "베스트3", image: "이미지링크" },
-      { id: 4, title: "베스트4", image: "이미지링크" },
-      { id: 5, title: "베스트5", image: "이미지링크" },
-      { id: 6, title: "베스트6", image: "이미지링크" },
-      { id: 7, title: "베스트7", image: "이미지링크" },
-      { id: 8, title: "베스트8", image: "이미지링크" },
-      { id: 9, title: "베스트9", image: "이미지링크" },
-      { id: 10, title: "베스트10", image: "이미지링크" },
+      { id: 1, title: "베스트1", image: "no-image.jpg" },
+      { id: 2, title: "베스트2", image: "no-image.jpg" },
+      { id: 3, title: "베스트3", image: "no-image.jpg" },
+      { id: 4, title: "베스트4", image: "no-image.jpg" },
+      { id: 5, title: "베스트5", image: "no-image.jpg" },
+      { id: 6, title: "베스트6", image: "no-image.jpg" },
+      { id: 7, title: "베스트7", image: "no-image.jpg" },
+      { id: 8, title: "베스트8", image: "no-image.jpg" },
+      { id: 9, title: "베스트9", image: "no-image.jpg" },
+      { id: 10, title: "베스트10", image: "no-image.jpg" },
     ]);
 
     fetchBooks(1);
@@ -153,21 +153,21 @@ function MainPage() {
   return (
     <div>
       <div className="base-container">
-        <h2>MainPage</h2>
+        {/* <h2>MainPage</h2> */}
         <Header />
 
         {/* 카테고리 */}
-        <div className="Category-container">
+        {/* <div className="Category-container">
           <h3>도서 전체</h3>
           <NavBar />
-        </div>
+        </div> */}
 
         {/* 로그인 시 NavBar 표시 */}
         {isLoggedIn && <NavBar />}
 
         {/* 메인 배너 */}
         <section className="main-banner">
-          <img src="src/assets/로고.png" alt="메인 베너" className="textimg1" />
+          <img src="no-image.jpg" alt="메인 베너" className="textimg1" />
         </section>
 
         {/* Best10 */}
@@ -176,7 +176,7 @@ function MainPage() {
           <hr />
           <BookListRowLoop
             books={bestBooks}
-            onCardClick={(book) => console.log("클릭한 책:", book)}
+            // onCardClick={(book) => console.log("클릭한 책:", book)}
           />
         </section>
 

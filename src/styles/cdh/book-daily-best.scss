@@ -21,6 +21,7 @@
 
   .book-list-row {
     display: flex;
+    
     gap: 0.75rem;
     overflow-x: auto;
     overflow-y: hidden;
@@ -40,8 +41,9 @@
 
     .book-item {
       flex: 0 0 auto;
-      width: 200px;
-      height: 280px;
+      width: 500px;
+      height: 700px;
+      
       margin-right: 12px;
       background: #f5f5f5;
       border-radius: 8px;
@@ -50,4 +52,11 @@
       align-items: center;
     }
   }
+}
+
+.best-book-image {
+  width: 120px;   /* 원하는 너비 */
+  height: 180px;  /* 원하는 높이 */
+  object-fit: cover; /* 이미지 비율 유지하며 자르기 */
+  border-radius: 8px; /* 모서리 둥글게, 선택 사항 */
 }
