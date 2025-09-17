@@ -170,6 +170,10 @@
         align-self: stretch; /* modal-content의 align-items: center 영향 최소화 */
     }
 
+    .edit-data-form .edit-data-email {
+        text-align: center;
+    }
+
     /* 라벨-인풋을 한 줄로: FormGroup 내부 클래스에 스코프 오버라이드 */
     .edit-data-form .input-wrap,
     .edit-password-form .input-wrap {
@@ -214,6 +218,25 @@
         .edit-data-form .input-error-message,
         .edit-password-form .input-error-message {
             grid-column: 1 / -1; /* 전체 너비로 */
+        }
+    }
+
+    .edit-password-form {
+        .edit-password {
+            position: relative;
+            margin-top: 1rem;
+
+            .login-eye-icon {
+                color: rgba($color: #000000, $alpha: 0.5);
+                position: absolute;
+                top: 50%;
+                right: 0.75rem;
+                transform: translateY(-50%);
+                height: 2.5rem;
+                width: 2rem;
+                position: absolute;
+                cursor: pointer;
+            }
         }
     }
 
