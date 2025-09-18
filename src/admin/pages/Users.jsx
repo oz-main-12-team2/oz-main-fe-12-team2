@@ -47,19 +47,20 @@ function Users() {
       { header: "이메일", accessorKey: "email" },
       { header: "이름", accessorKey: "name" },
       {
-        header: "소셜가입",
+        header: "소셜로그인",
         accessorKey: "is_social",
         cell: (info) => (info.getValue() ? "Y" : "N"),
       },
       {
-        header: "가입일",
+        header: "가입일자",
         accessorKey: "created_at",
-        cell: (info) =>
-          new Date(info.getValue()).toLocaleDateString("ko-KR", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }),
+        cell: (info) => {
+          const date = new Date(info.getValue());
+          const year = String(date.getFullYear()).slice(2); // 2025 -> "25"
+          const month = String(date.getMonth() + 1).padStart(2, "0"); // 09
+          const day = String(date.getDate()).padStart(2, "0"); // 18
+          return `${year}-${month}-${day}`;
+        },
       },
       { header: "주문수", accessorKey: "order_count" },
       {
@@ -81,7 +82,9 @@ function Users() {
     <div className="users-page">
       <div className="users-header">
         <h2 className="users-title">회원관리</h2>
-        <span className="users-total">전체 회원: {totalItems.toLocaleString()}명</span>
+        <span className="users-total">
+          전체 회원: {totalItems.toLocaleString()}명
+        </span>
       </div>
 
       <div className="users-table-wrap">
@@ -91,7 +94,10 @@ function Users() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                   </th>
                 ))}
               </tr>

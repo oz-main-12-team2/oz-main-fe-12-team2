@@ -148,26 +148,31 @@
     .products-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
 
       th,
       td {
-        border: 1px solid #e5e7eb;
-        padding: 0.75rem;
+        padding: 12px 14px;
         text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 14px;
       }
 
       th {
-        background: #f9fafb;
+        background-color: #f9fafb;
         font-weight: 600;
       }
 
-      tr:nth-child(even) {
-        background: #f3f4f6;
+      tr:hover td {
+        background-color: #f3f4f6;
+        cursor: pointer;
       }
 
       tr:hover {
-        background: #e0f2fe;
+        background: #f3f4f6;
       }
 
       td:hover {
@@ -276,13 +281,117 @@
   .users-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
 
     th,
     td {
-      border: 1px solid #e5e7eb;
-      padding: 0.75rem;
+      padding: 12px 14px;
       text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f9fafb;
+      font-weight: 600;
+    }
+
+    tr:hover td {
+      background-color: #f3f4f6;
+      cursor: pointer;
+    }
+  }
+}
+
+.orders-page {
+  padding: 20px;
+
+  .orders-page-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .orders-total {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $gray-500;
+  }
+
+  /* 주문 테이블 */
+  .orders-table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem 0;
+    border-radius: 0.5rem;
+  }
+
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f9fafb;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f3f4f6;
+      cursor: pointer;
+    }
+  }
+
+  /* 모달 내부 스타일 */
+  .order-info,
+  .recipient-info,
+  .payment-info {
+    margin-bottom: 16px;
+    font-size: 14px;
+
+    p {
+      margin: 4px 0;
+      line-height: 1.5;
+
+      b {
+        display: inline-block;
+        width: 80px;
+        color: #374151;
+      }
+    }
+
+    h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  }
+
+  /* 주문 상품 테이블 */
+  .order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+
+    th,
+    td {
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      text-align: center;
     }
 
     th {
@@ -291,12 +400,7 @@
     }
 
     tr:nth-child(even) {
-      background-color: #f3f4f6;
-    }
-
-    tr:hover td {
-      background-color: #e0f2fe;
-      cursor: pointer;
+      background-color: #fdfdfd;
     }
   }
 }

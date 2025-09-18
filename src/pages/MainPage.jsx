@@ -47,7 +47,7 @@ function MainPage() {
       return () => {
         container.removeEventListener("wheel", handleWheel);
       };
-    }, [books]);
+    }, [books, cloneCount, itemWidth]);
 
     if (books.length === 0) return null;
 
@@ -138,10 +138,11 @@ function MainPage() {
 
   useEffect(() => {
     const option = { threshold: 1.0 };
+    const observerTarget = observerRef.current; // ref.current를 변수에 복사
     const observer = new IntersectionObserver(handleObserver, option);
-    if (observerRef.current) observer.observe(observerRef.current);
+    if (observerTarget) observer.observe(observerRef.current);
     return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
+      if (observerTarget) observer.unobserve(observerTarget);
     };
   }, [handleObserver]);
 
