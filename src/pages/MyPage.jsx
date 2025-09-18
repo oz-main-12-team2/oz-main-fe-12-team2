@@ -234,7 +234,6 @@ function MyPage() {
                                 label="새 비밀번호"
                                 value={editPassword}
                                 onChange={handleEditPasswordChange}
-                                error={passwordMatchError}
                             />
                             {showEditPassword ? (
                                 <FaRegEye
@@ -255,13 +254,18 @@ function MyPage() {
                             )}
                         </div>
 
+                        {passwordMatchError && (
+                            <p className='field-error-message' role='alert'>
+                                {passwordMatchError}
+                            </p>
+                        )}
+
                         <div className='confirm-edit-password'>
                             <FormGroup 
                                 type={showConfirmEditPassword ? "text" : "password"} 
                                 label="새 비밀번호 확인"
                                 value={confirmEditPassword}
                                 onChange={handleConfirmEditPasswordChange}
-                                error={passwordMatchError}
                             />
                             {showConfirmEditPassword ? (
                                 <FaRegEye
@@ -281,6 +285,12 @@ function MyPage() {
                                 />
                             )}
                         </div>
+
+                        {passwordMatchError && (
+                            <p className='field-error-message' role='alert'>
+                                {passwordMatchError}
+                            </p>
+                        )}
                     </div>
                     <hr />
                 </Modal>
