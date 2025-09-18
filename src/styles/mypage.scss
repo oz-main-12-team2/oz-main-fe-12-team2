@@ -222,11 +222,45 @@
     }
 
     .edit-password-form {
+        .old-password {
+            position: relative;
+            margin-top: 1rem;
+
+            .old-password-eye-icon {
+                color: rgba($color: #000000, $alpha: 0.5);
+                position: absolute;
+                top: 50%;
+                right: 0.75rem;
+                transform: translateY(-50%);
+                height: 2.5rem;
+                width: 2rem;
+                position: absolute;
+                cursor: pointer;
+            }
+        }
+
         .edit-password {
             position: relative;
             margin-top: 1rem;
 
-            .login-eye-icon {
+            .edit-password-eye-icon {
+                color: rgba($color: #000000, $alpha: 0.5);
+                position: absolute;
+                top: 50%;
+                right: 0.75rem;
+                transform: translateY(-50%);
+                height: 2.5rem;
+                width: 2rem;
+                position: absolute;
+                cursor: pointer;
+            }
+        }
+
+        .confirm-edit-password {
+            position: relative;
+            margin-top: 1rem;
+
+            .confirm-edit-password-eye-icon {
                 color: rgba($color: #000000, $alpha: 0.5);
                 position: absolute;
                 top: 50%;

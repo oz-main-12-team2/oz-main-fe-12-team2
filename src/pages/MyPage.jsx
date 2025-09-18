@@ -16,7 +16,14 @@ function MyPage() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
 
+    const [showOldPassword, setShowOldPassword] = useState(false);
     const [showEditPassword, setShowEditPassword] = useState(false);
+    const [showConfirmEditPassword, setShowConfirmEditPassword] = useState(false);
+
+    // 비밀번호 값 & 에러
+    const [editPassword, setEditPassword] = useState("");
+    const [confirmEditPassword, setConfirmEditPassword] = useState("");
+    const [passwordMatchError, setPasswordMatchError] = useState("");
 
     const handleChange = (e) => {
         setEmail(e.target.value);
@@ -30,6 +37,43 @@ function MyPage() {
         } else if (!emailRegex.test(email)) {
             setError("올바른 이메일 형식을 입력해주세요.");
         }
+    };
+
+    // 입력 변경 시 에러 초기화 + 실시간 일치 검사
+    const handleEditPasswordChange = (e) => {
+        const v = e.target.value;
+        setEditPassword(v);
+        if (passwordMatchError) setPasswordMatchError("");
+        if (confirmEditPassword && v !== confirmEditPassword) {
+            setPasswordMatchError("새 비밀번호와 확인이 일치하지 않습니다.");
+        } else {
+            setPasswordMatchError("");
+        }
+    };
+
+    const handleConfirmEditPasswordChange = (e) => {
+        const v = e.target.value;
+        setConfirmEditPassword(v);
+        if (passwordMatchError) setPasswordMatchError("");
+        if (editPassword && v !== editPassword) {
+            setPasswordMatchError("새 비밀번호와 확인이 일치하지 않습니다.");
+        } else {
+            setPasswordMatchError("");
+        }
+    };
+
+    // 버튼 클릭 시 최종 검사
+    const handlePasswordSubmit = () => {
+        if (!editPassword || !confirmEditPassword) {
+            setPasswordMatchError("비밀번호를 모두 입력해주세요.");
+            return;
+        }
+        if (editPassword !== confirmEditPassword) {
+            setPasswordMatchError("새 비밀번호와 확인이 일치하지 않습니다.");
+            return;
+        }
+        // TODO: 비밀번호 변경 API 호출
+        setIsEditPasswordModalOpen(false);
     };
 
     return (
@@ -150,7 +194,7 @@ function MyPage() {
                     }
                     footer={
                         <>
-                            <Button>
+                            <Button onClick={handlePasswordSubmit}>
                                 수정하기
                             </Button>
                             <Button
@@ -163,11 +207,38 @@ function MyPage() {
                     }
                 >
                     <div className='edit-password-form'>
+                        <div className='old-password'>
+                            <FormGroup type={showOldPassword ? "text" : "password"} label="기존 비밀번호" />
+                            {showOldPassword ? (
+                                <FaRegEye
+                                    className='old-password-eye-icon'
+                                    role='button'
+                                    aria-label='비밀번호 가리기'
+                                    tabIndex={0}
+                                    onClick={() => setShowOldPassword(false)}
+                                />
+                            ) : (
+                                <FaRegEyeSlash
+                                    className='old-password-eye-icon'
+                                    role='button'
+                                    aria-label='비밀번호 보기'
+                                    tabIndex={0}
+                                    onClick={() => setShowOldPassword(true)}
+                                />
+                            )}
+                        </div>
+
                         <div className='edit-password'>
-                            <FormGroup type={showEditPassword ? "text" : "password"} label="비밀번호" />
+                            <FormGroup 
+                                type={showEditPassword ? "text" : "password"} 
+                                label="새 비밀번호"
+                                value={editPassword}
+                                onChange={handleEditPasswordChange}
+                                error={passwordMatchError}
+                            />
                             {showEditPassword ? (
                                 <FaRegEye
-                                    className='login-eye-icon'
+                                    className='edit-password-eye-icon'
                                     role='button'
                                     aria-label='비밀번호 가리기'
                                     tabIndex={0}
@@ -175,11 +246,38 @@ function MyPage() {
                                 />
                             ): (
                                 <FaRegEyeSlash
-                                    className='login-eye-icon'
+                                    className='edit-password-eye-icon'
                                     role='button'
                                     aria-label='비밀번호 보기'
                                     tabIndex={0}
                                     onClick={() => setShowEditPassword(true)}
+                                />
+                            )}
+                        </div>
+
+                        <div className='confirm-edit-password'>
+                            <FormGroup 
+                                type={showConfirmEditPassword ? "text" : "password"} 
+                                label="새 비밀번호 확인"
+                                value={confirmEditPassword}
+                                onChange={handleConfirmEditPasswordChange}
+                                error={passwordMatchError}
+                            />
+                            {showConfirmEditPassword ? (
+                                <FaRegEye
+                                    className='confirm-edit-password-eye-icon'
+                                    role='button'
+                                    aria-label='비밀번호 가리기'
+                                    tabIndex={0}
+                                    onClick={() => setShowConfirmEditPassword(false)}
+                                />
+                            ) : (
+                                <FaRegEyeSlash
+                                    className='confirm-edit-password-eye-icon'
+                                    role='button'
+                                    aria-label='비밀번호 보기'
+                                    tabIndex={0}
+                                    onClick={() => setShowConfirmEditPassword(true)}
                                 />
                             )}
                         </div>
