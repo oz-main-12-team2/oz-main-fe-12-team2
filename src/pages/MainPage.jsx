@@ -161,7 +161,6 @@ useEffect(() => {
   return (
     <div>
       <div className="base-container">
-        {/* <h2>MainPage</h2> */}
         <Header />
 
         {/* 카테고리 */}
