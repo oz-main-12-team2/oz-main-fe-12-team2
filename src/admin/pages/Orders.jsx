@@ -4,6 +4,13 @@ import Pagination from "../../components/common/Pagination";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
+import Select from "../../components/common/Select";
+
+const STATUS_OPTIONS = [
+  { value: "결제완료", label: "결제완료" },
+  { value: "배송중", label: "배송중" },
+  { value: "배송완료", label: "배송완료" },
+];
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -67,7 +74,7 @@ function Orders() {
 
     setOrders(dummyResponse.data.orders);
     setTotalPages(dummyResponse.data.pagination.total_pages);
-    setTotalOrders(dummyResponse.data.pagination.total_items); // ✅ 여기서 세팅
+    setTotalOrders(dummyResponse.data.pagination.total_items);
   }, [currentPage]);
 
   // 상세 보기
@@ -86,7 +93,6 @@ function Orders() {
     await alertSuccess("삭제 성공", "주문이 삭제되었습니다");
   };
 
-  // 테이블 컬럼 정의
   const columns = useMemo(
     () => [
       { header: "주문번호", accessorKey: "order_number" },
@@ -111,15 +117,44 @@ function Orders() {
         accessorKey: "total_price",
         cell: (info) => `${info.getValue().toLocaleString()}원`,
       },
-      { header: "상태", accessorKey: "status" },
+      {
+        header: "상태",
+        accessorKey: "status",
+        // cell 함수 내부에서 setOrders를 사용하므로 setOrders가 렌더마다 변경되지 않음을 이용
+        cell: ({ row, getValue }) => {
+          return (
+            <Select
+              value={getValue()}
+              onChange={(e) => {
+                const newStatus = e.target.value;
+                setOrders((prev) =>
+                  prev.map((order) =>
+                    order.order_number === row.original.order_number
+                      ? { ...order, status: newStatus }
+                      : order
+                  )
+                );
+                // api 호출 예정
+              }}
+            >
+              <option value="">선택</option>
+              {STATUS_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </Select>
+          );
+        },
+      },
       {
         header: "주문일",
         accessorKey: "created_at",
         cell: (info) => {
           const date = new Date(info.getValue());
-          const year = String(date.getFullYear()).slice(2); // 2025 -> "25"
-          const month = String(date.getMonth() + 1).padStart(2, "0"); // 09
-          const day = String(date.getDate()).padStart(2, "0"); // 18
+          const year = String(date.getFullYear()).slice(2);
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
           return `${year}-${month}-${day}`;
         },
       },
