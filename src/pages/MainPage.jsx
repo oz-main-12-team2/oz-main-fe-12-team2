@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
 import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
@@ -13,6 +14,12 @@ function MainPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
+
+  // 책 클릭 핸들러
+  const handleCardClick = (book) => {
+    navigate(`/book/${book.id}`);
+  }
 
   // ====== 무한루프 캐러셀 컴포넌트 ======
   const BookListRowLoop = ({ books, onCardClick }) => {
@@ -136,7 +143,7 @@ function MainPage() {
     [hasMore, loading]
   );
 
-  useEffect(() => {
+useEffect(() => {
     const option = { threshold: 1.0 };
     const observerTarget = observerRef.current; // ref.current를 변수에 복사
     const observer = new IntersectionObserver(handleObserver, option);
@@ -175,17 +182,14 @@ function MainPage() {
         <section className="book-daily-best">
           <h2>Best 10 (일간 베스트)</h2>
           <hr />
-          <BookListRowLoop
-            books={bestBooks}
-            // onCardClick={(book) => console.log("클릭한 책:", book)}
-          />
+          <BookListRowLoop books={bestBooks} onCardClick={handleCardClick} />
         </section>
 
         {/* 전체 상품 리스트 (무한 스크롤) */}
         <section className="book-list">
           <h2>전체 도서</h2>
           <hr />
-          <BookListCol books={allBooks} />
+          <BookListCol books={allBooks} onCardClick={handleCardClick} />
           {loading && <Loading />}
           <div ref={observerRef} style={{ height: "20px" }} />
         </section>

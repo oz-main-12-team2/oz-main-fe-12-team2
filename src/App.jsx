@@ -7,6 +7,7 @@ import SignUpPage from "./pages/SignUp";
 import FindPasswordPage from "./pages/FindPassword";
 import ResetPasswordPage from "./pages/ResetPassword";
 import MyPage from "./pages/MyPage";
+import BookDetail from "./pages/BookDetail";
 import adminRoutes from "./admin/adminRoutes";
 
 
@@ -14,6 +15,7 @@ function App() {
   // 라우트 배열
   const element = useRoutes([
     { path: "/", element: <MainPage /> },
+    { path: "/book/:id", element: <BookDetail /> }, // 동적 라우트
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
     { path: "/find-password", element: <FindPasswordPage /> },
