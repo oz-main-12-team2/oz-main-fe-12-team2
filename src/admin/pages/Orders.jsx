@@ -4,6 +4,7 @@ import Pagination from "../../components/common/Pagination";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
+import StatusCell from "../components/StatusCell";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -15,11 +16,10 @@ function Orders() {
 
   // 더미 데이터
   useEffect(() => {
-    // 실제 API 응답 형식 흉내
-    const dummyResponse = {
+    const res = {
       success: true,
       data: {
-        orders: Array.from({ length: 10 }, (_, i) => {
+        orders: Array.from({ length: 20 }, (_, i) => {
           const items = [
             {
               product_id: 1,
@@ -39,7 +39,7 @@ function Orders() {
           return {
             id: 101 + i,
             order_number: 123456789 + i,
-            user_id: 1 + i,
+            user_id: `유저${1 + i}`,
             name: "이름",
             total_price: items.reduce((acc, cur) => acc + cur.total_price, 0),
             status: ["결제완료", "배송중", "배송완료"][i % 3],
@@ -65,9 +65,9 @@ function Orders() {
       message: "주문 목록 조회 성공",
     };
 
-    setOrders(dummyResponse.data.orders);
-    setTotalPages(dummyResponse.data.pagination.total_pages);
-    setTotalOrders(dummyResponse.data.pagination.total_items); // ✅ 여기서 세팅
+    setOrders(res.data.orders);
+    setTotalPages(res.data.pagination.total_pages);
+    setTotalOrders(res.data.pagination.total_items);
   }, [currentPage]);
 
   // 상세 보기
@@ -86,7 +86,6 @@ function Orders() {
     await alertSuccess("삭제 성공", "주문이 삭제되었습니다");
   };
 
-  // 테이블 컬럼 정의
   const columns = useMemo(
     () => [
       { header: "주문번호", accessorKey: "order_number" },
@@ -111,15 +110,33 @@ function Orders() {
         accessorKey: "total_price",
         cell: (info) => `${info.getValue().toLocaleString()}원`,
       },
-      { header: "상태", accessorKey: "status" },
       {
-        header: "주문일",
+        header: "상태",
+        accessorKey: "status",
+        cell: ({ row, getValue }) => (
+          <StatusCell
+            value={getValue()}
+            orderNumber={row.original.order_number}
+            onChangeStatus={(orderNumber, newStatus) => {
+              setOrders((prev) =>
+                prev.map((order) =>
+                  order.order_number === orderNumber
+                    ? { ...order, status: newStatus }
+                    : order
+                )
+              );
+            }}
+          />
+        ),
+      },
+      {
+        header: "결제일자",
         accessorKey: "created_at",
         cell: (info) => {
           const date = new Date(info.getValue());
-          const year = String(date.getFullYear()).slice(2); // 2025 -> "25"
-          const month = String(date.getMonth() + 1).padStart(2, "0"); // 09
-          const day = String(date.getDate()).padStart(2, "0"); // 18
+          const year = String(date.getFullYear()).slice(2);
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
           return `${year}-${month}-${day}`;
         },
       },
@@ -137,7 +154,7 @@ function Orders() {
     <div className="orders-page">
       <h2 className="orders-page-title">주문 관리</h2>
       <span className="orders-total">
-        전체 주문: {totalOrders.toLocaleString()}건
+        Total : {totalOrders.toLocaleString()}건
       </span>
 
       {/* 주문 테이블 */}
@@ -205,19 +222,19 @@ function Orders() {
           {/* 주문 기본 정보 */}
           <div className="order-info">
             <p>
-              <b>주문번호:</b> {selectedOrder.order_number}
+              <span>주문번호</span> {selectedOrder.order_number}
             </p>
             <p>
-              <b>회원 ID:</b> {selectedOrder.user_id}
+              <span>회원 ID</span> {selectedOrder.user_id}
             </p>
             <p>
-              <b>총 금액:</b> {selectedOrder.total_price.toLocaleString()}원
+              <span>총 금액</span> {selectedOrder.total_price.toLocaleString()}원
             </p>
             <p>
-              <b>상태:</b> {selectedOrder.status}
+              <span>상태</span> {selectedOrder.status}
             </p>
             <p>
-              <b>주문일:</b>{" "}
+              <span>주문일</span>{" "}
               {new Date(selectedOrder.created_at).toLocaleString()}
             </p>
           </div>
@@ -227,13 +244,13 @@ function Orders() {
             <div className="recipient-info">
               <h4>주문 회원</h4>
               <p>
-                <b>이름:</b> {selectedOrder.recipient_name}
+                <span>이름</span> {selectedOrder.recipient_name}
               </p>
               <p>
-                <b>전화번호:</b> {selectedOrder.recipient_phone}
+                <span>전화번호</span> {selectedOrder.recipient_phone}
               </p>
               <p>
-                <b>주소:</b> {selectedOrder.recipient_address}
+                <span>주소</span> {selectedOrder.recipient_address}
               </p>
             </div>
           )}
@@ -243,13 +260,13 @@ function Orders() {
             <div className="payment-info">
               <h4>결제 정보</h4>
               <p>
-                <b>결제수단:</b> {selectedOrder.payment.method}
+                <span>결제수단</span> {selectedOrder.payment.method}
               </p>
               <p>
-                <b>결제상태:</b> {selectedOrder.payment.status}
+                <span>결제상태</span> {selectedOrder.payment.status}
               </p>
               <p>
-                <b>결제일:</b>{" "}
+                <span>결제일자</span>{" "}
                 {new Date(selectedOrder.payment.created_at).toLocaleString()}
               </p>
             </div>
@@ -263,7 +280,7 @@ function Orders() {
                 <th>상품명</th>
                 <th>수량</th>
                 <th>단가</th>
-                <th>총금액</th>
+                <th>총 금액</th>
               </tr>
             </thead>
             <tbody>
