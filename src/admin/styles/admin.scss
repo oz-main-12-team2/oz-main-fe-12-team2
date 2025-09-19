@@ -5,30 +5,6 @@
   min-height: 100vh;
 }
 
-.admin-header {
-
-  .header-icons {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-right: 1rem;
-  }
-
-  .icon-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: $gray-500;
-    transition: color 0.12s ease;
-  }
-
-  .icon-btn:hover {
-    color: $main-color-hover;
-  }
-}
-
 // 사이드바 시작
 .admin-sidebar {
   width: 240px;
@@ -96,11 +72,25 @@
     letter-spacing: 1px;
   }
 
-  .button-wrap {
+  .header-icons {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-right: 1rem;
+  }
+
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: $gray-500;
+    transition: color 0.12s ease;
+  }
+
+  .icon-btn:hover {
+    color: $main-color-hover;
   }
 }
 
@@ -396,7 +386,7 @@
       margin: 4px 0;
       line-height: 1.5;
 
-      span {
+      b {
         display: inline-block;
         width: 80px;
       }
@@ -469,4 +459,138 @@
       color: #fff;
     }
   }
+}
+
+// 모바일 반응형
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  // 사이드바 기본 숨김
+  .admin-sidebar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    nav {
+      display: none;
+    }
+
+    .logo {
+      position: relative;
+      margin: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .admin-header {
+    display: none;
+  }
+  .admin-content {
+    padding: 0;
+  }
+}
+
+// 모바일에서 햄버거 버튼 보이기
+.hamburger-btn {
+  display: none;
+  font-size: 1.32rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+// 모바일 사이드패널
+.sidebar-panel {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 240px;
+  height: 100%;
+  background: $main-color-hover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: right 0.3s ease;
+  z-index: 1000;
+  justify-content: space-between;
+  // 애니메이션 효과
+  animation: slideIn 0.3s forwards;
+
+  .panel-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+
+    .close-btn {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+  }
+
+  nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    a {
+      padding: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: #fff;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+  .panel-footer {
+    display: flex;
+    justify-content: space-around;
+    gap: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid $gray-300;
+
+    .icon-btn {
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: scale 0.5s ease;
+
+      &:hover {
+        scale: (1.1);
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    right: -260px;
+  }
+  to {
+    right: 0;
+  }
+}
+
+/* 오버레이 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 900;
 }
