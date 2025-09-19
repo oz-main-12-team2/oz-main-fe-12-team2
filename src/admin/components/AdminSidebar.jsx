@@ -8,7 +8,7 @@ import {
 } from "react-icons/lu";
 import { GiHamburgerMenu } from "react-icons/gi"; // 햄버거 아이콘
 import { AiFillHome } from "react-icons/ai";
-import { IoPowerSharp } from "react-icons/io5";
+import { IoPowerSharp, IoClose } from "react-icons/io5";
 import { alertComfirm } from "../../utils/alert";
 
 function AdminSidebar() {
@@ -28,7 +28,10 @@ function AdminSidebar() {
   };
 
   const handleLogout = async () => {
-    const logout = await alertComfirm("로그아웃", "정말 로그아웃 하시겠습니까?");
+    const logout = await alertComfirm(
+      "로그아웃",
+      "정말 로그아웃 하시겠습니까?"
+    );
     if (!logout.isConfirmed) return;
     localStorage.removeItem("token");
     handleUserHome();
@@ -75,7 +78,7 @@ function AdminSidebar() {
           <div className="sidebar-panel">
             <div className="panel-header">
               <span className="close-btn" onClick={handleCloseMenu}>
-                ✕
+                <IoClose className="close-btn" onClick={handleCloseMenu} />
               </span>
             </div>
 
@@ -106,7 +109,7 @@ function AdminSidebar() {
           </div>
 
           {/* 오버레이 */}
-          <div className="overlay" onClick={handleCloseMenu} />
+          <div className="panel-overlay" onClick={handleCloseMenu} />
         </>
       )}
     </>
