@@ -5,16 +5,15 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 
-import naversignup from '../assets/btnG_signup.png';
-import googlesignup from '../assets/web_neutral_sq_SU@4x.png';
-
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
     <>
       <div className="base-container">
-        <img className="signup-logo" src="../../public/logo.svg" alt="러블리 로고" />
+        <Link to="/">
+          <img className="signup-logo" src="../../public/logo.svg" alt="러블리 로고" />
+        </Link>
 
         <div className="signup-container">
           <FormGroup type="email" placeholder="이메일" />
@@ -75,21 +74,6 @@ function SignUpPage() {
               <Button variant='primary' size='lg' type='submit'>
                 회원가입
               </Button>
-            </div>
-
-            <div className='divider'>
-              <hr />
-              <span>또는</span>
-              <hr />
-            </div>
-
-            <div className='social-signup'>
-              <Link to="#" className='naver-signup'>
-                <img src={naversignup} alt='네이버 소셜 회원가입' />
-              </Link>
-              <Link to="#" className='google-signup'>
-                <img src={googlesignup} alt='구글 소셜 회원가입' />
-              </Link>
             </div>
           </div>
         </div>
