@@ -130,7 +130,7 @@ function Orders() {
         ),
       },
       {
-        header: "주문일",
+        header: "결제일자",
         accessorKey: "created_at",
         cell: (info) => {
           const date = new Date(info.getValue());
@@ -222,19 +222,19 @@ function Orders() {
           {/* 주문 기본 정보 */}
           <div className="order-info">
             <p>
-              <b>주문번호:</b> {selectedOrder.order_number}
+              <span>주문번호</span> {selectedOrder.order_number}
             </p>
             <p>
-              <b>회원 ID:</b> {selectedOrder.user_id}
+              <span>회원 ID</span> {selectedOrder.user_id}
             </p>
             <p>
-              <b>총 금액:</b> {selectedOrder.total_price.toLocaleString()}원
+              <span>총 금액</span> {selectedOrder.total_price.toLocaleString()}원
             </p>
             <p>
-              <b>상태:</b> {selectedOrder.status}
+              <span>상태</span> {selectedOrder.status}
             </p>
             <p>
-              <b>주문일:</b>{" "}
+              <span>주문일</span>{" "}
               {new Date(selectedOrder.created_at).toLocaleString()}
             </p>
           </div>
@@ -244,13 +244,13 @@ function Orders() {
             <div className="recipient-info">
               <h4>주문 회원</h4>
               <p>
-                <b>이름:</b> {selectedOrder.recipient_name}
+                <span>이름</span> {selectedOrder.recipient_name}
               </p>
               <p>
-                <b>전화번호:</b> {selectedOrder.recipient_phone}
+                <span>전화번호</span> {selectedOrder.recipient_phone}
               </p>
               <p>
-                <b>주소:</b> {selectedOrder.recipient_address}
+                <span>주소</span> {selectedOrder.recipient_address}
               </p>
             </div>
           )}
@@ -260,13 +260,13 @@ function Orders() {
             <div className="payment-info">
               <h4>결제 정보</h4>
               <p>
-                <b>결제수단:</b> {selectedOrder.payment.method}
+                <span>결제수단</span> {selectedOrder.payment.method}
               </p>
               <p>
-                <b>결제상태:</b> {selectedOrder.payment.status}
+                <span>결제상태</span> {selectedOrder.payment.status}
               </p>
               <p>
-                <b>결제일:</b>{" "}
+                <span>결제일자</span>{" "}
                 {new Date(selectedOrder.payment.created_at).toLocaleString()}
               </p>
             </div>
@@ -280,7 +280,7 @@ function Orders() {
                 <th>상품명</th>
                 <th>수량</th>
                 <th>단가</th>
-                <th>총금액</th>
+                <th>총 금액</th>
               </tr>
             </thead>
             <tbody>
