@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import Button from "../components/common/Button"; 
 import "../styles/cdh/book-detail.scss";
 
 function BookDetail() {
@@ -28,7 +29,6 @@ function BookDetail() {
             <main className="book-detail-container">
                 {/* 도서 이미지 */}
                 <div className="book-detail-image">
-                    <p>도서 ID: {id}</p>
                     <img src={BookDetailDummy.image} alt={BookDetailDummy.title} />
                 </div>
 
@@ -46,23 +46,24 @@ function BookDetail() {
                         <span className="sale-price"></span>
                     </div>
 
-                    {/* 구매 버튼 */}
-                    <div className="book-actions">
-                        <button className="buy-btn">구매 하기</button>
-                        <button className="cart-btn">장바구니에 넣기</button>
-                    </div>
             {/* 상세 설명 */}
             <section className="book-detail-description">
                 <br /> <h2>책 소개</h2> 
                 <br />
                 <p>{BookDetailDummy.description}</p>                
             </section>
+                    {/* 구매 버튼 */}
+                    <div className="book-actions">
+                        {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
+                        <Button variant="secondary" size="lg" type="button" onClick={() => alert("구매하시겠습니까?")}>구매하기</Button> 
+                        <Button variant="secondary" size="lg" type="button" onClick={() => alert("장바구니에 추가됨")}>장바구니에 넣기</Button>
+                    </div>
                 </div>
                 {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
                 {/* 제목, 저자, 가격, 설명 등 혹은 정해진 내용으로 */}
             </main>
 
-                </div> <br /> <br /> <br /> <br />
+                </div>
                 <Footer />
         </div>
     );

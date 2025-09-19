@@ -64,7 +64,7 @@ function MainPage() {
       <div className="book-list-row" ref={rowRef}>
         {/* 앞쪽 복제 */}
         {books.map((book, i) => (
-          <div key={`clone-left-${i}`} className="book-item">
+          <div key={`clone-left-${i}`} className="book-item" onClick={() => onCardClick(book)}>
             <img src={book.image} alt={book.title} />
             <p>{book.title}</p>
           </div>
@@ -84,7 +84,7 @@ function MainPage() {
 
         {/* 뒤쪽 복제 */}
         {books.map((book, i) => (
-          <div key={`clone-right-${i}`} className="book-item">
+          <div key={`clone-right-${i}`} className="book-item" onClick={() => onCardClick(book)}>
             <img src={book.image} alt={book.title} />
             <p>{book.title}</p>
           </div>
