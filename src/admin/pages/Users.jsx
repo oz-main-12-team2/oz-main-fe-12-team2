@@ -83,7 +83,7 @@ function Users() {
       <div className="users-header">
         <h2 className="users-title">회원관리</h2>
         <span className="users-total">
-          전체 회원: {totalItems.toLocaleString()}명
+          Total : {totalItems.toLocaleString()}명
         </span>
       </div>
 
