@@ -48,7 +48,7 @@ function BookDetail() {
 
             {/* 상세 설명 */}
             <section className="book-detail-description">
-                <br /> <h2>책 소개</h2> 
+                <br /> <h2 className="book-introduction">책 소개</h2> 
                 <br />
                 <p>{BookDetailDummy.description}</p>                
             </section>
