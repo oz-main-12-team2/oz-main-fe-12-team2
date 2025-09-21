@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 function OrdersTable({ table, onRowClick }) {
   return (
     <div className="orders-table-wrap">
@@ -33,4 +35,4 @@ function OrdersTable({ table, onRowClick }) {
   );
 }
 
-export default OrdersTable;
+export default memo(OrdersTable);

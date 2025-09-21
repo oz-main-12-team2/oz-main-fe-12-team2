@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
 import Pagination from "../../components/common/Pagination";
 import StatusCell from "../components/StatusCell";
@@ -19,7 +19,7 @@ function Orders() {
     const res = {
       success: true,
       data: {
-        orders: Array.from({ length: 20 }, (_, i) => {
+        orders: Array.from({ length: 10 }, (_, i) => {
           const items = [
             {
               product_id: 1,
@@ -78,7 +78,7 @@ function Orders() {
   };
 
   // 주문 삭제
-  const handleDelete = async (orderNumber) => {
+  const handleDelete = useCallback(async (orderNumber) => {
     // 삭제 확인
     const res = await alertComfirm("주문 삭제", "정말 삭제하시겠습니까?");
     if (!res.isConfirmed) return;
@@ -89,7 +89,7 @@ function Orders() {
 
     // 성공 알림
     await alertSuccess("삭제 성공", "주문이 삭제되었습니다");
-  };
+  }, []);
 
   // 테이블 컬럼 정의
   const columns = useMemo(
