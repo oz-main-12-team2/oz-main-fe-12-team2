@@ -6,6 +6,7 @@ import Footer from "../components/layout/Footer";
 import { BookListCol } from "../components/common/BookListCol.jsx";
 import "../styles/cdh/book-daily-best.scss";
 import Loading from "../components/common/Loading";
+import MainBanner from "../components/MainBanner";
 
 function MainPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,11 +16,12 @@ function MainPage() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
+  const bookListRef = useRef(null);
 
   // 책 클릭 핸들러
   const handleCardClick = (book) => {
     navigate(`/book/${book.id}`);
-  }
+  };
 
   // ====== 무한루프 캐러셀 컴포넌트 ======
   const BookListRowLoop = ({ books, onCardClick }) => {
@@ -143,7 +145,7 @@ function MainPage() {
     [hasMore, loading]
   );
 
-useEffect(() => {
+  useEffect(() => {
     const option = { threshold: 1.0 };
     const observerTarget = observerRef.current; // ref.current를 변수에 복사
     const observer = new IntersectionObserver(handleObserver, option);
@@ -160,23 +162,31 @@ useEffect(() => {
   // ====== 렌더 ======
   return (
     <div>
-      <div className="base-container">
-        <Header />
+      <Header />
 
-        {/* 카테고리 */}
-        {/* <div className="Category-container">
+      {/* 카테고리 */}
+      {/* <div className="Category-container">
           <h3>도서 전체</h3>
           <NavBar />
         </div> */}
 
-        {/* 로그인 시 NavBar 표시 */}
-        {isLoggedIn && <NavBar />}
+      {/* 로그인 시 NavBar 표시 */}
+      {isLoggedIn && <NavBar />}
 
-        {/* 메인 배너 */}
-        <section className="main-banner">
-          <img src="no-image.jpg" alt="메인 베너" className="textimg1" />
-        </section>
+      {/* 메인 배너 */}
+      <MainBanner
+        image="main-banner.jpg"
+        title="책으로 여는 하루"
+        subtitle="좋은 책과 함께 오늘을 시작하세요"
+        buttonText="전체 도서 보기"
+        buttonClick={() => {
+          if (bookListRef.current) {
+            bookListRef.current.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+      />
 
+      <div className="base-container">
         {/* Best10 */}
         <section className="book-daily-best">
           <h2>Best 10 (일간 베스트)</h2>
@@ -185,7 +195,7 @@ useEffect(() => {
         </section>
 
         {/* 전체 상품 리스트 (무한 스크롤) */}
-        <section className="book-list">
+        <section className="book-list" ref={bookListRef}>
           <h2>전체 도서</h2>
           <hr />
           <BookListCol books={allBooks} onCardClick={handleCardClick} />
