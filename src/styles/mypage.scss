@@ -1,56 +1,60 @@
 @import "./var.scss";
 
+/* ====== 레이아웃 ====== */
 .mypage-layout {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 22rem);
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 250px 1fr;
     gap: 1.5rem;
+    min-height: 100vh;
 
     @media (max-width: 900px) {
-        grid-template-columns: 1fr; /* 모바일에서 세로 스택 */
+        grid-template-columns: 1fr;
     }
 
     .mypage-sidebar {
-        background-color: #d9d9d9;
-        // height: 100vh;
-        padding: 0.5rem;
+        background-color: #fff8f0;
+        padding: 0.75rem;
         display: flex;
         flex-direction: column;
+        align-items: center;
         text-align: center;
-        align-items: center; // 세로 중앙
-        width: 100%;
 
         .mypage-title {
             font-size: $font-2xl;
             font-weight: bold;
+            margin: 0.25rem 0 0.5rem;
         }
 
         .mypage-logo {
             height: 125px;
             width: 125px;
-            margin-bottom: 2rem;
-            margin: 0 auto;
+            margin: 0 auto 1rem;
+            display: block;
         }
 
         .profile {
-            font-size: $font-xl;
-            border-bottom: 1px solid black;
+            width: 100%;
+            font-size: $font-lg;
+            border-bottom: 1px solid #000;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+
             .mypage-greeting {
                 margin: 0;
-                flex: 1 1 auto;
-                min-width: 0;           /* 🔑 줄바꿈 허용을 위해 꼭 필요 */
-                white-space: normal;     /* 기본 줄바꿈 허용 */
-                overflow-wrap: anywhere; /* 🔑 긴 이메일/URL도 강제 줄바꿈 (현대 브라우저) */
-                word-break: break-word;  /* 폴백 */
+                min-width: 0;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                word-break: break-word;
             }
+
             .mypage-info {
                 display: flex;
-                flex-direction: column; /* 이메일/주소를 세로로 쌓기 */
+                flex-direction: column;
                 gap: 0.5rem;
+                margin-top: 0.5rem;
 
-                .mypage-email, .mypage-address {
+                .mypage-email,
+                .mypage-address {
                     display: flex;
                     align-items: flex-start;
                     gap: 0.5rem;
@@ -58,23 +62,24 @@
 
                     svg {
                         flex: 0 0 auto;
-                        margin-top: 0.2rem; /* 텍스트 첫 줄 높이에 맞추려면 옵션 */
+                        margin-top: 0.2rem;
                     }
 
                     p {
                         margin: 0;
                         flex: 1 1 auto;
-                        min-width: 0;           /* 🔑 줄바꿈 허용을 위해 꼭 필요 */
-                        white-space: normal;     /* 기본 줄바꿈 허용 */
-                        overflow-wrap: anywhere; /* 🔑 긴 이메일/URL도 강제 줄바꿈 (현대 브라우저) */
-                        word-break: break-word;  /* 폴백 */
+                        min-width: 0;
+                        white-space: normal;
+                        overflow-wrap: anywhere;
+                        word-break: break-word;
                     }
                 }
+
                 @media (max-width: 640px) {
-                    font-size: $font-xl;
+                    font-size: $font-md;
                 }
                 @media (max-width: 320px) {
-                    font-size: $font-xs;
+                    font-size: $font-sm;
                 }
             }
         }
@@ -82,318 +87,252 @@
         nav {
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 0.5rem;
 
-            span {
-                font-size: $font-2xl;
-            }
-            
             a {
                 text-decoration: none;
+                font-size: $font-xl;
+                padding: 0.5rem 0.25rem;
+                border-radius: 8px;
+                color: inherit;
+
+                &:hover {
+                    background: rgba(0, 0, 0, 0.05);
+                }
+
+                /* React Router NavLink의 .active 클래스 가정 */
+                &.active,
+                &[aria-current="page"] {
+                    background: #ffe7d0;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    .mypage-main {
+        width: 100%;
+        padding: 0.75rem 0.75rem 2rem;
+    }
+}
+
+/* ====== 탭 헤더 (MyPageSection 내부) ====== */
+.mypage-section-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 5;
+    padding-top: 0.25rem;
+}
+
+.mypage-tabs {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+
+    .mypage-tab {
+        position: relative;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-decoration: none;
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+        outline: none;
+        border-radius: 8px 8px 0 0;
+
+        &:hover {
+            color: #374151;
+        }
+        &:focus-visible {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+
+        &.is-active {
+            color: #111827;
+            border-bottom-color: #111827;
+        }
+    }
+}
+
+.mypage-section-body {
+    padding: 1rem 0.25rem;
+}
+
+.profile-edit-loading,
+.account-delete-loading {
+    padding: 1rem;
+    text-align: center;
+}
+
+/* ====== 페이지 탭용 폼 공통 (모달 → 페이지 전환에 맞춘 범위 축소) ====== */
+.edit-data-form,
+.edit-password-form {
+    .edit-data-actions {
+        display: flex;
+        justify-content: center; /* 가운데 정렬 */
+        align-items: center;
+        gap: 12px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+
+        /* 반응형: 모바일에서 스택 */
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+    width: 100%;
+    text-align: left;
+
+    /* FormGroup 내부 오버라이드: 라벨-필드 2열 */
+    .input-wrap {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        align-items: center;
+        column-gap: 12px;
+        row-gap: 6px;
+        margin-bottom: 12px;
+    }
+    .input-label {
+        text-align: center;
+        font-weight: 500;
+    }
+    .input-field {
+        width: 100%;
+    }
+    .input-error-message {
+        grid-column: 2 / 3;
+        margin-top: 4px;
+    }
+
+    @media (max-width: 520px) {
+        .input-wrap {
+            grid-template-columns: 1fr;
+        }
+        .input-label {
+            text-align: left;
+        }
+        .input-error-message {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+/* ====== 비밀번호 탭 아이콘/오류 ====== */
+.edit-password-form {
+    .old-password,
+    .edit-password,
+    .confirm-edit-password {
+        position: relative;
+        margin-top: 1rem;
+    }
+
+    .old-password-eye-icon,
+    .edit-password-eye-icon,
+    .confirm-edit-password-eye-icon {
+        color: rgba(#000000, 0.5);
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        height: 2.5rem;
+        width: 2rem;
+        cursor: pointer;
+    }
+
+    .field-error-message {
+        margin-top: 6px;
+        font-size: 12px;
+        color: $red-500;
+        text-align: start;
+    }
+
+    /* 버튼 영역: 가운데 정렬 + 모바일 스택 */
+    .edit-password-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
+
+            button {
+                width: 100%;
             }
         }
     }
 }
 
-// .mypage-layout {
-//     display: grid;
-//     grid-template-columns: 300px 1fr; /* 사이드바 고정, 콘텐츠 유동 */
-//     gap: 1.5rem;
+/* ====== 회원 탈퇴 탭 ====== */
+.delete-user-form {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-//     @media (max-width: 900px) {
-//         grid-template-columns: 1fr; /* 모바일에서 세로 스택 */
-//     }
+    .delete-user-attribute {
+        font-size: $font-xl;
+        color: #a5a5a5;
+    }
 
-//     .mypage-sidebar {
-//         background-color: #d9d9d9;
-//         height: 100vh;
-//         padding: 2rem 1rem;
-//         display: flex;
-//         flex-direction: column;
-//         align-items: center; // 세로 중앙
+    .delete-user-content {
+        font-size: $font-xl;
+    }
 
-//         .mypage-logo {
-//             height: 200px;
-//             width: 200px;
-//             margin-bottom: 2rem;
-//         }
+    .warning {
+        color: $red-500;
+    }
 
-//         nav {
-//             display: flex;
-//             flex-direction: column;
-//             gap: 1.25rem;
+    /* 버튼 영역: 가운데 정렬 + 모바일 스택 */
+    .account-delete-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
 
-//             span {
-//                 font-size: $font-2xl;
-//             }
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
 
-//             a {
-//                 text-decoration: none;
-//             }
-//         }
-//     }
+            button {
+                width: 100%;
+            }
+        }
+    }
 
-//     .mypage-content {
-//         width: 100%;
-//         min-width: 80vw;
-//         max-width: 960px;   /* 필요시 폭 제한 */
-//         margin: 0;          /* auto 없애고 */
-//         padding-left: 10rem; /* 살짝 안쪽 여백만 줌 */
-//     }
+    /* 모달 본문 좌측 정렬 */
+    .account-delete-modal-body {
+        text-align: left;
+    }
 
-//     .mypage-title,
-//     .mypage-greeting,
-//     .mypage-info {
-//         text-align: left;
-//     }
+    .modal-title {
+        display: flex;
+        width: 100%;
+        text-align: center;
+        margin: 0 0 1rem;
+        padding-right: 36px; /* 닫기 아이콘 영역 확보 */
+        line-height: 1.2;
 
-//     .mypage-title {
-//         font-size: 5rem;
-//         margin-bottom: 5rem;
-//     }
-
-//     .mypage-greeting {
-//         font-size: 3rem;
-//         margin-bottom: 3rem;
-//     }
-
-//     .mypage-info {
-//         font-size: $font-2xl;
-//         display: grid;
-//         grid-template-columns: 1fr;
-//         gap: 12px 16px;
-//         margin-top: 12px;
-
-//         .mypage-email, .mypage-address {
-//             display: flex;
-//             align-items: center;
-//             gap: 0.5rem;
-//         }
-
-//         @media (max-width: 640px) {
-//             font-size: $font-xl;
-//         }
-
-//         @media (max-width: 320px) {
-//             font-size: $font-xs;
-//         }
-//     }
-
-//     .mypage-buttons {
-//         display: flex;
-//         justify-content: center;
-//         gap: 1.5rem;
-//         margin-top: 2.5rem;
-//         flex-wrap: wrap; /* 줄바꿈 허용 */
-
-//         /* 버튼이 너무 빽빽하면 모바일에서 한 줄씩 꽉 차게 */
-//         @media (max-width: 480px) {
-//             & > * {
-//                 flex: 1 1 100%;
-//                 max-width: 100%;
-//             }
-//         }
-//     }
-
-//     .modal-content {
-//         display: flex;
-//         flex-direction: column;   /* 세로 정렬 */
-//         align-items: center;      /* 가로축 가운데 */
-//         justify-content: center;  /* 필요하면 세로축도 가운데 */
-//         text-align: center;       /* 텍스트 가운데 정렬 */
-//     }
-
-//     .modal-title {
-//         position: relative;
-//         width: 100%;
-//         text-align: center;
-//         margin: 0 0 1rem;        /* 필요시 간격 조절 */
-//         padding-right: 36px;     /* X가 겹치지 않게 우측 여백(아이콘 크기에 맞춰 조정) */
-//         line-height: 1.2;        /* 세로 가운데 보정 */
-//     }
-
-//     /* 실제 제목 텍스트 */
-//     .modal-title .edit-data-title {
-//         display: inline-block;   /* 정확한 가운데 정렬 유지 */
-//         font-weight: 600;        /* 스타일은 취향대로 */
-//     }
-
-//     /* 닫기(X) 아이콘을 오른쪽 끝에 고정 */
-//     .modal-title .edit-data-close {
-//         position: absolute;
-//         top: 50%;
-//         right: 0;
-//         transform: translateY(-50%);
-//         display: inline-flex;
-//         align-items: center;
-//         justify-content: center;
-//         width: 32px;             /* 클릭 영역 확보 */
-//         height: 32px;
-//         cursor: pointer;
-//         border-radius: 6px;       /* 접근성/호버감 */
-//     }
-
-//     .modal-title .edit-data-close:hover {
-//         background: rgba(0,0,0,0.06); /* 선택 */
-//     }
-
-//     /* 아이콘 크기 보정 (IoMdClose) */
-//     .modal-title .edit-data-close svg {
-//         font-size: 20px;         /* 필요시 조절 */
-//     }
-
-//     .modal-body {
-//         width: 100%;
-//         text-align: center;
-//         margin-bottom: 1rem;
-//     }
-
-//     .modal-footer {
-//         width: 100%;
-//         display: flex;
-//         justify-content: center;  /* 버튼들 가운데 정렬 */
-//         gap: 10px;                /* 버튼 사이 간격 */
-//     }
-
-//     /* ===== 모달 내 폼(오버라이드 전용, 공통 컴포넌트는 그대로) ===== */
-//     .edit-data-form,
-//     .edit-password-form {
-//         /* modal-content/ modal-body가 center 정렬이라 폼 영역만 왼쪽 정렬로 덮어씀 */
-//         width: 100%;
-//         text-align: left;
-//         align-self: stretch; /* modal-content의 align-items: center 영향 최소화 */
-//     }
-
-//     .edit-data-form .edit-data-email {
-//         text-align: center;
-//     }
-
-//     /* 라벨-인풋을 한 줄로: FormGroup 내부 클래스에 스코프 오버라이드 */
-//     .edit-data-form .input-wrap,
-//     .edit-password-form .input-wrap {
-//         display: grid;
-//         grid-template-columns: 120px 1fr; /* 라벨 120px, 인풋 유동 */
-//         align-items: center;
-//         column-gap: 12px;
-//         row-gap: 6px;
-//         margin-bottom: 12px;
-//     }
-
-//     .edit-data-form .input-label,
-//     .edit-password-form .input-label {
-//         text-align: center;
-//         font-weight: 500;
-//         /* 필요시 min-width 대신 그리드 컬럼이 폭 보장 */
-//     }
-
-//     .edit-data-form .input-field,
-//     .edit-password-form .input-field {
-//         width: 100%;
-//         /* 그리드 2번째 컬럼이므로 자동으로 한 줄 정렬 */
-//     }
-
-//     /* 에러 메시지는 인풋 아래 줄로 */
-//     .edit-data-form .input-error-message,
-//     .edit-password-form .input-error-message {
-//         grid-column: 2 / 3;   /* 인풋 칸 아래에 위치 */
-//         margin-top: 4px;
-//     }
-
-//     /* 모바일에서는 세로 스택 */
-//     @media (max-width: 520px) {
-//         .edit-data-form .input-wrap,
-//         .edit-password-form .input-wrap {
-//             grid-template-columns: 1fr;
-//         }
-//         .edit-data-form .input-label,
-//         .edit-password-form .input-label {
-//             text-align: left;
-//         }
-//         .edit-data-form .input-error-message,
-//         .edit-password-form .input-error-message {
-//             grid-column: 1 / -1; /* 전체 너비로 */
-//         }
-//     }
-
-//     .edit-password-form {
-//         .old-password {
-//             position: relative;
-//             margin-top: 1rem;
-
-//             .old-password-eye-icon {
-//                 color: rgba($color: #000000, $alpha: 0.5);
-//                 position: absolute;
-//                 top: 50%;
-//                 right: 0.75rem;
-//                 transform: translateY(-50%);
-//                 height: 2.5rem;
-//                 width: 2rem;
-//                 position: absolute;
-//                 cursor: pointer;
-//             }
-//         }
-
-//         .edit-password {
-//             position: relative;
-//             margin-top: 1rem;
-
-//             .edit-password-eye-icon {
-//                 color: rgba($color: #000000, $alpha: 0.5);
-//                 position: absolute;
-//                 top: 50%;
-//                 right: 0.75rem;
-//                 transform: translateY(-50%);
-//                 height: 2.5rem;
-//                 width: 2rem;
-//                 position: absolute;
-//                 cursor: pointer;
-//             }
-//         }
-
-//         .confirm-edit-password {
-//             position: relative;
-//             margin-top: 1rem;
-
-//             .confirm-edit-password-eye-icon {
-//                 color: rgba($color: #000000, $alpha: 0.5);
-//                 position: absolute;
-//                 top: 50%;
-//                 right: 0.75rem;
-//                 transform: translateY(-50%);
-//                 height: 2.5rem;
-//                 width: 2rem;
-//                 position: absolute;
-//                 cursor: pointer;
-//             }
-//         }
-
-//         .field-error-message {
-//             margin-top: 6px;
-//             font-size: 12px;
-//             color: $red-500;
-//             text-align: center;
-//         }
-//     }
-
-//     .delete-user-form {
-//         text-align: left;
-//         display: flex;
-//         flex-direction: column;
-//         gap: 0.5rem;
-
-//         .delete-user-attribute {
-//             font-size: $font-2xl;
-//             color: #a5a5a5;
-//         }
-
-//         .delete-user-content {
-//             font-size: $font-2xl;
-//         }
-
-//         .warning {
-//             color: $red-500;
-//             margin-top: 1rem;
-//             margin-bottom: 1rem;
-//         }
-//     }
-// }
+        .edit-data-title {
+            display: inline-block;
+            font-weight: 600;
+        }
+    }
+}
