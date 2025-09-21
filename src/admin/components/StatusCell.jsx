@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { alertComfirm } from "../../utils/alert";
+import { alertComfirm, alertSuccess } from "../../utils/alert";
 import Select from "../../components/common/Select";
 
 const STATUS_OPTIONS = [
@@ -19,6 +19,7 @@ function StatusCell({ value, orderNumber, onChangeStatus }) {
 
     onChangeStatus(orderNumber, tempStatus);
     setIsEditing(false);
+    await alertSuccess("변경 완료", "변경이 완료되었습니다");
   };
 
   const handleCancel = (e) => {
