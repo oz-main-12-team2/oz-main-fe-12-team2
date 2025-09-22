@@ -81,7 +81,7 @@ function BookDetail() {
                 {isModalOpen && (
                     <div className="modal-overlay">
                         <div className="modal">
-                            <h2>구매하시겠습니까?</h2>
+                            <h2>구매하시겠습니까??</h2>
                             <div className="modal-actions">
                                 <button variant="primary" size="md" onClick={handleConfirmPurchase}>확인</button>
                                 <button variant="secondary" size="md" onClick={()=> setIsModalOpen(false)}>취소</button>
