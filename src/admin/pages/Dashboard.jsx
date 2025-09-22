@@ -1,20 +1,12 @@
-import { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { useEffect, useState, useMemo } from "react";
+import { ResponsiveLine } from "@nivo/line";
 import { FaCalendarDay, FaCalendarWeek, FaChartBar } from "react-icons/fa";
 import Loading from "../../components/common/Loading";
 
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [chartType, setChartType] = useState("quantity"); // 'quantity' | 'revenue'
+  const [chartType, setChartType] = useState("quantity");
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,17 +31,35 @@ function Dashboard() {
           ],
         };
 
-        setTimeout(() => setStats(dummyData), 500);
-      } catch (error) {
-        console.error("대시보드 데이터 로딩 실패", error);
+        setTimeout(() => {
+          setStats(dummyData);
+          setIsLoading(false);
+        }, 500);
+      } catch (e) {
+        console.error("대시보드 데이터 로딩 실패", e);
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     }
     fetchData();
   }, []);
 
-  if (isLoading) return <Loading loadingText="데이터를 불러오는 중" />;
+  const chartData = useMemo(() => {
+    if (!stats) return [];
+    return [
+      {
+        id: chartType === "quantity" ? "건수" : "매출",
+        color: chartType === "quantity" ? "#3b82f6" : "#10b981",
+        data: stats.trend.map((d) => ({
+          x: d.date.slice(5),
+          y: chartType === "quantity" ? d.quantity : Number(d.revenue),
+          date: d.date,
+        })),
+      },
+    ];
+  }, [stats, chartType]);
+
+  if (isLoading) return <Loading loadingText="대시보드 불러오는 중" />;
   if (!stats) return <div>데이터를 불러올 수 없습니다.</div>;
 
   return (
@@ -103,7 +113,7 @@ function Dashboard() {
           })}
         </div>
 
-        {/* 오른쪽 판매 추이 */}
+        {/* 오른쪽 판매 추이 그래프 */}
         <div className="dashboard-chart">
           <div className="dashboard-chart-header">
             <span>판매 추이</span>
@@ -122,20 +132,57 @@ function Dashboard() {
               </button>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={stats.trend}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickFormatter={(d) => d.slice(5)} />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey={chartType}
-                stroke={chartType === "quantity" ? "#3b82f6" : "#10b981"}
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+
+          <div style={{ height: 320 }}>
+            <ResponsiveLine
+              data={chartData}
+              margin={{ top: 20, right: 20, bottom: 40, left: 50 }}
+              xScale={{ type: "point" }}
+              yScale={{ type: "linear", min: "auto", max: "auto" }}
+              curve="monotoneX"
+              axisBottom={{
+                tickRotation: -30,
+              }}
+              colors={{ datum: "color" }}
+              lineWidth={3}
+              enablePoints={true}
+              pointSize={8}
+              pointColor={{ theme: "background" }}
+              pointBorderWidth={2}
+              pointBorderColor={{ from: "serieColor" }}
+              enableArea={true}
+              areaOpacity={0.1}
+              useMesh={true}
+              tooltip={({ point }) => (
+                <div
+                  style={{
+                    background: "white",
+                    minWidth: "100px",
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                    fontSize: "0.9rem",
+                    color: "#0f172a",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{ fontWeight: 500, marginBottom: "4px" }}>
+                    {point.data.date.slice(5)} {/* 09-22 형태 */}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      fontSize: "1rem",
+                    }}
+                  >
+                    {chartType === "quantity"
+                      ? `${point.data.yFormatted} 건`
+                      : `${Number(point.data.y).toLocaleString()}`}
+                  </div>
+                </div>
+              )}
+            />
+          </div>
         </div>
       </div>
     </div>
