@@ -16,7 +16,6 @@ function MyPage() {
                     <aside className="mypage-sidebar">
                         <nav>
                             <p className='mypage-title'>마이페이지</p>
-                            <img className="mypage-logo" src="/logo.svg" alt="러블리 로고" />
                             <div className='profile'>
                                 <p className='mypage-greeting'>홍엽님 반갑습니다!</p>
                                 {/* mypage-info의 경우 글자가 넘칠 경우 어떻게 할 지 */}

@@ -158,6 +158,7 @@ function ProfileEdit() {
                     onBlur={onEmailBlur}
                     error={errors.email}
                     placeholder="example@domain.com"
+                    disabled
                 />
             </div>
 
