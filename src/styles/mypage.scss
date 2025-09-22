@@ -1,0 +1,331 @@
+@import "./var.scss";
+
+/* ====== 레이아웃 ====== */
+.mypage-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 1.5rem;
+    min-height: 100vh;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+
+    .mypage-sidebar {
+        background-color: #fff8f0;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        .mypage-title {
+            font-size: $font-2xl;
+            font-weight: bold;
+            margin: 0.25rem 0 0.5rem;
+        }
+
+        .profile {
+            width: 100%;
+            font-size: $font-sm;
+            border-bottom: 1px solid #000;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+
+            .mypage-greeting {
+                margin: 0;
+                min-width: 0;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+
+            .mypage-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+
+                .mypage-email,
+                .mypage-address {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.5rem;
+                    min-width: 0;
+
+                    svg {
+                        flex: 0 0 auto;
+                        margin-top: 0.2rem;
+                    }
+
+                    p {
+                        margin: 0;
+                        flex: 1 1 auto;
+                        min-width: 0;
+                        white-space: normal;
+                        overflow-wrap: anywhere;
+                        word-break: break-word;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    font-size: $font-md;
+                }
+                @media (max-width: 320px) {
+                    font-size: $font-sm;
+                }
+            }
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 0.5rem;
+
+            a {
+                text-decoration: none;
+                font-size: $font-xl;
+                padding: 0.5rem 0.25rem;
+                border-radius: 8px;
+                color: inherit;
+
+                &:hover {
+                    background: rgba(0, 0, 0, 0.05);
+                }
+
+                /* React Router NavLink의 .active 클래스 가정 */
+                &.active,
+                &[aria-current="page"] {
+                    background: #ffe7d0;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    .mypage-main {
+        width: 100%;
+        padding: 0.75rem 0.75rem 2rem;
+    }
+}
+
+/* ====== 탭 헤더 (MyPageSection 내부) ====== */
+.mypage-section-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 5;
+    padding-top: 0.25rem;
+}
+
+.mypage-tabs {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+
+    .mypage-tab {
+        position: relative;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-decoration: none;
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+        outline: none;
+        border-radius: 8px 8px 0 0;
+
+        &:hover {
+            color: #374151;
+        }
+        &:focus-visible {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+
+        &.is-active {
+            color: #111827;
+            border-bottom-color: #111827;
+        }
+    }
+}
+
+.mypage-section-body {
+    padding: 1rem 0.25rem;
+}
+
+.profile-edit-loading,
+.account-delete-loading {
+    padding: 1rem;
+    text-align: center;
+}
+
+/* ====== 페이지 탭용 폼 공통 (모달 → 페이지 전환에 맞춘 범위 축소) ====== */
+.edit-data-form,
+.edit-password-form {
+    .edit-data-actions {
+        display: flex;
+        justify-content: center; /* 가운데 정렬 */
+        align-items: center;
+        gap: 12px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+
+        /* 반응형: 모바일에서 스택 */
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+    width: 100%;
+    text-align: left;
+
+    /* FormGroup 내부 오버라이드: 라벨-필드 2열 */
+    .input-wrap {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        align-items: center;
+        column-gap: 12px;
+        row-gap: 6px;
+        margin-bottom: 12px;
+    }
+    .input-label {
+        text-align: center;
+        font-weight: 500;
+    }
+    .input-field {
+        width: 100%;
+    }
+    .input-error-message {
+        grid-column: 2 / 3;
+        margin-top: 4px;
+    }
+
+    @media (max-width: 520px) {
+        .input-wrap {
+            grid-template-columns: 1fr;
+        }
+        .input-label {
+            text-align: left;
+        }
+        .input-error-message {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+/* ====== 비밀번호 탭 아이콘/오류 ====== */
+.edit-password-form {
+    .old-password,
+    .edit-password,
+    .confirm-edit-password {
+        position: relative;
+        margin-top: 1rem;
+    }
+
+    .old-password-eye-icon,
+    .edit-password-eye-icon,
+    .confirm-edit-password-eye-icon {
+        color: rgba(#000000, 0.5);
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        height: 2.5rem;
+        width: 2rem;
+        cursor: pointer;
+    }
+
+    .field-error-message {
+        margin-top: 6px;
+        font-size: 12px;
+        color: $red-500;
+        text-align: start;
+    }
+
+    /* 버튼 영역: 가운데 정렬 + 모바일 스택 */
+    .edit-password-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}
+
+/* ====== 회원 탈퇴 탭 ====== */
+.delete-user-form {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .delete-user-attribute {
+        font-size: $font-xl;
+        color: #a5a5a5;
+    }
+
+    .delete-user-content {
+        font-size: $font-xl;
+    }
+
+    .warning {
+        color: $red-500;
+    }
+
+    /* 버튼 영역: 가운데 정렬 + 모바일 스택 */
+    .account-delete-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+
+    /* 모달 본문 좌측 정렬 */
+    .account-delete-modal-body {
+        text-align: left;
+    }
+
+    .modal-title {
+        display: flex;
+        width: 100%;
+        text-align: center;
+        margin: 0 0 1rem;
+        padding-right: 36px; /* 닫기 아이콘 영역 확보 */
+        line-height: 1.2;
+
+        .edit-data-title {
+            display: inline-block;
+            font-weight: 600;
+        }
+    }
+}

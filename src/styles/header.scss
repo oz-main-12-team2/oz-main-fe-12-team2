@@ -63,16 +63,32 @@
     }
   }
 
+  .cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: $red-500;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 50%;
+    min-width: 15px;
+    text-align: center;
+    line-height: 1;
+  }
+
   // 아이콘 + 로그인/회원가입 (PC 전용)
   .header-icon-wrap {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 
     .header-cart {
       position: relative;
       cursor: pointer;
-      top: 1px;
+      display: flex;
+      top: -1px;
 
       .header-cart-icon {
         font-size: 1.4rem;
@@ -163,6 +179,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  color: $gray-500;
 
   .mobile-user-name {
     margin: 0;
@@ -192,11 +209,27 @@
   .mobile-action-icon {
     cursor: pointer;
     transition: color 0.2s ease, transform 0.15s ease;
+    color: $gray-500;
 
     &:hover {
       color: $main-color-hover;
       transform: scale(1.1);
     }
+  }
+}
+
+.mobile-user-guest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+  color: $gray-500;
+
+  .mobile-user-guest-text {
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+    font-weight: bold;
+    text-align: center;
   }
 }
 

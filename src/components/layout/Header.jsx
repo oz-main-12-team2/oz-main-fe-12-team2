@@ -1,6 +1,6 @@
 import "../../styles/header.scss";
 
-import { HiOutlineShoppingCart } from "react-icons/hi2";
+import { LuShoppingCart } from "react-icons/lu";
 import {
   //   FaSearch, //검색 임시 숨김
   FaBars,
@@ -19,6 +19,7 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   //   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
   const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(3); // 3개로 일단 가정
 
   useEffect(() => {
     const token = "fffffffff"; // 임시
@@ -34,6 +35,7 @@ function Header() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setIsMobileMenuOpen(false);
+    setCartCount(0);
   };
 
   return (
@@ -61,18 +63,13 @@ function Header() {
             placeholder="도서 검색"
           />
         </div> */}
-
         {/* 우측 영역 */}
         <div className="header-right">
           {/* PC 아이콘 + 로그인 */}
           <div className="header-icon-wrap pc-only">
-            <Link
-              to="/mypage/cart"
-              className="header-cart"
-              role="button"
-              aria-label="장바구니"
-            >
-              <HiOutlineShoppingCart className="header-cart-icon" />
+            <Link to="/mypage/cart" className="header-cart">
+              <LuShoppingCart className="header-cart-icon" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
 
             <div className="header-actions">
@@ -127,7 +124,8 @@ function Header() {
             </div>
 
             <div className="mobile-menu-body">
-              {isLoggedIn && (
+              {/* 로그인 상태에 따른 상단 영역 */}
+              {isLoggedIn ? (
                 <div className="mobile-user-info">
                   <FaUserCircle size={40} />
                   <div>
@@ -135,24 +133,55 @@ function Header() {
                     <p className="mobile-user-email">{user.email}</p>
                   </div>
                 </div>
+              ) : (
+                <div className="mobile-user-info mobile-user-guest">
+                  <FaUserCircle size={48} />
+                  <p className="mobile-user-guest-text">로그인 해주세요</p>
+                </div>
               )}
 
-              {/* 장바구니 / 마이페이지 아이콘으로 배치 */}
+              {/* 장바구니 / 마이페이지 아이콘 */}
               <div className="mobile-actions">
-                <HiOutlineShoppingCart
-                  size={28}
-                  className="mobile-action-icon"
-                  onClick={() => navigate("/mypage/cart")}
-                />
+                <div
+                  className="mobile-action-item"
+                  style={{ position: "relative" }}
+                >
+                  <LuShoppingCart
+                    size={28}
+                    className="mobile-action-icon"
+                    onClick={() => navigate("/mypage/cart")}
+                  />
+                  {cartCount > 0 && (
+                    <span className="cart-badge">{cartCount}</span>
+                  )}
+                </div>
+
                 <FaHome
                   size={26}
                   className="mobile-action-icon"
                   onClick={() => navigate("/mypage")}
                 />
               </div>
-              {isLoggedIn && (
-                <Button variant="primary" size="md" onClick={handleLogout}>
+
+              {/* 로그인 상태에 따라 버튼 변경 */}
+              {isLoggedIn ? (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleLogout}
+                >
                   로그아웃
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate("/login");
+                  }}
+                >
+                  로그인
                 </Button>
               )}
               {/* 메뉴 (세로형) */}

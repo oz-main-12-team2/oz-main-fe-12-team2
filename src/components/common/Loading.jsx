@@ -1,4 +1,5 @@
 import { ClipLoader } from "react-spinners";
+import "../../styles/loading.scss";
 
 function Loading({ loadingText }) {
   return (

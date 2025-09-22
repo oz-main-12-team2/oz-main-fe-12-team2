@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/common/Button";
 import { alertComfirm } from "../../utils/alert";
+import { AiFillHome } from "react-icons/ai";
+import { IoPowerSharp } from 'react-icons/io5';
 
 function AdminHeader() {
   const navigate = useNavigate();
@@ -22,13 +23,9 @@ function AdminHeader() {
   return (
     <header className="admin-header">
       <h1>ADMINISTRATOR</h1>
-      <div className="button-wrap">
-        <Button variant="secondary" size="md" onClick={handleGoHome}>
-          홈으로
-        </Button>
-        <Button size="md" onClick={handleLogout}>
-          로그아웃
-        </Button>
+      <div className="header-icons">
+        <AiFillHome className="icon-btn" onClick={handleGoHome} />
+        <IoPowerSharp className="icon-btn" onClick={handleLogout} />
       </div>
     </header>
   );

@@ -2,7 +2,7 @@
 
 .admin-layout {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 // 사이드바 시작
@@ -72,11 +72,25 @@
     letter-spacing: 1px;
   }
 
-  .button-wrap {
+  .header-icons {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-right: 1rem;
+  }
+
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: $gray-500;
+    transition: color 0.12s ease;
+  }
+
+  .icon-btn:hover {
+    color: $main-color-hover;
   }
 }
 
@@ -126,25 +140,118 @@
 }
 
 .products-page {
-  .products-page-title {
-    font-size: $font-xl;
-    margin-bottom: 1rem;
-  }
+  padding: 1rem;
 
   .products-actions {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 1rem;
-    padding-right: 1rem;
+    margin-bottom: 0.75rem;
   }
 
-  .book-card-row-actions {
+  .products-page-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .products-table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem 0;
+    border-radius: 0.5rem;
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+
+      th,
+      td {
+        padding: 12px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 14px;
+      }
+
+      th {
+        background-color: #f9fafb;
+        font-weight: 600;
+      }
+
+      tr:hover td {
+        background-color: #f3f4f6;
+        cursor: pointer;
+      }
+
+      tr:hover {
+        background: #f3f4f6;
+      }
+
+      td:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.product-detail {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 1rem 0;
+
+  .product-detail-left {
+    flex: 1;
+    max-width: 300px;
+
+    img.product-detail-image {
+      width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .product-detail-right {
+    flex: 2;
     display: flex;
     flex-direction: column;
-    min-width: 70px;
+    gap: 0.75rem;
 
-    .btn {
-      min-height: 35px;
+    .product-detail-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .product-detail-category {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: $main-color;
+      background-color: rgba($main-color, 0.1); // 살짝 연한 배경
+      border-radius: 12px;
+      width: fit-content;
+      margin-bottom: 0.3rem;
+    }
+
+    .product-detail-meta {
+      font-size: 0.95rem;
+      color: #4b5563;
+    }
+
+    .product-detail-price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .product-detail-stock {
+      font-size: 0.9rem;
+      color: #374151;
     }
   }
 }
@@ -162,7 +269,7 @@
 
   .users-header {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
     margin-bottom: 1rem;
 
@@ -183,20 +290,22 @@
     overflow-x: auto;
     margin: 1rem 0 1.5rem 0;
     border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    background: #fff;
   }
 
   .users-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
 
     th,
     td {
-      border: 1px solid #e5e7eb;
-      padding: 0.75rem;
+      padding: 12px 14px;
       text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
     }
 
     th {
@@ -204,12 +313,284 @@
       font-weight: 600;
     }
 
-    tr:nth-child(even) {
-      background-color: #f3f4f6;
-    }
-
     tr:hover td {
-      background-color: #e0f2fe;
+      background-color: #f3f4f6;
+      cursor: pointer;
     }
   }
+}
+
+.orders-page {
+  padding: 1rem;
+
+  .orders-page-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .orders-total {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $gray-500;
+  }
+
+  /* 주문 테이블 */
+  .orders-table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem 0;
+    border-radius: 0.5rem;
+  }
+
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    /* 상태 열만 너비 강제 */
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 230px;
+    }
+
+    th {
+      background-color: #f9fafb;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f3f4f6;
+      cursor: pointer;
+    }
+  }
+
+  /* 모달 내부 스타일 */
+  .order-info,
+  .recipient-info,
+  .payment-info {
+    margin-bottom: 16px;
+    font-size: 14px;
+
+    p {
+      margin: 4px 0;
+      line-height: 1.5;
+
+      b {
+        display: inline-block;
+        width: 80px;
+      }
+    }
+
+    h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  }
+
+  /* 주문 상품 테이블 */
+  .order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+
+    th,
+    td {
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f9fafb;
+      font-weight: 600;
+    }
+  }
+
+  .status-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .select-field {
+      min-width: 100px;
+    }
+
+    .status-actions {
+      display: flex;
+      gap: 0.25rem;
+      margin-left: auto;
+    }
+
+    .btn-save,
+    .btn-cancel {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #d1d5db;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      font-weight: 600;
+    }
+
+    .btn-save {
+      background-color: $main-color;
+      color: #fff;
+
+      &:hover {
+        background-color: $main-color-hover;
+      }
+    }
+
+    .btn-cancel {
+      background-color: $red-500;
+      color: #fff;
+    }
+  }
+}
+
+// 모바일 반응형
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  // 사이드바 기본 숨김
+  .admin-sidebar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    nav {
+      display: none;
+    }
+
+    .logo {
+      position: relative;
+      margin: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .admin-header {
+    display: none;
+  }
+  .admin-content {
+    padding: 0;
+  }
+}
+
+// 모바일에서 햄버거 버튼 보이기
+.hamburger-btn {
+  display: none;
+  font-size: 1.32rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+// 모바일 사이드패널
+.sidebar-panel {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 240px;
+  height: 100%;
+  background: $main-color-hover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: right 0.3s ease;
+  z-index: 1000;
+  justify-content: space-between;
+  // 애니메이션 효과
+  animation: slideIn 0.3s forwards;
+
+  .panel-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+
+    .close-btn {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+  }
+
+  nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    a {
+      padding: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: #fff;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+  .panel-footer {
+    display: flex;
+    justify-content: space-around;
+    gap: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid $gray-300;
+
+    .icon-btn {
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: scale 0.5s ease;
+
+      &:hover {
+        scale: (1.1);
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    right: -260px;
+  }
+  to {
+    right: 0;
+  }
+}
+
+// 오버레이 배경
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 900;
 }

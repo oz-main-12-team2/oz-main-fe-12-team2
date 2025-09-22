@@ -1,5 +1,5 @@
 import "../../styles/booklistcol.scss";
-import { BookCardCol } from "./BookCardCol";
+import { BookCardCol } from "./BookCard";
 
 export function BookListCol({ books, onCardClick }) {
   if (!books || books.length === 0) {

@@ -1,0 +1,89 @@
+.book-detail-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .footer {
+    margin-top: auto;
+  }
+}
+
+.book-detail-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 20px 0;
+  padding-top: 15rem;
+
+  // 왼쪽 이미지
+  .book-detail-image img {
+    width: 25rem;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  // 오른쪽 상세정보 전체 박스
+  .book-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; // 위쪽 정보, 아래쪽 소개/버튼 공간 분리
+  }
+
+  // 상단 정보 (제목, 저자, 가격)
+  .book-detail-up {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; // 이미지 상단 맞춤
+  }
+
+  // 하단 정보 (책 소개, 버튼)
+  .book-detail-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; // 이미지 하단 맞춤
+  }
+
+  // 책 소개
+  .book-detail-description {
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ddd;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #000000;
+    }
+  }
+
+  // 가격
+  .book-price {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    .sale-price {
+      font-weight: bold;
+      color: #e74c3c;
+    }
+  }
+
+  // 버튼 영역
+  .book-actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 3rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+}
