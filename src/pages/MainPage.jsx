@@ -190,14 +190,12 @@ function MainPage() {
         {/* Best10 */}
         <section className="book-daily-best">
           <h2>Best 10 (일간 베스트)</h2>
-          {/* <hr /> */}
           <BookListRowLoop books={bestBooks} onCardClick={handleCardClick} />
         </section>
 
         {/* 전체 상품 리스트 (무한 스크롤) */}
         <section className="book-list" ref={bookListRef}>
           <h2>전체 도서</h2>
-          {/* <hr /> */}
           <BookListCol books={allBooks} onCardClick={handleCardClick} />
           {loading && <Loading />}
           <div ref={observerRef} style={{ height: "20px" }} />

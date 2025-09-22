@@ -61,9 +61,9 @@ function BookDetail() {
                         <Button variant="secondary" size="lg" type="button" onClick={() => alert("장바구니에 추가됨")}>장바구니에 넣기</Button>
                     </div>
                     </div>
-                </div>
+                </div> <br />
                 {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
-                {/* 제목, 저자, 가격, 설명 등 혹은 정해진 내용으로 */}
+                {/* 제목, 저자, 가격, 설명  등 혹은 정해진 내용으로 */}
             </main>
 
                 </div>
