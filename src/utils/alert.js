@@ -29,6 +29,5 @@ export const alertComfirm = (title, message) => {
     showCancelButton: true,
     confirmButtonText: "예",
     cancelButtonText: "아니요",
-    reverseButtons: true,
   });
 };
