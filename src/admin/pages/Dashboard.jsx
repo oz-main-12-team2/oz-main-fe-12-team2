@@ -8,17 +8,18 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { FaCalendarDay, FaCalendarWeek, FaChartBar } from "react-icons/fa";
 import Loading from "../../components/common/Loading";
 
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [chartType, setChartType] = useState("quantity"); // 'quantity' | 'revenue'
 
   useEffect(() => {
+    setIsLoading(true);
     async function fetchData() {
-      setIsLoading(true);
       try {
-        // 더미데이터
         const dummyData = {
           total_users: 42,
           total_revenue: "12500000.00",
@@ -38,7 +39,6 @@ function Dashboard() {
           ],
         };
 
-        // 0.5초 로딩 딜레이 주고 데이터 설정
         setTimeout(() => setStats(dummyData), 500);
       } catch (error) {
         console.error("대시보드 데이터 로딩 실패", error);
@@ -49,81 +49,91 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  if (isLoading) return <Loading loadingText={"데이터를 불러오는중"} />;
+  if (isLoading) return <Loading loadingText="데이터를 불러오는 중" />;
   if (!stats) return <div>데이터를 불러올 수 없습니다.</div>;
 
   return (
     <div className="dashboard-page">
       <h2 className="dashboard-title">대시보드</h2>
 
-      {/* 통계 카드 */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <p className="stat-header">회원 수</p>
-          <p className="stat-info">{stats.total_users}</p>
+      {/* 상단 통계 */}
+      <div className="dashboard-grid">
+        <div className="dashboard-card">
+          <p className="dashboard-card-title">회원 수</p>
+          <p className="dashboard-card-value">{stats.total_users}</p>
         </div>
-
-        <div className="stat-card">
-          <p className="stat-header">총 매출</p>
-          <p className="stat-info">
+        <div className="dashboard-card">
+          <p className="dashboard-card-title">총 매출</p>
+          <p className="dashboard-card-value">
             ₩ {Number(stats.total_revenue).toLocaleString()}
           </p>
         </div>
-
-        <div className="stat-card">
-          <p className="stat-header">재고 상태</p>
-          <p className="stat-info">{stats.total_stock}</p>
+        <div className="dashboard-card">
+          <p className="dashboard-card-title">재고 상태</p>
+          <p className="dashboard-card-value">{stats.total_stock}</p>
         </div>
-
-        <div className="stat-card">
-          <p className="stat-header">오늘 주문 수</p>
-          <p className="stat-info">{stats.today_orders}</p>
+        <div className="dashboard-card">
+          <p className="dashboard-card-title">오늘 주문 수</p>
+          <p className="dashboard-card-value">{stats.today_orders}</p>
         </div>
       </div>
 
-      {/* 판매 통계 */}
-      <div className="stats-grid">
-        <div className="stat-card sales-card">
-          <p className="stat-header">판매</p>
-          <div className="sales-item">
-            <span>오늘</span>
-            <span>
-              <span className="sales-qty">{stats.daily_sales.quantity}건</span>
-              <span className="sales-revenue">
-                ₩ {Number(stats.daily_sales.revenue).toLocaleString()}
-              </span>
-            </span>
-          </div>
-          <div className="sales-item">
-            <span>이번주</span>
-            <span>
-              <span className="sales-qty">{stats.weekly_sales.quantity}건</span>
-              <span className="sales-revenue">
-                ₩ {Number(stats.weekly_sales.revenue).toLocaleString()}
-              </span>
-            </span>
-          </div>
-          <div className="sales-item">
-            <span>이번달</span>
-            <span>
-              <span className="sales-qty">{stats.monthly_sales.quantity}건</span>
-              <span className="sales-revenue">
-                ₩ {Number(stats.monthly_sales.revenue).toLocaleString()}
-              </span>
-            </span>
-          </div>
+      {/* 하단 - 판매 + 차트 */}
+      <div className="dashboard-section">
+        {/* 왼쪽 판매 */}
+        <div className="dashboard-sales">
+          {[
+            { icon: FaCalendarDay, title: "Today", data: stats.daily_sales },
+            { icon: FaCalendarWeek, title: "Week", data: stats.weekly_sales },
+            { icon: FaChartBar, title: "Month", data: stats.monthly_sales },
+          ].map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div className="dashboard-sales-card" key={idx}>
+                <Icon className="dashboard-sales-icon" />
+                <div>
+                  <p className="dashboard-sales-title">{item.title}</p>
+                  <p className="dashboard-sales-qty">{item.data.quantity}건</p>
+                  <p className="dashboard-sales-revenue">
+                    ₩ {Number(item.data.revenue).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* 판매 추이 그래프 */}
-        <div className="stat-card">
-          <p className="stat-header">판매 추이</p>
-          <ResponsiveContainer width="100%" height={200}>
+        {/* 오른쪽 판매 추이 */}
+        <div className="dashboard-chart">
+          <div className="dashboard-chart-header">
+            <span>판매 추이</span>
+            <div className="dashboard-chart-toggle">
+              <button
+                className={chartType === "quantity" ? "active" : ""}
+                onClick={() => setChartType("quantity")}
+              >
+                건수
+              </button>
+              <button
+                className={chartType === "revenue" ? "active" : ""}
+                onClick={() => setChartType("revenue")}
+              >
+                매출
+              </button>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
             <LineChart data={stats.trend}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickFormatter={(date) => date.slice(5)} />
+              <XAxis dataKey="date" tickFormatter={(d) => d.slice(5)} />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="quantity" stroke="#8884d8" />
+              <Line
+                type="monotone"
+                dataKey={chartType}
+                stroke={chartType === "quantity" ? "#3b82f6" : "#10b981"}
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

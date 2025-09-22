@@ -102,107 +102,140 @@
 
 // dashboard
 .dashboard-page {
-  padding: 1.5rem;
-  background-color: #f8fafc; // 전체 배경 살짝 회색
+  padding: 1rem;
 
   .dashboard-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 2rem;
-    color: #1e293b; // 진한 네이비 느낌
+    margin-bottom: 1rem;
   }
 
-  .stats-grid {
+  .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
-
-    .stat-card.sales-card {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      .sales-item {
-        display: flex;
-        justify-content: flex-start;
-        gap: 2rem;
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: #475569; // 기본 텍스트 색 (Slate 600)
-
-        .sales-qty {
-          font-weight: 700;
-          color: #0f172a; // 진한 글씨 (숫자 강조)
-        }
-
-        .sales-revenue {
-          font-size: 0.85rem;
-          color: #94a3b8; // 회색톤 (보조 정보 느낌)
-          margin-left: 0.5rem;
-        }
-      }
-    }
   }
 
-  .stat-card {
-    background: #ffffff;
-    // border-radius: 16px;
+  .dashboard-card {
     padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border-left: 5px solid #3b82f6;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .stat-header {
-      font-size: 1rem;
+    .dashboard-card-title {
+      font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 0.8rem;
-      color: #64748b; // 중간 회색
-      letter-spacing: 0.5px;
+      color: #64748b;
+      margin-bottom: 0.5rem;
     }
 
-    .stat-info {
+    .dashboard-card-value {
       font-size: 1.4rem;
       font-weight: 700;
-      color: #0f172a; // 더 진한 텍스트
-      line-height: 1.4;
     }
   }
 
-  // 색상 변형 (카드별 구분)
-  .stat-card:nth-child(1) {
-    border-left: 5px solid #3b82f6; // 파랑
-  }
-  .stat-card:nth-child(2) {
-    border-left: 5px solid #10b981; // 초록
-  }
-  .stat-card:nth-child(3) {
-    border-left: 5px solid #f59e0b; // 주황
-  }
-  .stat-card:nth-child(4) {
-    border-left: 5px solid #ef4444; // 빨강
-  }
+  .dashboard-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
 
-  // 반응형 대응
-  @media (max-width: 640px) {
-    padding: 1rem;
-
-    .dashboard-title {
-      font-size: 1.5rem;
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
     }
+  }
 
-    .stat-card {
+  .dashboard-sales {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .dashboard-sales-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       padding: 1rem;
+      border-radius: 12px;
+      min-height: 90px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+      .dashboard-sales-icon {
+        font-size: 1.5rem;
+        color: #3b82f6;
+      }
+
+      .dashboard-sales-title {
+        font-size: 0.9rem;
+        color: #475569;
+      }
+
+      .dashboard-sales-qty {
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .dashboard-sales-revenue {
+        font-size: 0.85rem;
+        color: #94a3b8;
+      }
+    }
+  }
+
+  .dashboard-chart {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    .dashboard-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .dashboard-chart-toggle {
+      display: flex;
+      gap: 0.5rem;
+
+      button {
+        padding: 0.3rem 0.7rem;
+        border: 1px solid #cbd5e1;
+        background: #f1f5f9;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+
+        &.active {
+          background-color: #3b82f6;
+          color: #fff;
+          border-color: #3b82f6;
+        }
+
+        &:hover {
+          background-color: #3b82f6;
+          color: #fff;
+          border-color: #3b82f6;
+        }
+      }
     }
   }
 }
+
+// dashboard 끝
 
 .products-page {
   padding: 1rem;
