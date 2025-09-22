@@ -22,6 +22,9 @@ function ProductDetail({ selectedBook }) {
           {(selectedBook.price ?? 0).toLocaleString()}원
         </p>
         <p className="product-detail-stock">재고: {selectedBook.stock}권</p>
+        <p className="product-detail-description">
+          {selectedBook.description || "설명 없음"}
+        </p>
       </div>
     </div>
   );

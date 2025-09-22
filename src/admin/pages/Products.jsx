@@ -21,7 +21,8 @@ function Products() {
   useEffect(() => {
     const dummyBooks = Array.from({ length: 10 }, (_, i) => ({
       id: i + 1,
-      name: `책 ${i + 1}`,
+      name: `도서 ${i + 1}`,
+      description: `도서 설명${i + 1}`,
       author: "저자",
       publisher: "출판사",
       price: Math.floor(Math.random() * 100000),
@@ -46,6 +47,7 @@ function Products() {
     setSelectedBook({
       id: null,
       name: "",
+      description: "",
       author: "",
       publisher: "",
       price: 0,
@@ -105,6 +107,25 @@ function Products() {
       newErrors.category = "카테고리를 선택하세요.";
     }
 
+    // 상품 설명
+    if (!selectedBook.description?.trim()) {
+      newErrors.description = "상품 설명을 입력하세요.";
+    }
+
+    // 이미지 파일 체크
+    if (selectedBook.imageFile) {
+      const allowedExtensions = ["jpg", "jpeg", "png", "gif", "webp", "svg"];
+      const fileExtension = selectedBook.imageFile.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+      if (!allowedExtensions.includes(fileExtension)) {
+        newErrors.imageFile =
+          "이미지 파일만 업로드 가능합니다 (jpg, png, gif, webp).";
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -126,28 +147,47 @@ function Products() {
 
   // 등록 저장
   const handleCreateSave = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) return; // 유효성 검사 실패 시 종료
 
     const res = await alertComfirm("상품 등록", "등록하시겠습니까?");
     if (!res.isConfirmed) return;
 
+    // 새로운 book 객체 생성 (ID 자동 증가)
     const newBook = {
-      ...selectedBook,
       id: books.length > 0 ? Math.max(...books.map((b) => b.id)) + 1 : 1,
+      name: selectedBook.name,
+      description: selectedBook.description,
+      author: selectedBook.author,
+      publisher: selectedBook.publisher,
+      price: selectedBook.price,
+      stock: selectedBook.stock,
+      category: selectedBook.category,
+      image_url: selectedBook.imageFile
+        ? URL.createObjectURL(selectedBook.imageFile) // 미리보기용 URL
+        : "",
     };
 
+    // 상태에 추가
     setBooks((prev) => [...prev, newBook]);
 
     await alertSuccess("등록 성공", "상품이 등록되었습니다");
+
+    // 모달 닫기 & 선택 초기화
     setIsCreateOpen(false);
+    setSelectedBook(null);
   };
 
+  // 테이블 컬럼 정의
   // 테이블 컬럼 정의
   const columns = useMemo(
     () => [
       { header: "ID", accessorKey: "id" },
       { header: "상품명", accessorKey: "name" },
       { header: "카테고리", accessorKey: "category" },
+      {
+        header: "상품 설명",
+        accessorKey: "description",
+      },
       { header: "저자", accessorKey: "author" },
       { header: "출판사", accessorKey: "publisher" },
       {
