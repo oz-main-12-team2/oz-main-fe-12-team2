@@ -14,7 +14,6 @@ import AccountDelete from "./components/mypage/AccountDelete";
 import BookDetail from "./pages/BookDetail";
 import adminRoutes from "./admin/adminRoutes";
 
-
 function App() {
   // 라우트 배열
   const element = useRoutes([
@@ -40,6 +39,7 @@ function App() {
         // { path: "cart" element: <Cart /> }, // 장바구니 추가 예정
       ]
     },
+
 
     // 관리자라우트
     adminRoutes,

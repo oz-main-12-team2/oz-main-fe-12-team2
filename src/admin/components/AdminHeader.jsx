@@ -23,7 +23,6 @@ function AdminHeader() {
   return (
     <header className="admin-header">
       <h1>ADMINISTRATOR</h1>
-
       <div className="header-icons">
         <AiFillHome className="icon-btn" onClick={handleGoHome} />
         <IoPowerSharp className="icon-btn" onClick={handleLogout} />
