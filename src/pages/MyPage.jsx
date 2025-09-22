@@ -9,10 +9,9 @@ function MyPage() {
 
     return (
         <>
+            <Header />
             <div className="base-container">
-                <Header />
                 <div className='mypage-layout'>
-                    
                     <aside className="mypage-sidebar">
                         <nav>
                             <p className='mypage-title'>마이페이지</p>
@@ -42,10 +41,8 @@ function MyPage() {
                         <Outlet />
                     </div>
                 </div>
-                <Footer />
-
-                
             </div>
+            <Footer />
         </>
     )
 }
