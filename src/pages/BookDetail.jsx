@@ -19,7 +19,6 @@ function BookDetail() {
         title: "도서 제목",
         author: "저자",
         publisher: "출판사",
-        pubDate: "2024-09-01",
         price: 15000,
         salePrice: 12000,
         image: "/no-image.jpg",
@@ -28,23 +27,24 @@ function BookDetail() {
     }
 
     // 구매 확인
-    const handleConfirmPurchase = () => {
-        alert("구매 완료(계산페이지or모달창 필요)"); //추후 계산페이지로 이동or 모달창으로 계산시스템 구현 필요 
-        setIsModalOpen(false);
-    }
+    const handlePurchase  = async () => {
+    const res = await alertComfirm("구매 확인", "정말 구매하시겠습니까?");
+    if (!res.isConfirmed) return;
+    await alertSuccess("구매 완료", "구매가 정상적으로 처리되었습니다.");
+  };
 
     // 장바구니 확인 처리
-    const handleAddToCart = () => {
-        alert("장바구니에 추가되었습니다")
-        setIsCartModalOpen(false);
-    }
+    const handleAddToCart = async () => {
+    const res = await alertComfirm("장바구니 추가", "장바구니에 담으시겠습니까?");
+    if (!res.isConfirmed) return;
+    await alertSuccess("장바구니 추가 완료", "상품이 장바구니에 담겼습니다.");
+    };
 
     return (
     <>
         <Header />
         <div className="book-detail-page">
             <div className="base-container">
-            
             <main className="book-detail-container">
                 {/* 도서 이미지 */}
                 <div className="book-detail-image">
@@ -55,7 +55,7 @@ function BookDetail() {
                 <div className="book-detail-up">
                     <h1>{BookDetailDummy.title}</h1>
                     <p>
-                        저자: {BookDetailDummy.author} | 출판사: {BookDetailDummy.publisher} | 출판일: {" "}
+                        저자: {BookDetailDummy.author} | 출판사: {BookDetailDummy.publisher}
                         {BookDetailDummy.pubDate}
                     </p>
 
@@ -76,12 +76,18 @@ function BookDetail() {
             {/* 구매 버튼 / 장바구니 버튼 */}
             <div className="book-actions">
             {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
-                <Button variant="secondary"
-                        size="md" type="button"
-                        onClick={() => setIsModalOpen(true)}>구매하기</Button> 
-                <Button variant="secondary"
-                        size="md" type="button"
-                        onClick={() => setIsCartModalOpen("true")}>장바구니에 넣기</Button>
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    type="button"
+                    onClick={handlePurchase}
+                  >구매하기</Button> 
+                    <Button
+                    variant="secondary"
+                    size="md"
+                    type="button"
+                    onClick={handleAddToCart}
+                  >장바구니에 넣기</Button>
             </div>
             </div>
         </div>
@@ -99,7 +105,7 @@ function BookDetail() {
               <Button variant="primary" size="md" onClick={handleConfirmPurchase}>
                 확인
               </Button>
-              <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+              <Button variant="primary" size="md" onClick={() => setIsModalOpen(false)}>
                 취소
               </Button>
             </>
