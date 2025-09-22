@@ -31,9 +31,9 @@ function BookDetail() {
                 <div className="book-detail-image">
                     <img src={BookDetailDummy.image} alt={BookDetailDummy.title} />
                 </div>
-
+            <div className="book-detail">
                 {/* 도서 기본 정보 */}
-                <div className="book-detail-info">
+                <div className="book-detail-up">
                     <h1>{BookDetailDummy.title}</h1>
                     <p>
                         저자: {BookDetailDummy.author} | 출판사: {BookDetailDummy.publisher} | 출판일: {" "}
@@ -45,11 +45,13 @@ function BookDetail() {
                         <span className="original-price">가격: {BookDetailDummy.price.toLocaleString()}원</span>
                         <span className="sale-price"></span>
                     </div>
+            </div>
 
+            <div className="book-detail-bottom">
             {/* 상세 설명 */}
             <section className="book-detail-description">
-                <br /> <h2 className="book-introduction">책 소개</h2> 
-                <br />
+                <h2 className="book-introduction">책 소개</h2> 
+                
                 <p>{BookDetailDummy.description}</p>                
             </section>
                     {/* 구매 버튼 */}
@@ -57,6 +59,7 @@ function BookDetail() {
                         {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
                         <Button variant="secondary" size="lg" type="button" onClick={() => alert("구매하시겠습니까?")}>구매하기</Button> 
                         <Button variant="secondary" size="lg" type="button" onClick={() => alert("장바구니에 추가됨")}>장바구니에 넣기</Button>
+                    </div>
                     </div>
                 </div>
                 {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
