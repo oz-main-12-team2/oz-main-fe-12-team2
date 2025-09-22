@@ -1,0 +1,70 @@
+@import "./var.scss";
+
+// 메인 배너
+.main-banner {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  margin-bottom: 1.5rem;
+
+  // 배경 이미지
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // 어두운 배경(오버레이)
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.6)
+    );
+    z-index: 1;
+  }
+
+  .banner-text {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    transform: translateY(0);
+    color: #fff;
+    z-index: 2;
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      opacity: 0.9;
+      margin-bottom: 1.2rem;
+    }
+
+    .banner-button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      background-color: $main-color;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.25s ease, transform 0.2s ease;
+
+      &:hover {
+        background-color: $main-color-hover;
+      }
+    }
+  }
+}
