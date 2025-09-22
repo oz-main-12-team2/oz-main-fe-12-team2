@@ -4,10 +4,14 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button"; 
 import "../styles/cdh/book-detail.scss";
+import Modal from "../components/common/Modal";
 
 function BookDetail() {
     const { id } = useParams();
+
+    // Modal 상태 관리
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
     // 임시 더미 데이터.
     const BookDetailDummy = {
@@ -25,14 +29,21 @@ function BookDetail() {
 
     // 구매 확인
     const handleConfirmPurchase = () => {
-        alert("구매 완료");
+        alert("구매 완료(계산페이지or모달창 필요)"); //추후 계산페이지로 이동or 모달창으로 계산시스템 구현 필요 
         setIsModalOpen(false);
     }
 
+    // 장바구니 확인 처리
+    const handleAddToCart = () => {
+        alert("장바구니에 추가되었습니다")
+        setIsCartModalOpen(false);
+    }
+
     return (
+    <>
+        <Header />
         <div className="book-detail-page">
             <div className="base-container">
-            <Header />
             
             <main className="book-detail-container">
                 {/* 도서 이미지 */}
@@ -62,34 +73,62 @@ function BookDetail() {
                 <p>{BookDetailDummy.description}</p>                
             </section>
 
-            {/* 구매 버튼 */}
+            {/* 구매 버튼 / 장바구니 버튼 */}
             <div className="book-actions">
             {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
-                <Button variant="secondary" size="md" type="button" onClick={() => handleConfirmPurchase(true)}>구매하기</Button> 
-                        <Button variant="secondary" size="md" type="button" onClick={() => alert("장바구니에 추가됨")}>장바구니에 넣기</Button>
-                    </div>
-                    </div>
-                </div>
+                <Button variant="secondary"
+                        size="md" type="button"
+                        onClick={() => setIsModalOpen(true)}>구매하기</Button> 
+                <Button variant="secondary"
+                        size="md" type="button"
+                        onClick={() => setIsCartModalOpen("true")}>장바구니에 넣기</Button>
+            </div>
+            </div>
+        </div>
                 {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
                 {/* 제목, 저자, 가격, 설명  등 혹은 정해진 내용으로 */}
-            </main>
-
-                </div>
-
-                <Footer />
+    </main>
+    </div>
                 {/* 구매 확인 */}
-                {isModalOpen && (
-                    <div className="modal-overlay">
-                        <div className="modal">
-                            <h2>구매하시겠습니까??</h2>
-                            <div className="modal-actions">
-                                <button variant="primary" size="md" onClick={handleConfirmPurchase}>확인</button>
-                                <button variant="secondary" size="md" onClick={()=> setIsModalOpen(false)}>취소</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+            <Modal
+          isOpen={isModalOpen}
+          title="구매 확인"
+          onClose={() => setIsModalOpen(false)}
+          footer={
+            <>
+              <Button variant="primary" size="md" onClick={handleConfirmPurchase}>
+                확인
+              </Button>
+              <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+                취소
+              </Button>
+            </>
+          }
+        >
+          <p>구매하시겠습니까?</p>
+        </Modal>
+
+        {/* 장바구니 확인 */}
+        <Modal
+            isOpen={isCartModalOpen}
+            title="장바구니 확인"
+            onClose={() => setIsCartModalOpen(false)}
+            footer={
+                <>
+                <Button variant="primary" size="md" onClick={handleAddToCart}>
+                    확인
+                </Button>
+                <Button variant="primary" size="md" onClick={() => handleAddToCart(false)}>
+                    취소
+                </Button>
+                </>
+            }
+            >
+                <p>장바구니에 추가하시겠습니까?</p>
+        </Modal>
         </div>
+    <Footer />
+</>
     );
 }
 
