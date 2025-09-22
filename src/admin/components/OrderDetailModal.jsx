@@ -2,7 +2,7 @@ import Modal from "../../components/common/Modal";
 import Button from "../../components/common/Button";
 
 function OrderDetailModal({ order, isOpen, onClose, onDelete }) {
-  if (!order) return null;
+  if (!order) return false;
 
   return (
     <Modal
