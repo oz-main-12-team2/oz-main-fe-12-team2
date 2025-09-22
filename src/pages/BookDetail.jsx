@@ -1,10 +1,17 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import Button from "../components/common/Button"; 
 import "../styles/cdh/book-detail.scss";
+import Modal from "../components/common/Modal";
 
 function BookDetail() {
     const { id } = useParams();
+
+    // Modal 상태 관리
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
     // 임시 더미 데이터.
     const BookDetailDummy = {
@@ -20,20 +27,32 @@ function BookDetail() {
         "책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글",
     }
 
+    // 구매 확인
+    const handleConfirmPurchase = () => {
+        alert("구매 완료(계산페이지or모달창 필요)"); //추후 계산페이지로 이동or 모달창으로 계산시스템 구현 필요 
+        setIsModalOpen(false);
+    }
+
+    // 장바구니 확인 처리
+    const handleAddToCart = () => {
+        alert("장바구니에 추가되었습니다")
+        setIsCartModalOpen(false);
+    }
+
     return (
+    <>
+        <Header />
         <div className="book-detail-page">
             <div className="base-container">
-            <Header />
             
             <main className="book-detail-container">
                 {/* 도서 이미지 */}
                 <div className="book-detail-image">
-                    <p>도서 ID: {id}</p>
                     <img src={BookDetailDummy.image} alt={BookDetailDummy.title} />
                 </div>
-
+            <div className="book-detail">
                 {/* 도서 기본 정보 */}
-                <div className="book-detail-info">
+                <div className="book-detail-up">
                     <h1>{BookDetailDummy.title}</h1>
                     <p>
                         저자: {BookDetailDummy.author} | 출판사: {BookDetailDummy.publisher} | 출판일: {" "}
@@ -45,26 +64,71 @@ function BookDetail() {
                         <span className="original-price">가격: {BookDetailDummy.price.toLocaleString()}원</span>
                         <span className="sale-price"></span>
                     </div>
+            </div>
 
-                    {/* 구매 버튼 */}
-                    <div className="book-actions">
-                        <button className="buy-btn">구매 하기</button>
-                        <button className="cart-btn">장바구니에 넣기</button>
-                    </div>
+            <div className="book-detail-bottom">
             {/* 상세 설명 */}
             <section className="book-detail-description">
-                <br /> <h2>책 소개</h2> 
-                <br />
+                <h2 className="book-introduction">책 소개</h2> 
                 <p>{BookDetailDummy.description}</p>                
             </section>
-                </div>
-                {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
-                {/* 제목, 저자, 가격, 설명 등 혹은 정해진 내용으로 */}
-            </main>
 
-                </div> <br /> <br /> <br /> <br />
-                <Footer />
+            {/* 구매 버튼 / 장바구니 버튼 */}
+            <div className="book-actions">
+            {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
+                <Button variant="secondary"
+                        size="md" type="button"
+                        onClick={() => setIsModalOpen(true)}>구매하기</Button> 
+                <Button variant="secondary"
+                        size="md" type="button"
+                        onClick={() => setIsCartModalOpen("true")}>장바구니에 넣기</Button>
+            </div>
+            </div>
         </div>
+                {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
+                {/* 제목, 저자, 가격, 설명  등 혹은 정해진 내용으로 */}
+    </main>
+    </div>
+                {/* 구매 확인 */}
+            <Modal
+          isOpen={isModalOpen}
+          title="구매 확인"
+          onClose={() => setIsModalOpen(false)}
+          footer={
+            <>
+              <Button variant="primary" size="md" onClick={handleConfirmPurchase}>
+                확인
+              </Button>
+              <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+                취소
+              </Button>
+            </>
+          }
+        >
+          <p>구매하시겠습니까?</p>
+        </Modal>
+
+        {/* 장바구니 확인 */}
+        <Modal
+            isOpen={isCartModalOpen}
+            title="장바구니 확인"
+            onClose={() => setIsCartModalOpen(false)}
+            footer={
+                <>
+                <Button variant="primary" size="md" onClick={handleAddToCart}>
+                    확인
+                </Button>
+                <Button variant="primary" size="md" onClick={() => handleAddToCart(false)}>
+                    취소
+                </Button>
+                </>
+            }
+            >
+                <p>장바구니에 추가하시겠습니까?</p>
+        </Modal>
+        </div>
+    <Footer />
+</>
     );
 }
 
