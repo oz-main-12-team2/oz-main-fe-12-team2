@@ -8,7 +8,7 @@ function MyPageInfo() {
         <>
             <section className="mypage-section">
                 <div className="mypage-section-header">
-                    <h2 className="sr-only">마이페이지 설정</h2>
+                    <h2 className="sr-only">계정설정</h2>
                     <MyPageInfoTabs />
                 </div>
 

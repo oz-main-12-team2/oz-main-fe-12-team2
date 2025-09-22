@@ -31,7 +31,7 @@ function MyPage() {
                                 </div>
                             </div>
                             <Link to="/mypage">
-                                <span>나의정보</span>
+                                <span>계정설정</span>
                             </Link>
                             <Link to="/mypage/cart">
                                 <span>장바구니</span>
