@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button"; 
@@ -6,6 +7,7 @@ import "../styles/cdh/book-detail.scss";
 
 function BookDetail() {
     const { id } = useParams();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // 임시 더미 데이터.
     const BookDetailDummy = {
@@ -19,6 +21,12 @@ function BookDetail() {
         image: "/no-image.jpg",
         description:
         "책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글",
+    }
+
+    // 구매 확인
+    const handleConfirmPurchase = () => {
+        alert("구매 완료");
+        setIsModalOpen(false);
     }
 
     return (
@@ -51,23 +59,36 @@ function BookDetail() {
             {/* 상세 설명 */}
             <section className="book-detail-description">
                 <h2 className="book-introduction">책 소개</h2> 
-                
                 <p>{BookDetailDummy.description}</p>                
             </section>
-                    {/* 구매 버튼 */}
-                    <div className="book-actions">
-                        {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
-                        <Button variant="secondary" size="lg" type="button" onClick={() => alert("구매하시겠습니까?")}>구매하기</Button> 
-                        <Button variant="secondary" size="lg" type="button" onClick={() => alert("장바구니에 추가됨")}>장바구니에 넣기</Button>
+
+            {/* 구매 버튼 */}
+            <div className="book-actions">
+            {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
+                <Button variant="secondary" size="md" type="button" onClick={() => handleConfirmPurchase(true)}>구매하기</Button> 
+                        <Button variant="secondary" size="md" type="button" onClick={() => alert("장바구니에 추가됨")}>장바구니에 넣기</Button>
                     </div>
                     </div>
-                </div> <br />
+                </div>
                 {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
                 {/* 제목, 저자, 가격, 설명  등 혹은 정해진 내용으로 */}
             </main>
 
                 </div>
+
                 <Footer />
+                {/* 구매 확인 */}
+                {isModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>구매하시겠습니까?</h2>
+                            <div className="modal-actions">
+                                <button variant="primary" size="md" onClick={handleConfirmPurchase}>확인</button>
+                                <button variant="secondary" size="md" onClick={()=> setIsModalOpen(false)}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
         </div>
     );
 }
