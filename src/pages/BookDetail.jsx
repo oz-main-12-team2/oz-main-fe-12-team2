@@ -3,7 +3,7 @@ import { useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button"; 
-import "../styles/cdh/book-detail.scss";
+import "../styles/cdh/book-Detail.scss";
 import Modal from "../components/common/Modal";
 
 function BookDetail() {
