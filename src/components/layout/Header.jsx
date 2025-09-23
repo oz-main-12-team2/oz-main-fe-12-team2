@@ -9,33 +9,34 @@ import {
   FaHome,
 } from "react-icons/fa";
 // import NavBar from "./NavBar"; //검색 임시 숨김
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import HeaderUserDropdown from "./HeaderUserDropdown";
 import Button from "../common/Button";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../api/axios";
+import useUserStore from "../../stores/userStore";
+import { alertError } from "../../utils/alert";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   //   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(3); // 3개로 일단 가정
 
-  useEffect(() => {
-    const token = "fffffffff"; // 임시
-    if (token) setIsLoggedIn(true);
-  }, []);
+  const { user, clearUser } = useUserStore(); // user 가져오기
+  const isLogin = !!user; // user가 있으면 로그인 상태
 
-  const user = {
-    name: "테스트",
-    email: "test@example.com",
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    setIsMobileMenuOpen(false);
-    setCartCount(0);
+  const handleLogout = async () => {
+    try {
+      await api.post("/user/logout"); // 서버 로그아웃 호출
+    } catch (e) {
+      console.error("로그아웃 실패:", e);
+    } finally {
+      clearUser(); // zustand에서 user 정보 삭제
+      alertError('로그아웃 성공', '로그아웃 되었습니다.');
+      setIsMobileMenuOpen(false);
+      setCartCount(0);
+    }
   };
 
   return (
@@ -73,7 +74,7 @@ function Header() {
             </Link>
 
             <div className="header-actions">
-              {isLoggedIn ? (
+              {isLogin ? (
                 <HeaderUserDropdown user={user} onLogout={handleLogout} />
               ) : (
                 <>
@@ -125,7 +126,7 @@ function Header() {
 
             <div className="mobile-menu-body">
               {/* 로그인 상태에 따른 상단 영역 */}
-              {isLoggedIn ? (
+              {isLogin ? (
                 <div className="mobile-user-info">
                   <FaUserCircle size={40} />
                   <div>
@@ -164,12 +165,8 @@ function Header() {
               </div>
 
               {/* 로그인 상태에 따라 버튼 변경 */}
-              {isLoggedIn ? (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={handleLogout}
-                >
+              {isLogin ? (
+                <Button variant="primary" size="md" onClick={handleLogout}>
                   로그아웃
                 </Button>
               ) : (
