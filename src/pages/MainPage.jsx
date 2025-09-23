@@ -188,7 +188,6 @@ function MainPage() {
 
       <div className="base-container">
         {/* Best10 */}
-        <h2>dev test</h2>
         <section className="book-daily-best">
           <h2>Best 10 (일간 베스트)</h2>
           <BookListRowLoop books={bestBooks} onCardClick={handleCardClick} />
