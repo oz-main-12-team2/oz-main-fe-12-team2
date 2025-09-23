@@ -11,11 +11,11 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete }) {
       onClose={onClose}
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
-            닫기
-          </Button>
           <Button variant="danger" onClick={() => onDelete(order.order_number)}>
             삭제
+          </Button>
+          <Button variant="secondary" onClick={onClose}>
+            닫기
           </Button>
         </>
       }

@@ -22,23 +22,23 @@ function ProductModal({
       footer={
         isEditMode ? (
           <>
-            <Button variant="secondary" onClick={() => onEditModeChange(false)}>
-              취소
-            </Button>
             <Button variant="primary" onClick={onSave}>
               저장
+            </Button>
+            <Button variant="secondary" onClick={() => onEditModeChange(false)}>
+              취소
             </Button>
           </>
         ) : (
           <>
-            <Button variant="secondary" onClick={onClose}>
-              닫기
+            <Button variant="primary" onClick={() => onEditModeChange(true)}>
+              수정
             </Button>
             <Button variant="danger" onClick={() => onDelete(selectedBook.id)}>
               삭제
             </Button>
-            <Button variant="primary" onClick={() => onEditModeChange(true)}>
-              수정
+            <Button variant="secondary" onClick={onClose}>
+              닫기
             </Button>
           </>
         )
