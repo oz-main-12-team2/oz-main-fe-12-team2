@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = import.meta.env.VITE_url;
+const url = import.meta.env.VITE_API_URL;
 
 // 인스턴스
 export const api = axios.create({
