@@ -46,7 +46,7 @@ import "../../styles/formgroup.scss";
  * ```
  */
 
-function FormGroup({ label, error, onChange, onBlur, ...rest }) {
+function FormGroup({ label, error, onChange, onBlur, type = "text", ...rest }) {
   const id = `input-${Math.random().toString(36).slice(2, 11)}`;
 
   return (
@@ -56,13 +56,26 @@ function FormGroup({ label, error, onChange, onBlur, ...rest }) {
           {label}
         </label>
       )}
-      <input
-        id={id}
-        className={`input-field ${error ? "input-error" : ""}`}
-        onChange={onChange}
-        onBlur={onBlur}
-        {...rest}
-      />
+
+      {type === "textarea" ? (
+        <textarea
+          id={id}
+          className={`input-field textarea-field ${error ? "input-error" : ""}`}
+          onChange={onChange}
+          onBlur={onBlur}
+          {...rest}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          className={`input-field ${error ? "input-error" : ""}`}
+          onChange={onChange}
+          onBlur={onBlur}
+          {...rest}
+        />
+      )}
+
       {error && <span className="input-error-message">{error}</span>}
     </div>
   );

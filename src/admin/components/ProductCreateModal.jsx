@@ -17,11 +17,11 @@ function ProductCreateModal({
       onClose={onClose}
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
-            취소
-          </Button>
           <Button variant="primary" onClick={onSave}>
             등록
+          </Button>
+          <Button variant="secondary" onClick={onClose}>
+            취소
           </Button>
         </>
       }

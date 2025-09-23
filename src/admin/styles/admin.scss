@@ -102,42 +102,136 @@
 
 // dashboard
 .dashboard-page {
+  padding: 1rem;
+
   .dashboard-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 
-  .stats-grid {
+  .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
   }
 
-  .stat-card {
-    border-radius: 12px;
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  .dashboard-card {
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border-left: 5px solid #3b82f6;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-    .stat-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
+    .dashboard-card-title {
       font-size: 0.9rem;
-      color: $gray-500;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 0.5rem;
     }
 
-    .stat-info {
-      font-size: 1.5rem;
+    .dashboard-card-value {
+      font-size: 1.4rem;
       font-weight: 700;
-      margin: 0;
+    }
+  }
+
+  .dashboard-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .dashboard-sales {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .dashboard-sales-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      min-height: 90px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid #3b82f6;
+
+      .dashboard-sales-icon {
+        font-size: 1.5rem;
+        color: #3b82f6;
+      }
+
+      .dashboard-sales-title {
+        font-size: 0.9rem;
+        color: #475569;
+      }
+
+      .dashboard-sales-qty {
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .dashboard-sales-revenue {
+        font-size: 0.85rem;
+        color: #94a3b8;
+      }
+    }
+  }
+
+  .dashboard-chart {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    .dashboard-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .dashboard-chart-toggle {
+      display: flex;
+      gap: 0.5rem;
+
+      button {
+        padding: 0.3rem 0.7rem;
+        border: 1px solid #cbd5e1;
+        background: #f1f5f9;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+
+        &.active {
+          background-color: #3b82f6;
+          color: #fff;
+          border-color: #3b82f6;
+        }
+
+        &:hover {
+          background-color: #3b82f6;
+          color: #fff;
+          border-color: #3b82f6;
+        }
+      }
     }
   }
 }
+
+// dashboard 끝
 
 .products-page {
   padding: 1rem;
@@ -165,7 +259,6 @@
       background: #fff;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
-      overflow: hidden;
 
       th,
       td {
@@ -173,6 +266,10 @@
         text-align: left;
         border-bottom: 1px solid #e5e7eb;
         font-size: 14px;
+        overflow: hidden; // 넘치는 내용 숨김
+        white-space: nowrap; // 줄바꿈 금지
+        text-overflow: ellipsis; // ... 처리
+        max-width: 150px;
       }
 
       th {
@@ -253,16 +350,87 @@
       font-size: 0.9rem;
       color: #374151;
     }
+
+    .product-detail-description {
+      font-size: 0.95rem;
+      color: #1f2937;
+      line-height: 1.5;
+      margin-top: 0.5rem;
+      white-space: pre-wrap; // 줄바꿈 유지
+    }
   }
 }
 
+// 모달 폼 수정/등록 시작
 .edit-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
   margin: 0 auto;
+
+  .form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .image-upload-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    .image-upload-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem; // input과 미리보기 사이 간격
+
+      .file-input {
+        flex-shrink: 0;
+      }
+
+      .image-preview {
+        position: relative; // X 버튼 위치 기준
+
+        img {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+        }
+
+        .remove-button {
+          position: absolute;
+          top: -6px;
+          right: -6px;
+          background-color: #ff0000;
+          color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          font-size: 14px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background: $red-500;
+          }
+        }
+      }
+    }
+
+    .form-error {
+      font-size: 0.75rem;
+      color: $red-500;
+    }
+  }
 }
+// 모달 폼 수정/등록 끝
 
 .users-page {
   padding: 1rem;
