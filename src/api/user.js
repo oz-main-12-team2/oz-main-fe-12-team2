@@ -3,7 +3,7 @@ import api from "./axios";
 // 일반 로그인
 export const login = async (email, password) => {
   try {
-    const res = await api.post("/user/login/", { email, password });
+    const res = await api.post("/user/login", { email, password });
 
     // success 여부 체크
     if (res.data.success === false) {
@@ -35,7 +35,7 @@ export const login = async (email, password) => {
 // 로그아웃
 export const logout = async () => {
   try {
-    await api.post("/user/logout/");
+    await api.post("/user/logout");
   } catch (e) {
     console.error("로그아웃 실패:", e);
     throw e;
