@@ -58,7 +58,7 @@ api.interceptors.response.use(
         processQueue(); // 대기 중인 요청들 재시작
         return api(originalRequest); // 원래 요청 다시 시도
       } catch (e) {
-        // refresh 실패 → 로그인 페이지로 이동
+        // refresh 실패
         processQueue(e);
         window.location.href = "/login";
         return Promise.reject(e);
