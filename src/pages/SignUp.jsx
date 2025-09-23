@@ -4,6 +4,7 @@ import Button from '../components/common/Button';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import AddressAutoComplete from '../components/AddressAutoComplete';
 
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +28,13 @@ function SignUpPage() {
   // 공통: 입력 시 해당 에러 초기화
   const handleEmailChange = (e) => { setEmail(e.target.value); if (emailError) setEmailError(""); };
   const handleNameChange = (e) => { setName(e.target.value); if (nameError) setNameError(""); };
-  const handleAddressChange = (e) => { setAddress(e.target.value); if (addressError) setAddressError(""); };
+  // const handleAddressChange = (e) => { setAddress(e.target.value); if (addressError) setAddressError(""); };
+
+  // 공통 입력 핸들러는 유지 가능 (address는 최종 선택시만 세팅)
+  const handleAddressChangeFinalize = (v) => {
+    setAddress(v);
+    if (addressError) setAddressError("");
+  };
 
   // 비번 입력 시: 빈값 에러 초기화 + 둘 다 값 있으면 불일치 검사, 아니면 match 에러 비움
   const handleInputPasswordChange = (e) => {
@@ -202,19 +209,18 @@ function SignUpPage() {
           )}
           
           <div className='address-input'>
-            <FormGroup 
-              type="text" 
-              placeholder="주소" 
+            <AddressAutoComplete
               value={address}
-              onChange={handleAddressChange}
+              onChangeValue={handleAddressChangeFinalize}
+              placeholder="주소"
+              errorText={addressError}
+              // 스타일 커스터마이즈
+              className=""
+              inputClassName="form-input"        // 필요 시 SCSS 클래스
+              dropdownClassName="addr-dropdown"
+              optionClassName="addr-option"
             />
           </div>
-
-          {addressError && (
-            <p className='field-error-message' role='alert'>
-              {addressError}
-            </p>
-          )}
 
           <div className='signup-options'>
             <div className='email-signup-button'>
