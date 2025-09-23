@@ -49,7 +49,7 @@ function App() {
     },
 
     // 관리자라우트
-    adminRoutes,
+    ...adminRoutes,
     // { path: "*", element: <NotFoundPage /> }, // 404낫파운드 추가 예정
   ]);
 
