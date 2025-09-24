@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Link } from 'react-router-dom';
 import AddressAutoComplete from '../components/AddressAutoComplete';
 import { register } from '../api/user';
+import { alertError, alertSuccess } from '../utils/alert';
 
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -62,6 +63,7 @@ function SignUpPage() {
   };
 
   const handleSignUp = async (e) => {
+    e?.preventDefault();
     // 초기화
     setEmailError("");
     setPasswordError("");
@@ -96,7 +98,12 @@ function SignUpPage() {
     // ✅ 모든 검증 통과 시: 회원가입 API 호출
     // await axios.post('/api/signup', { email, password: inputPassword, name, address });
     try {
-      const res = await register(email, name, password, password_confirm, address);
+      const res = await register(email, name, inputPassword, confirmInputPassword, address);
+      console.log(res);
+
+      await alertSuccess("회원가입 성공", res.message);
+    } catch (e) {
+      await alertError("회원가입 실패", e.message)
     }
   };
   

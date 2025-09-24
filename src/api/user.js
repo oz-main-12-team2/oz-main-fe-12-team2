@@ -69,11 +69,22 @@ export const register = async (email, name, password, password_confirm, address)
 
     return res.data;
   } catch (e) {
-    if (e.response) {
-      throw {
-        message: e.response.data?.error || "서버 오류가 발생했습니다.",
-        code: e.response.status,
-      };
+    if (e.response && e.response.data) {
+      const data = e.response.data;
+
+      // ✅ 에러 객체 파싱
+      let messages = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) {
+          messages.push(`${key}: ${data[key].join(", ")}`);
+        } else {
+          messages.push(`${key}: ${data[key]}`);
+        }
+      }
+
+      throw new Error(messages.join("\n")); // 줄바꿈으로 합치기
     }
+
+    throw new Error("알 수 없는 오류가 발생했습니다.");
   }
 }
