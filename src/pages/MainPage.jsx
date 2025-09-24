@@ -178,7 +178,7 @@ function MainPage() {
       <MainBanner
         image="main-banner.jpg"
         title="책으로 여는 하루"
-        subtitle="좋은 책과 함께 오늘을 시작하세요"
+        subtitle="좋은 책과 함께 오늘을 시작하세요."
         buttonText="전체 도서 보기"
         buttonClick={() => {
           if (bookListRef.current) {
