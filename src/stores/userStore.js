@@ -1,16 +1,16 @@
 import { create } from "zustand";
-import api from "../api/axios";
+import { getUserMe } from "../api/user";
 
 const useUserStore = create((set) => ({
   user: null, // 로그인한 사용자 정보
   loading: false, // 로딩 상태
   error: null, // 에러 메시지
-
+  
   getUser: async () => {
     set({ loading: true, error: null });
     try {
-      const res = await api.get("/user/me");
-      set({ user: res.data, loading: false });
+      const userData = await getUserMe();
+      set({ user: userData, loading: false });
     } catch (e) {
       set({ user: null, loading: false, error: e.message });
     }
