@@ -35,9 +35,29 @@ export const login = async (email, password) => {
 // 로그아웃
 export const logout = async () => {
   try {
-    await api.post("/user/logout/");
+    await api.post("/user/logout/", { withCredentials: true });
   } catch (e) {
     console.error("로그아웃 실패 : ", e);
     throw e;
+  }
+};
+
+// 현재 로그인한 유저 정보
+export const getUserMe = async () => {
+  try {
+    const res = await api.get("/user/me/");
+
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message: e.response.data?.error || "사용자 정보를 불러오지 못했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
   }
 };

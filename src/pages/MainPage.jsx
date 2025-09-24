@@ -7,7 +7,6 @@ import { BookListCol } from "../components/common/BookListCol.jsx";
 import "../styles/cdh/book-daily-best.scss";
 import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
-import api from "../api/axios.js";
 
 function MainPage() {
   const [ IsLoggedIn,setIsLoggedIn] = useState(false); // IsLoggedIn
@@ -101,11 +100,6 @@ function MainPage() {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
 
-    console.log('ff');
-    // const test =  api.get('/products/');
-    const test = api.get('/user/me/');
-    console.log(test);
-    // console.log(test);
   }, []);
 
   const fetchBooks = async (pageNum) => {

@@ -15,8 +15,19 @@ import BookDetail from "./pages/BookDetail";
 import adminRoutes from "./admin/adminRoutes";
 import NotFoundPage from "./pages/NotFoundPage";
 import ConfirmEmail from "./pages/ConfirmEmail";
+import useUserStore from "./stores/userStore";
+import { useCallback, useEffect } from "react";
 
 function App() {
+  const getUserFromStore = useUserStore((state) => state.getUser);
+
+  const getUser = useCallback(() => {
+    getUserFromStore();
+  }, [getUserFromStore]);
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
 
   // 라우트 배열
   const element = useRoutes([
@@ -46,7 +57,7 @@ function App() {
 
     // 관리자라우트
     ...adminRoutes,
-    
+
     { path: "*", element: <NotFoundPage /> }, // 404낫파운드
   ]);
 

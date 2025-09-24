@@ -2,24 +2,24 @@ import "../../styles/header.scss";
 
 import { LuShoppingCart } from "react-icons/lu";
 import {
-  //   FaSearch, //검색 임시 숨김
+  FaSearch, //검색 임시 숨김
   FaBars,
   FaTimes,
   FaUserCircle,
   FaHome,
 } from "react-icons/fa";
-// import NavBar from "./NavBar"; //검색 임시 숨김
+import NavBar from "./NavBar"; //검색 임시 숨김
 import { useState } from "react";
 import HeaderUserDropdown from "./HeaderUserDropdown";
 import Button from "../common/Button";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../api/axios";
 import useUserStore from "../../stores/userStore";
-import { alertError } from "../../utils/alert";
+import { alertSuccess } from "../../utils/alert";
+import { logout } from "../../api/user";
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  //   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(3); // 3개로 일단 가정
 
@@ -28,12 +28,13 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      await api.post("/user/logout"); // 서버 로그아웃 호출
+      clearUser(); // zustand에서 user 정보 삭제
+      await logout(); // 서버 로그아웃 호출
+      await alertSuccess("로그아웃 성공", "로그아웃 되었습니다.");
+      navigate("/", { replace: true });
     } catch (e) {
       console.error("로그아웃 실패:", e);
     } finally {
-      clearUser(); // zustand에서 user 정보 삭제
-      alertError('로그아웃 성공', '로그아웃 되었습니다.');
       setIsMobileMenuOpen(false);
       setCartCount(0);
     }
@@ -47,7 +48,7 @@ function Header() {
         </Link>
 
         {/* 모바일 검색 */}
-        {/* <div
+        <div
           className={`header-search-wrap ${isMobileSearchOpen ? "active" : ""}`}
           onKeyDown={(e) => {
             if (e.key === "Escape") setIsMobileSearchOpen(false);
@@ -63,7 +64,7 @@ function Header() {
             className="header-search-input"
             placeholder="도서 검색"
           />
-        </div> */}
+        </div>
         {/* 우측 영역 */}
         <div className="header-right">
           {/* PC 아이콘 + 로그인 */}
