@@ -26,6 +26,7 @@ export const getAdminUsers = async () => {
   }
 };
 
+// 특정 사용자 정보 수정, 활성화/비활성화 (admin/users/:userid)
 export async function toggleUserActive(userId, newState) {
   try {
     const res = await api.put(`/admin/users/${userId}/`, {
