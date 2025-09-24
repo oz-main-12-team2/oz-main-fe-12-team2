@@ -103,8 +103,8 @@ function MainPage() {
 
     console.log('ff');
     // const test =  api.get('/products/');
-    // const test = api.get('/user/me/');
-    // console.log(test);
+    const test = api.get('/user/me/');
+    console.log(test);
     // console.log(test);
   }, []);
 
