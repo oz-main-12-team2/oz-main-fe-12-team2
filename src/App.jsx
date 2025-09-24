@@ -14,6 +14,7 @@ import AccountDelete from "./components/mypage/AccountDelete";
 import BookDetail from "./pages/BookDetail";
 import adminRoutes from "./admin/adminRoutes";
 import NotFoundPage from "./pages/NotFoundPage";
+import ConfirmEmail from "./pages/ConfirmEmail";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
     { path: "/book/:id", element: <BookDetail /> }, // 동적 라우트
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
+    { path: "/activate", element: <ConfirmEmail /> },
     { path: "/find-password", element: <FindPasswordPage /> },
     { path: "/reset-password", element: <ResetPasswordPage /> },
     {
