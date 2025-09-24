@@ -61,3 +61,19 @@ export const getUserMe = async () => {
     };
   }
 };
+
+// 회원가입
+export const register = async (email, name, password, password_confirm, address) => {
+  try {
+    const res = await api.post("/user/register/", { email, name, password, password_confirm, address })
+
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message: e.response.data?.error || "서버 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+  }
+}
