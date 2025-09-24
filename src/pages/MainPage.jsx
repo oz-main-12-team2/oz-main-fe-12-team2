@@ -121,16 +121,16 @@ function MainPage() {
 
   useEffect(() => {
     setBestBooks([
-      { id: 1, title: "베스트1", image: "no-image.jpg" },
-      { id: 2, title: "베스트2", image: "no-image.jpg" },
-      { id: 3, title: "베스트3", image: "no-image.jpg" },
-      { id: 4, title: "베스트4", image: "no-image.jpg" },
-      { id: 5, title: "베스트5", image: "no-image.jpg" },
-      { id: 6, title: "베스트6", image: "no-image.jpg" },
-      { id: 7, title: "베스트7", image: "no-image.jpg" },
-      { id: 8, title: "베스트8", image: "no-image.jpg" },
-      { id: 9, title: "베스트9", image: "no-image.jpg" },
-      { id: 10, title: "베스트10", image: "no-image.jpg" },
+      { id: 1, title: "베스트1", image: "no-image.jpg", price: 15000 },
+      { id: 2, title: "베스트2", image: "no-image.jpg", price: 11000 },
+      { id: 3, title: "베스트3", image: "no-image.jpg", price: 23000 },
+      { id: 4, title: "베스트4", image: "no-image.jpg", price: 17000 },
+      { id: 5, title: "베스트5", image: "no-image.jpg", price: 26000 },
+      { id: 6, title: "베스트6", image: "no-image.jpg", price: 12000 },
+      { id: 7, title: "베스트7", image: "no-image.jpg", price: 16000 },
+      { id: 8, title: "베스트8", image: "no-image.jpg", price: 15500 },
+      { id: 9, title: "베스트9", image: "no-image.jpg", price: 17500 },
+      { id: 10, title: "베스트10", image: "no-image.jpg", price: 18000 },
     ]);
 
     fetchBooks(1);
