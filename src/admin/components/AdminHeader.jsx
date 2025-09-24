@@ -18,8 +18,10 @@ function AdminHeader() {
       "정말 로그아웃 하시겠습니까?"
     );
     if (!logout.isConfirmed) return;
+    clearUser(); // zustand에서 user 정보 삭제
+    await logout(); // 서버 로그아웃 호출
     await alertSuccess("로그아웃 성공", "로그아웃이 완료되었습니다");
-    clearUser(); //전역 상태 초기화
+    navigate("/", { replace: true });
   };
 
   return (
