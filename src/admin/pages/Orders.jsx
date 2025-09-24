@@ -5,6 +5,7 @@ import StatusCell from "../components/StatusCell";
 import OrdersTable from "../components/OrdersTable";
 import OrderDetailModal from "../components/OrderDetailModal";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
+import { formatDateShort } from "../../utils/dateFormat";
 
 function Orders() {
   const [orders, setOrders] = useState([]); // 주문 목록
@@ -101,13 +102,15 @@ function Orders() {
         accessorFn: (row) => {
           const firstItem = row.items[0];
           if (!firstItem) return "-";
-          const extra = row.items.length > 1 ? ` 외 ${row.items.length - 1}개` : "";
+          const extra =
+            row.items.length > 1 ? ` 외 ${row.items.length - 1}개` : "";
           return `${firstItem.name}${extra}`;
         },
       },
       {
         header: "총 수량",
-        accessorFn: (row) => row.items.reduce((acc, item) => acc + item.quantity, 0),
+        accessorFn: (row) =>
+          row.items.reduce((acc, item) => acc + item.quantity, 0),
       },
       {
         header: "총 금액",
@@ -125,7 +128,9 @@ function Orders() {
               // 상태 업데이트
               setOrders((prev) =>
                 prev.map((order) =>
-                  order.order_number === orderNumber ? { ...order, status: newStatus } : order
+                  order.order_number === orderNumber
+                    ? { ...order, status: newStatus }
+                    : order
                 )
               );
             }}
@@ -135,13 +140,7 @@ function Orders() {
       {
         header: "결제일자",
         accessorKey: "created_at",
-        cell: (info) => {
-          const date = new Date(info.getValue());
-          const year = String(date.getFullYear()).slice(2);
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
-        },
+        cell: (info) => formatDateShort(info.getValue()),
       },
     ],
     []
@@ -158,13 +157,19 @@ function Orders() {
     <div className="orders-page">
       {/* 페이지 타이틀 */}
       <h2 className="orders-page-title">주문관리</h2>
-      <span className="orders-total">Total : {totalOrders.toLocaleString()}건</span>
+      <span className="orders-total">
+        Total : {totalOrders.toLocaleString()}건
+      </span>
 
       {/* 주문 테이블 */}
       <OrdersTable table={table} onRowClick={openDetail} />
 
       {/* 페이지네이션 */}
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       {/* 상세 모달 */}
       <OrderDetailModal
