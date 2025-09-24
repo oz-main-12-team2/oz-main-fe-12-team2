@@ -1,34 +1,29 @@
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-// import api from "../api/axios";
 import useUserStore from "../stores/userStore";
+import { getUserMe } from "../api/user";
+import Loading from "../components/common/Loading";
 
 function AdminProtectedRoute({ children }) {
   const user = useUserStore((state) => state.user);
-
-  // user가 없거나 is_admin이 false면 로그인 페이지로 이동
-  if (!user || !user.is_admin) {
-    return <Navigate to="/admin/login" replace />;
-  }
-
-  return children;
-
-  /*
-  const [loading, setLoading] = useState(true);
+  const setUser = useUserStore((state) => state.setUser);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function checkAdmin() {
       try {
-        const res = await api.get("/user/me");
-
-        if (res.data.is_admin) {
-          setIsAdmin(true);
+        if (user) {
+          // 이미 zustand에 user가 있으면 그대로 사용
+          setIsAdmin(user.is_admin);
         } else {
-          setIsAdmin(false);
+          // zustand 비어있으면 서버에 다시 확인
+          const reloadUser = await getUserMe();
+          setUser(reloadUser);
+          setIsAdmin(reloadUser.is_admin);
         }
       } catch (e) {
-        console.error("인증 실패 : ", e);
+        console.error("관리자 인증 실패 : ", e);
         setIsAdmin(false);
       } finally {
         setLoading(false);
@@ -36,17 +31,15 @@ function AdminProtectedRoute({ children }) {
     }
 
     checkAdmin();
-  }, []);
-  
+  }, [user, setUser]);
+
+  if (loading) return <Loading loadingText={"접근 권한을 확인하고 있어요"} size={100}/>;
 
   if (!isAdmin) {
-    // 관리자 아니면 로그인 페이지로 리다이렉트
     return <Navigate to="/admin/login" replace />;
   }
 
-  // 관리자면 children 렌더링
   return children;
-  */
 }
 
 export default AdminProtectedRoute;
