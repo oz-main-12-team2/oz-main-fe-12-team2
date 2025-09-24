@@ -5,11 +5,23 @@ import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button";
 import Modal from "../components/common/Modal";
 import "../styles/cdh/book-Detail.scss"; // 기존 스타일 유지
+import { alertComfirm } from "../utils/alert"; //alertError alertSuccess
 
 function BookDetail() {
   const { id } = useParams();
   const [isCartModalOpen, setCartModalOpen] = useState(false);
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
+
+  const handleCartAdd = async () =>{
+  const alert = await alertComfirm("장바구니에 담겠습니까?","예를 누르면 장바구니에 상품이 담깁니다")
+    if(!alert.isConfirmed) return
+    console.log("API호출경로")
+    }
+  const handlebuyAdd = async () =>{
+  const alert = await alertComfirm("상품을 구매하시겠습니까?","예를 누르면 상품구매를 진행합니다")
+    if(!alert.isConfirmed) return
+    console.log("API호출경로")
+    }
 
   const BookDetailDummy = {
     id,
@@ -53,27 +65,27 @@ function BookDetail() {
                 </section>
 
                 <div className="book-actions">
-                  <Button onClick={() => setCartModalOpen(true)}>장바구니</Button>
-                  <Button onClick={() => setOrderModalOpen(true)}>구매하기</Button>
+                  <Button onClick={handleCartAdd}>장바구니</Button>
+                  <Button onClick={handlebuyAdd}>구매하기</Button>
                 </div>
               </div>
             </div>
           </main>
         </div>
 
-        {/* 주문 상태 변경 모달 (이미지에 맞춘 텍스트) */}
+{/* 구매하기 모달 */}
         <Modal
           isOpen={isOrderModalOpen}
-          title="주문상태 변경"
+          title="구매하기"
           onClose={() => setOrderModalOpen(false)}
         >
-          <p>변경하시겠습니까?</p>
+          <p>해당 도서를 바로 구매하시겠습니까?</p>
           <div className="custom-modal-actions">
             <button
               className="btn-confirm"
               onClick={() => {
-                // 실제 로직 삽입
-                alert("주문 상태가 변경되었습니다.");
+                console.log("구매 API 호출");
+                alert("구매가 완료되었습니다.");
                 setOrderModalOpen(false);
               }}
             >
@@ -88,7 +100,8 @@ function BookDetail() {
         {/* 장바구니 확인 모달 */}
         <Modal isOpen={isCartModalOpen} title="장바구니" onClose={() => setCartModalOpen(false)}>
           <p>선택하신 도서가 장바구니에 담겼습니다.</p>
-          <div className="custom-modal-actions">
+          <div className="custom-mod
+          al-actions">
             <button className="btn-confirm" onClick={() => setCartModalOpen(false)}>
               확인
             </button>
