@@ -13,16 +13,9 @@ import PasswordEdit from "./components/mypage/PasswordEdit";
 import AccountDelete from "./components/mypage/AccountDelete";
 import BookDetail from "./pages/BookDetail";
 import adminRoutes from "./admin/adminRoutes";
-import useUserStore from "./stores/userStore";
-import { useEffect } from "react";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
-  const { getUser } = useUserStore();
-
-  useEffect(() => {
-    getUser(); // 쿠키 기반 인증 자동 로그인 복구
-  }, [getUser]);
 
   // 라우트 배열
   const element = useRoutes([
