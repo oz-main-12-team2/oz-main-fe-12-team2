@@ -77,7 +77,7 @@ function BookDetail() {
                 setOrderModalOpen(false);
               }}
             >
-              예
+              예!
             </button>
             <button className="btn-cancel" onClick={() => setOrderModalOpen(false)}>
               아니요
