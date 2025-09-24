@@ -9,13 +9,14 @@ import googlelogin from "../assets/web_neutral_sq_SI@4x.png";
 import api from "../api/axios";
 import useUserStore from "../stores/userStore";
 import { alertError, alertSuccess } from "../utils/alert";
+import { login } from "../api/user";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setLoading, setError, getUser } = useUserStore();
+  const { setLoading, setError } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -24,12 +25,21 @@ function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.post("/user/login", { email, password });
-      await getUser(); // 방금 로그인한 정보
-      await alertSuccess("로그인 성공", `${res.data.name}님 환영합니다.`);
-      navigate("/");
-    } catch (err) {
-      setError(err.response?.data.error || "로그인 실패");
+      const res = await login(email, password);
+    //   console.log(res);
+      if (res.success === true) {
+        // const a = api.get('/user/me/');
+        // console.log(a);
+        await alertSuccess("로그인 성공", '환영합니다');
+        navigate("/");
+        // const test = api.get("/user/me/");
+        // console.log(test);
+      }
+      //   await getUser(); // 방금 로그인한 정보
+      //   await alertSuccess("로그인 성공", `${res.data.name}님 환영합니다.`);
+      //   navigate("/");
+    } catch (e) {
+      setError(e.response?.data.error || "로그인 실패");
       await alertError("로그인 실패", "로그인에 실패했습니다.");
     } finally {
       setLoading(false);
