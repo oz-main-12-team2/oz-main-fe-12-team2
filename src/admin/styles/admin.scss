@@ -762,3 +762,39 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 900;
 }
+
+// 관리자 로그인 페이지
+.admin-login-page {
+  display: flex;
+  justify-content: center;
+  background-color: #f5f6f8;
+  padding: 4rem;
+}
+
+.admin-login-card {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.admin-login-logo {
+  display: flex;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  width: 35%;
+  max-width: 150px;
+  height: auto;
+  cursor: pointer;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  button {
+    margin-top: 1rem;
+  }
+}

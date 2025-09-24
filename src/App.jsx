@@ -15,6 +15,7 @@ import BookDetail from "./pages/BookDetail";
 import adminRoutes from "./admin/adminRoutes";
 import useUserStore from "./stores/userStore";
 import { useEffect } from "react";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const { getUser } = useUserStore();
@@ -49,8 +50,9 @@ function App() {
     },
 
     // 관리자라우트
-    adminRoutes,
-    // { path: "*", element: <NotFoundPage /> }, // 404낫파운드 추가 예정
+    ...adminRoutes,
+    
+    { path: "*", element: <NotFoundPage /> }, // 404낫파운드
   ]);
 
   return element;
