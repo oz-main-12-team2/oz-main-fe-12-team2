@@ -26,7 +26,7 @@ function App() {
     { path: "/signup", element: <SignUpPage /> },
     { path: "/activate", element: <ConfirmEmail /> },
     { path: "/find-password", element: <FindPasswordPage /> },
-    { path: "/reset-password", element: <ResetPasswordPage /> },
+    { path: "/password-reset/confirm", element: <ResetPasswordPage /> },
     {
       path: "/mypage",
       element: <MyPage />,
