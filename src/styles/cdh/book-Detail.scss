@@ -1,5 +1,7 @@
+@import "../var.scss";
+
+/* Book Detail Page 스타일 */
 .book-detail-page {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
 
@@ -13,38 +15,38 @@
   justify-content: center;
   gap: 40px;
   margin: 20px 0;
-  padding-top: 15rem;
+  padding-top: 5rem;
 
-  // 왼쪽 이미지
+  /* 왼쪽 이미지 */
   .book-detail-image img {
-    width: 25rem;
+    width: 19rem;
     height: auto;
     border: 1px solid #ddd;
     border-radius: 8px;
   }
 
-  // 오른쪽 상세정보 전체 박스
+  /* 오른쪽 상세정보 전체 */
   .book-detail {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; // 위쪽 정보, 아래쪽 소개/버튼 공간 분리
+    justify-content: space-between;
   }
 
-  // 상단 정보 (제목, 저자, 가격)
+  /* 상단 정보 (제목, 저자, 가격) */
   .book-detail-up {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; // 이미지 상단 맞춤
+    align-items: flex-start;
   }
 
-  // 하단 정보 (책 소개, 버튼)
+  /* 하단 정보 (책 소개, 버튼) */
   .book-detail-bottom {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; // 이미지 하단 맞춤
+    justify-content: flex-end;
   }
 
-  // 책 소개
+  /* 책 소개 */
   .book-detail-description {
     padding-bottom: 2rem;
     margin-bottom: 2rem;
@@ -58,14 +60,13 @@
     p {
       font-size: 1rem;
       line-height: 1.8;
-      color: #000000;
+      color: #000;
     }
   }
 
-  // 가격
+  /* 가격 */
   .book-price {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
 
     .sale-price {
       font-weight: bold;
@@ -73,7 +74,7 @@
     }
   }
 
-  // 버튼 영역
+  /* 버튼 영역 */
   .book-actions {
     margin-top: auto;
     display: flex;
@@ -85,5 +86,125 @@
       flex-direction: column;
       align-items: stretch;
     }
+  }
+}
+
+/* 모달관련 스타일 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.45); /* 어두운 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+}
+
+/* 모달 박스 */
+.modal {
+  width: 640px; /* 이미지처럼 넓게 보이려면 640px */
+  max-width: calc(100% - 48px);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 42px 48px 36px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  color: #2a2a2a;
+  position: relative;
+}
+
+/* 상단: 아이콘 + 타이틀 */
+.modal-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+/* 외곽 원 + 느낌표 */
+.modal-icon-circle {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 6px solid #f7b986; /* 연한 오렌지 링 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  box-shadow: none;
+}
+
+.modal-icon-excl {
+  font-size: 48px;
+  line-height: 1;
+  color: #f7b986; /* 느낌표 색 */
+  font-weight: 700;
+}
+
+/* 제목 스타일(굵고 큼) */
+.modal-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #464646; /* 진한 회색 */
+}
+
+/* 본문(질문 등) */
+.modal-body {
+  margin-top: 6px;
+  p, span {
+    font-size: 16px;
+    color: #646464;
+    margin: 8px 0 20px;
+  }
+}
+
+/* 버튼 그룹 (이미지와 동일하게 가운데 정렬된 큰 버튼) */
+.custom-modal-actions {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* 버튼 공통 */
+.custom-modal-actions button {
+  min-width: 120px;
+  height: 48px;
+  border-radius: 10px;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 18px;
+  box-shadow: none;
+}
+
+/* 예 버튼 - 진한 초록 */
+.custom-modal-actions .btn-confirm {
+  background: #0d6b52; /* 이미지의 짙은 초록 느낌 */
+  color: #ffffff;
+}
+
+/* 아니요 버튼 - 회색 */
+.custom-modal-actions .btn-cancel {
+  background: #6f7780;
+  color: #ffffff;
+}
+
+/* 반응형: 작은 화면에서는 버튼을 세로로 */
+@media (max-width: 480px) {
+  .modal {
+    padding: 28px 20px;
+  }
+  .custom-modal-actions {
+    flex-direction: column;
+  }
+  .custom-modal-actions button {
+    width: 100%;
+    min-width: 0;
   }
 }
