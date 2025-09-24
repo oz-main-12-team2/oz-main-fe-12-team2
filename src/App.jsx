@@ -16,6 +16,7 @@ import adminRoutes from "./admin/adminRoutes";
 import useUserStore from "./stores/userStore";
 import { useEffect } from "react";
 import NotFoundPage from "./pages/NotFoundPage";
+import ConfirmEmail from "./pages/ConfirmEmail";
 
 function App() {
   const { getUser } = useUserStore();
@@ -30,6 +31,7 @@ function App() {
     { path: "/book/:id", element: <BookDetail /> }, // 동적 라우트
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
+    { path: "/activate", element: <ConfirmEmail /> },
     { path: "/find-password", element: <FindPasswordPage /> },
     { path: "/reset-password", element: <ResetPasswordPage /> },
     {
