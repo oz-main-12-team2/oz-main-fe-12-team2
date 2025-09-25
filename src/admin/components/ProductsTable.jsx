@@ -9,7 +9,10 @@ function ProductsTable({ table, onRowClick }) {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>
@@ -17,9 +20,9 @@ function ProductsTable({ table, onRowClick }) {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} onClick={() => onRowClick(row.original)}>
+            <tr key={row.original.id} onClick={() => onRowClick(row.original)}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={`${row.original.id}_${cell.column.id}`}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

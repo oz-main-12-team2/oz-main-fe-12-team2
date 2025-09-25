@@ -350,6 +350,7 @@
     .product-detail-stock {
       font-size: 0.9rem;
       color: $gray-500;
+      margin-bottom: 0.5rem;
     }
 
     .product-detail-description {
@@ -357,6 +358,8 @@
       color: #333;
       line-height: 1.5;
       white-space: pre-wrap; // 줄바꿈 유지
+      border-top: 1px solid $gray-500;
+      padding-top: 1rem;
     }
   }
 }

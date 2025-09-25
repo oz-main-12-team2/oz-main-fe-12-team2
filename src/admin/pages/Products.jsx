@@ -6,6 +6,8 @@ import { alertComfirm, alertSuccess } from "../../utils/alert";
 import ProductsTable from "../components/ProductsTable";
 import ProductModal from "../components/ProductModal";
 import ProductCreateModal from "../components/ProductCreateModal";
+import { getProducts } from "../../api/products";
+import { formatDateShort } from "../../utils/dateFormat";
 
 function Products() {
   const [books, setBooks] = useState([]);
@@ -17,21 +19,19 @@ function Products() {
   const [errors, setErrors] = useState({});
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  // 더미 데이터
   useEffect(() => {
-    const dummyBooks = Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      name: `도서 ${i + 1}`,
-      description: `도서 설명${i + 1}`,
-      author: "저자",
-      publisher: "출판사",
-      price: Math.floor(Math.random() * 100000),
-      stock: Math.floor(Math.random() * 10),
-      category: i % 2 === 0 ? "카테고리1" : "카테고리2",
-      image_url: "/sample-book.jpg",
-    }));
-    setBooks(dummyBooks);
-    setTotalPages(10);
+    const loadProducts = async () => {
+      try {
+        const res = await getProducts({ page: currentPage, size: 10 });
+        // console.log(res.results);
+        setBooks(res.results || []);
+        setTotalPages(Math.ceil((res.count || 1) / 10));
+      } catch (e) {
+        console.error("상품 불러오기 실패 : ", e);
+      }
+    };
+
+    loadProducts();
   }, [currentPage]);
 
   // 상세 모달 열기
@@ -178,9 +178,27 @@ function Products() {
   };
 
   // 테이블 컬럼 정의
-  // 테이블 컬럼 정의
   const columns = useMemo(
     () => [
+      {
+        header: "이미지",
+        accessorKey: "image_url",
+        cell: (info) => (
+          <img
+            src={info.getValue() || "/no-image.jpg"}
+            alt="상품 이미지"
+            style={{
+              width: 40,
+              height: 40,
+              objectFit: "cover",
+              borderRadius: 4,
+            }}
+            onError={(e) => {
+              e.currentTarget.src = "/no-image.jpg"; // 로딩 실패시 noImage
+            }}
+          />
+        ),
+      },
       { header: "ID", accessorKey: "id" },
       { header: "상품명", accessorKey: "name" },
       { header: "카테고리", accessorKey: "category" },
@@ -193,12 +211,32 @@ function Products() {
       {
         header: "가격",
         accessorKey: "price",
-        cell: (info) => `${Number(info.getValue()).toLocaleString()}원`,
+        cell: (info) =>
+          `${Number(info.getValue()).toLocaleString(undefined, {
+            maximumFractionDigits: 0,
+          })}원`, // 소수점 제거
       },
       {
         header: "재고",
         accessorKey: "stock",
         cell: (info) => Number(info.getValue()).toLocaleString(),
+      },
+      {
+        header: "등록일",
+        accessorKey: "created_at",
+        cell: (info) => formatDateShort(info.getValue()),
+      },
+      {
+        header: "상태",
+        accessorKey: "stock",
+        cell: (info) => {
+          const value = info.getValue();
+          const style = {
+            color: value > 0 ? "blue" : "red",
+            fontWeight: "600",
+          };
+          return <span style={style}>{value > 0 ? "판매중" : "품절"}</span>;
+        },
       },
     ],
     []
