@@ -500,12 +500,26 @@
     margin-top: 0.5rem;
     color: $gray-500;
     font-weight: 600;
-    
+
     span {
       display: inline-block;
       min-width: 100px;
       font-weight: 600;
     }
+  }
+}
+
+.user-modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+
+  .footer-left,
+  .footer-right {
+    display: flex;
+    gap: 0.5rem;
   }
 }
 // 회원관리 유저 모달 끝
@@ -549,7 +563,7 @@
       font-size: 14px;
     }
 
-    /* 상태 열만 너비 강제 */
+    // 상태 열만 너비 강제
     th:nth-child(6),
     td:nth-child(6) {
       width: 230px;
@@ -566,7 +580,7 @@
     }
   }
 
-  /* 모달 내부 스타일 */
+  // 모달 내부 스타일
   .order-info,
   .recipient-info,
   .payment-info {
@@ -594,7 +608,7 @@
     }
   }
 
-  /* 주문 상품 테이블 */
+  // 주문 상품 테이블
   .order-items-table {
     width: 100%;
     border-collapse: collapse;
