@@ -20,7 +20,6 @@ function MyPage() {
       try {
         setLoading(true);
         const data = await getUserMe();
-        console.log(data);
         setUser(data);
       } catch (e) {
         setError(e.message || "사용자 정보를 불러오지 못했습니다.");
