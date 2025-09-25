@@ -6,6 +6,8 @@ import OrdersTable from "../components/OrdersTable";
 import OrderDetailModal from "../components/OrderDetailModal";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
 import { formatDateShort } from "../../utils/dateFormat";
+import { getOrders } from "../../api/admin";
+import Loading from "../../components/common/Loading";
 
 function Orders() {
   const [orders, setOrders] = useState([]); // 주문 목록
@@ -14,62 +16,29 @@ function Orders() {
   const [selectedOrder, setSelectedOrder] = useState(null); // 상세보기 대상 주문
   const [isDetailOpen, setIsDetailOpen] = useState(false); // 상세 모달 열림 여부
   const [totalOrders, setTotalOrders] = useState(0); // 총 주문 건수
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // 더미 데이터
   useEffect(() => {
-    const res = {
-      success: true,
-      data: {
-        orders: Array.from({ length: 10 }, (_, i) => {
-          const items = [
-            {
-              product_id: 1,
-              name: `주문 상품 ${i + 1}`,
-              quantity: 2,
-              unit_price: 45000,
-              total_price: 90000,
-            },
-            {
-              product_id: 2,
-              name: `주문 상품 ${i + 1}`,
-              quantity: 1,
-              unit_price: 30000,
-              total_price: 30000,
-            },
-          ];
-          return {
-            id: 101 + i,
-            order_number: 123456789 + i,
-            user_id: `유저${1 + i}`,
-            name: "이름",
-            total_price: items.reduce((acc, cur) => acc + cur.total_price, 0),
-            status: ["결제완료", "배송중", "배송완료"][i % 3],
-            created_at: new Date(Date.now() - i * 86400000).toISOString(),
-            recipient_name: "유저1",
-            recipient_phone: "010-1111-2222",
-            recipient_address: "서울시 강남구 123",
-            payment: {
-              method: "카드",
-              status: "성공",
-              created_at: new Date(Date.now() - i * 3600000).toISOString(),
-            },
-            items,
-          };
-        }),
-        pagination: {
-          page: currentPage,
-          size: 10,
-          total_pages: 10,
-          total_items: 100,
-        },
-      },
-      message: "주문 목록 조회 성공",
-    };
+    async function loadOrders() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const res = await getOrders({ page: currentPage, size: 10 });
 
-    // 상태에 데이터 세팅
-    setOrders(res.data.orders);
-    setTotalPages(res.data.pagination.total_pages);
-    setTotalOrders(res.data.pagination.total_items);
+        setOrders(res.results);
+        setTotalPages(Math.ceil(res.count / 10)); // count 기반 페이지 수 계산
+        setTotalOrders(res.count);
+      } catch (e) {
+        console.error("주문 목록 불러오기 실패 : ", e);
+        setError("주문 목록을 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadOrders();
   }, [currentPage]);
 
   // 주문 상세 모달 열기
@@ -96,15 +65,35 @@ function Orders() {
   const columns = useMemo(
     () => [
       { header: "주문번호", accessorKey: "order_number" },
-      { header: "회원 ID", accessorKey: "user_id" },
+      { header: "회원 ID", accessorKey: "user" }, // user_id → user
       {
-        header: "상품명",
-        accessorFn: (row) => {
-          const firstItem = row.items[0];
-          if (!firstItem) return "-";
-          const extra =
-            row.items.length > 1 ? ` 외 ${row.items.length - 1}개` : "";
-          return `${firstItem.name}${extra}`;
+        header: "주문상품",
+        accessorFn: (row) => row.items, // items 전체 전달
+        cell: (info) => {
+          const items = info.getValue();
+          if (!items || items.length === 0) return "-";
+
+          const firstItem = items[0];
+          const extra = items.length > 1 ? ` 외 ${items.length - 1}개` : "";
+
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img
+                src={firstItem.product.image_url || "/no-image.jpg"}
+                alt={firstItem.product.name}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "cover",
+                  borderRadius: 4,
+                }}
+                onError={(e) => {
+                  e.currentTarget.src = "/no-image.jpg";
+                }}
+              />
+              <span>{`${firstItem.product.name}${extra}`}</span>
+            </div>
+          );
         },
       },
       {
@@ -113,9 +102,9 @@ function Orders() {
           row.items.reduce((acc, item) => acc + item.quantity, 0),
       },
       {
-        header: "총 금액",
+        header: "결제금액",
         accessorKey: "total_price",
-        cell: (info) => `${info.getValue().toLocaleString()}원`,
+        cell: (info) => `${Number(info.getValue()).toLocaleString()}원`,
       },
       {
         header: "상태",
@@ -125,7 +114,6 @@ function Orders() {
             value={getValue()}
             orderNumber={row.original.order_number}
             onChangeStatus={(orderNumber, newStatus) => {
-              // 상태 업데이트
               setOrders((prev) =>
                 prev.map((order) =>
                   order.order_number === orderNumber
@@ -136,6 +124,18 @@ function Orders() {
             }}
           />
         ),
+      },
+      {
+        header: "수령인",
+        accessorKey: "recipient_name",
+      },
+      {
+        header: "수령인 연락처",
+        accessorKey: "recipient_phone",
+      },
+      {
+        header: "배송지",
+        accessorKey: "recipient_address",
       },
       {
         header: "결제일자",
@@ -155,21 +155,27 @@ function Orders() {
 
   return (
     <div className="orders-page">
-      {/* 페이지 타이틀 */}
       <h2 className="orders-page-title">주문관리</h2>
       <span className="orders-total">
         Total : {totalOrders.toLocaleString()}건
       </span>
 
-      {/* 주문 테이블 */}
-      <OrdersTable table={table} onRowClick={openDetail} />
+      {isLoading && <Loading loadingText="주문 목록 불러오는 중" />}
+      {error && <p className="error">{error}</p>}
 
-      {/* 페이지네이션 */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {!isLoading && !error && (
+        <>
+          {/* 주문 테이블 */}
+          <OrdersTable table={table} onRowClick={openDetail} />
+
+          {/* 페이지네이션 */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      )}
 
       {/* 상세 모달 */}
       <OrderDetailModal

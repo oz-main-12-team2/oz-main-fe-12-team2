@@ -13,7 +13,6 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const [isloading, setIsLoading] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
-  const getUser = useUserStore((state) => state.getUser);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,8 +20,7 @@ function AdminLogin() {
     try {
       setIsLoading(true);
       const res = await login(email, password);
-      const test = await getUser();
-      console.log(test);
+    
       if (res.success) {
         const checkAdmin = await getUserMe();
 

@@ -16,7 +16,7 @@ function Users() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0); // 전체 회원수 상태
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [isLoading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
   const [isModalOpen, setIsModalOpen] = useState(false); //모달오픈 여부 상태
   const [selectedUser, setSelectedUser] = useState(null); //선택한 유저정보를 저장하는 상태
@@ -27,14 +27,14 @@ function Users() {
         setLoading(true);
         setError(null);
 
-        const data = await getAdminUsers(currentPage);
+        const res = await getAdminUsers(currentPage);
 
-        setUsers(data.results || []);
-        setTotalItems(data.count || 0);
+        setUsers(res.results || []);
+        setTotalItems(res.count || 0);
 
         // 페이지 개수 계산
-        const pageSize = data.results?.length || 1;
-        setTotalPages(Math.ceil((data.count || 1) / pageSize));
+        const pageSize = res.results?.length || 1;
+        setTotalPages(Math.ceil((res.count || 1) / pageSize));
       } catch (e) {
         console.error("유저 불러오기 실패 : ", e);
         setError(e.message || "유저 목록을 불러오는 중 오류가 발생했습니다.");
@@ -157,10 +157,10 @@ function Users() {
         </span>
       </div>
 
-      {loading && <Loading loadingText={"회원목록 불러오는중"} />}
+      {isLoading && <Loading loadingText={"회원목록 불러오는중"} />}
       {error && <p className="error">{error}</p>}
 
-      {!loading && !error && (
+      {!isLoading && !error && (
         <div className="users-table-wrap">
           <table className="users-table">
             <thead>
