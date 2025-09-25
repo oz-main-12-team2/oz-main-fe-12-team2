@@ -1,53 +1,73 @@
-@import "../var.scss";
-
-.textimg1 {
-  height: 5rem;
-  width: 50rem;
-}
-
-// 일간 베스트 스타일
 .book-daily-best {
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 2rem;
+  padding: 0 1rem;
 
   .book-list-row {
     display: flex;
-
-    gap: 0.75rem;
+    gap: 1.5rem;
     overflow-x: auto;
-    overflow-y: hidden;
     scroll-behavior: smooth;
-    white-space: nowrap;
+    padding-bottom: 1rem;
 
-    /* 스크롤바 숨김 - 크롬, 사파리, 오페라 */
+    /* 스크롤바 숨김 */
     &::-webkit-scrollbar {
       display: none;
     }
-
-    /* IE, Edge */
     -ms-overflow-style: none;
-
-    /* Firefox */
     scrollbar-width: none;
 
     .book-item {
-      flex: 0 0 auto;
-      width: 500px;
-      height: 700px;
+      flex: 0 0 calc((100% - 1.5rem) / 2); // 항상 2개씩만 보이도록
+      max-width: calc((100% - 1.5rem) / 2);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
 
-      margin-right: 12px;
-      background: #f5f5f5;
-      border-radius: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .book-image {
+        width: 100%;
+        height: 30rem;
+        background: #eaeaea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 65%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .book-list-details {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+
+        .book-title {
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+          color: #024b3a;
+          line-height: 1.4;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .book-price {
+          color: #024c3b;
+          font-size: 1.1rem;
+          font-weight: bold;
+        }
+      }
     }
   }
-}
-
-.best-book-image {
-  width: 120px; /* 원하는 너비 */
-  height: 180px; /* 원하는 높이 */
-  object-fit: cover; /* 이미지 비율 유지하며 자르기 */
-  border-radius: 8px; /* 모서리 둥글게, 선택 사항 */
 }
