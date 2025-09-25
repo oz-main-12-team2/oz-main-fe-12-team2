@@ -228,9 +228,9 @@ function Products() {
       },
       {
         header: "상태",
-        accessorKey: "stock",
+        accessorKey: "status",
         cell: (info) => {
-          const value = info.getValue();
+          const value = info.row.original.stock;
           const style = {
             color: value > 0 ? "blue" : "red",
             fontWeight: "600",
