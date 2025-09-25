@@ -99,7 +99,6 @@ function SignUpPage() {
     // await axios.post('/api/signup', { email, password: inputPassword, name, address });
     try {
       const res = await register(email, name, inputPassword, confirmInputPassword, address);
-      console.log(res);
 
       await alertSuccess("회원가입 성공", res.message);
     } catch (e) {
