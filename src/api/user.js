@@ -88,3 +88,27 @@ export const register = async (email, name, password, password_confirm, address)
     throw new Error("알 수 없는 오류가 발생했습니다.");
   }
 }
+
+// 이메일 계정 활성화
+export const activateAccount = async (uid, token) => {
+  try {
+    const res = await api.get("/user/activate/", {
+      params: { uid, token },
+    });
+    return res.data; // { success: true, ... } 형태 가정
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data;
+
+      // DRF 필드형 에러 or 일반 메시지 모두 처리
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(`${data[key].join(", ")}`);
+        else msgs.push(`${data[key]}`);
+      }
+      throw new Error(msgs.join("\n") || "이메일 인증에 실패했습니다.");
+    }
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "이메일 인증 중 오류가 발생했습니다.");
+  }
+};
