@@ -1,24 +1,21 @@
 @import "../var.scss";
 
-.textimg1 {
-  height: 5rem;
-  width: 50rem;
-}
-
 // 일간 베스트 스타일
 .book-daily-best {
   width: 100%;
   margin-top: 1rem;
-
+  
+  
+  
   .book-list-row {
     display: flex;
-
+    
     gap: 0.75rem;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
     white-space: nowrap;
-
+    
     /* 스크롤바 숨김 - 크롬, 사파리, 오페라 */
     &::-webkit-scrollbar {
       display: none;
@@ -32,10 +29,10 @@
 
     .book-item {
       flex: 0 0 auto;
-      width: 500px;
-      height: 700px;
+      width: 150px;
+      height: 30rem;
 
-      margin-right: 12px;
+      margin:7rem 15rem 7rem 15rem;
       background: #f5f5f5;
       border-radius: 8px;
       display: flex;
