@@ -4,12 +4,9 @@
 .book-daily-best {
   width: 100%;
   margin-top: 1rem;
-  
-  
-  
+
   .book-list-row {
     display: flex;
-    
     gap: 0.75rem;
     overflow-x: auto;
     overflow-y: hidden;
@@ -31,15 +28,35 @@
       flex: 0 0 auto;
       width: 150px;
       height: 30rem;
-
       margin:7rem 15rem 7rem 15rem;
       background: #f5f5f5;
       border-radius: 8px;
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .book-list-details {
+        display: flex;
+        flex-direction: column;
+        padding-left: 1rem;
+
+        .book-title {
+          font-size: 2rem;
+          padding-bottom: 2rem;
+          color: #024c3b;
+        }
+
+        .book-price {
+          color: #024c3b;
+          font-size: 2rem;
+        }
+      }
     }
   }
+}
+
+.book-list {
+  padding-top: 3rem;
 }
 
 .best-book-image {

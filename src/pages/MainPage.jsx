@@ -65,8 +65,12 @@ function MainPage() {
         {/* 앞쪽 복제 */}
         {books.map((book, i) => (
           <div key={`clone-left-${i}`} className="book-item" onClick={() => onCardClick(book)}>
-            <img src={book.image} alt={book.title} />
-            <p>{book.title}</p>
+            <img className="book-list-row-img" src={book.image} alt={book.title} />
+            <div className="book-list-details">
+              <p className="book-title">제목 : {book.title}</p>
+              <p className="book-price">가격 : {book.price.toLocaleString()}원</p>
+            </div>
+
           </div>
         ))}
 
@@ -160,7 +164,6 @@ function MainPage() {
     if (page > 1) fetchBooks(page);
   }, [page]);
 
-  // ====== 렌더 ======
   return (
     <div>
       <Header />
@@ -195,8 +198,8 @@ function MainPage() {
         </section>
 
         {/* 전체 상품 리스트 (무한 스크롤) */}
-        <section className="book-list" ref={bookListRef}>
           <h2>전체 도서</h2>
+        <section className="book-list" ref={bookListRef}>
           <BookListCol books={allBooks} onCardClick={handleCardClick} />
           {loading && <Loading />}
           <div ref={observerRef} style={{ height: "20px" }} />
