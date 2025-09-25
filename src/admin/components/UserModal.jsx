@@ -1,7 +1,7 @@
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 
-function UserModal({ isOpen, user, onClose, onToggleActive }) {
+function UserModal({ isOpen, user, onClose, onToggleActive, onDelete }) {
   if (!user) return;
 
   return (
@@ -18,7 +18,9 @@ function UserModal({ isOpen, user, onClose, onToggleActive }) {
             >
               {user.is_active ? "비활성화" : "활성화"}
             </Button>
-            <Button variant="danger">회원 탈퇴</Button>
+            <Button variant="danger" onClick={onDelete}>
+              회원 탈퇴
+            </Button>
           </div>
           <div className="footer-right">
             <Button variant="secondary" onClick={onClose}>

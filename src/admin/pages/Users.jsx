@@ -5,7 +5,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import Pagination from "../../components/common/Pagination";
-import { getAdminUsers, toggleUserActive } from "../../api/admin";
+import { deleteUser, getAdminUsers, toggleUserActive } from "../../api/admin";
 import Loading from "../../components/common/Loading";
 import UserModal from "../components/UserModal";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
@@ -19,7 +19,7 @@ function Users() {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
   const [isModalOpen, setIsModalOpen] = useState(false); //모달오픈 여부 상태
-  const [selectedUser, setSelectedUser] = useState(null);//선택한 유저정보를 저장하는 상태
+  const [selectedUser, setSelectedUser] = useState(null); //선택한 유저정보를 저장하는 상태
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -77,6 +77,33 @@ function Users() {
       );
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  // 회원 삭제
+  const handleDelete = async () => {
+    const confirm = await alertComfirm(
+      "회원 탈퇴",
+      "정말로 이 회원을 탈퇴시키겠습니까?"
+    );
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await deleteUser(selectedUser.id);
+
+      await alertSuccess(
+        "회원 탈퇴",
+        `'${selectedUser.name}' 회원이 삭제되었습니다.`
+      );
+
+      // 목록에서 삭제된 유저 제거
+      setUsers((prev) => prev.filter((u) => u.id !== selectedUser.id));
+
+      // 모달 닫기
+      setIsModalOpen(false);
+      setSelectedUser(null);
+    } catch (e) {
+      console.error("회원 삭제 실패:", e);
     }
   };
 
@@ -188,6 +215,7 @@ function Users() {
           user={selectedUser}
           onClose={() => setIsModalOpen(false)}
           onToggleActive={handleToggleActive}
+          onDelete={handleDelete}
         />
       )}
     </div>
