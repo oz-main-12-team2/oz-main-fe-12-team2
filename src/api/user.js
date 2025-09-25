@@ -112,3 +112,29 @@ export const activateAccount = async (uid, token) => {
     throw new Error(e.message || "이메일 인증 중 오류가 발생했습니다.");
   }
 };
+
+// 개인정보 수정
+export const updateUserMe = async (name, address) => {
+  try {
+    const res = await api.put("/user/me/", {name, address});
+
+    return res.data ?? { name, address };
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data;
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(`${key}: ${data[key].join(", ")}`);
+        else msgs.push(`${key}: ${String(data[key])}`);
+      }
+      throw new Error(msgs.join("\n") || "개인정보 수정에 실패했습니다.");
+    }
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "개인정보 수정 중 오류가 발생했습니다.");
+  }
+}
+
+// 비밀번호 수정
+
+
+// 회원 탈퇴
