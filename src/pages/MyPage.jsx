@@ -1,12 +1,14 @@
 import "../styles/mypage.scss";
 import { Outlet } from "react-router-dom";
 import { MdOutlineMailOutline, MdOutlineHome } from "react-icons/md";
+import { FiUserPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { useEffect, useState } from "react";
 import { getUserMe } from "../api/user";
 import Loading from "../components/common/Loading";
+import { formatDateShort } from "../utils/dateFormat";
 
 function MyPage() {
   const [user, setUser] = useState(null);
@@ -53,6 +55,10 @@ function MyPage() {
                     <div className="mypage-address">
                       <MdOutlineHome />
                       <p>{user.address}</p>
+                    </div>
+                    <div className="mypage-register-date">
+                      <FiUserPlus />
+                      <p>{formatDateShort(user.created_at)} 가입</p>
                     </div>
                   </div>
                 </div>
