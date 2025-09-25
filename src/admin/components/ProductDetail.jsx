@@ -19,7 +19,7 @@ function ProductDetail({ selectedBook }) {
           {selectedBook.author} · {selectedBook.publisher}
         </p>
         <p className="product-detail-price">
-          {(selectedBook.price ?? 0).toLocaleString()}원
+          {Math.floor(Number(selectedBook.price ?? 0)).toLocaleString()}원
         </p>
         <p className="product-detail-stock">재고: {selectedBook.stock}권</p>
         <p className="product-detail-description">

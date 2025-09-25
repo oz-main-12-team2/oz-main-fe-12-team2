@@ -26,7 +26,7 @@ export const getAdminUsers = async () => {
   }
 };
 
-// 특정 사용자 정보 수정, 활성화/비활성화 (admin/users/:userid)
+// 특정 사용자 정보 수정, 활성화/비활성화 (PUT admin/users/:userid)
 export async function toggleUserActive(userId, newState) {
   try {
     const res = await api.put(`/admin/users/${userId}/`, {
@@ -45,6 +45,25 @@ export async function toggleUserActive(userId, newState) {
     }
 
     // 네트워크 문제 (서버 연결 불가 등)
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}
+
+// 특정 사용자 삭제 (DELETE /admin/users/:userId/)
+export async function deleteUser(userId) {
+  try {
+    const res = await api.delete(`/admin/users/${userId}/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message: e.response.data?.error || "회원 삭제 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
     throw {
       message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
       code: "NETWORK_ERROR",
