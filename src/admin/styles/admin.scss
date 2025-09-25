@@ -671,6 +671,79 @@
       color: #fff;
     }
   }
+  // 주문관리 배송정보 모달창 안에 수정폼
+  .recipient-info {
+    .recipient-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .recipient-edit {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        label {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: $gray-500;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          padding: 0.5rem 0.75rem;
+          font-size: 0.9rem;
+          transition: border-color 0.2s ease;
+
+          &:focus {
+            border-color: $main-color;
+            outline: none;
+            box-shadow: 0 0 0 1px $main-color;
+          }
+        }
+
+        .form-textarea {
+          min-height: 80px;
+          resize: vertical;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+
+        .btn-save {
+          background-color: $main-color;
+          color: #fff;
+
+          &:hover {
+            background-color: $main-color-hover;
+          }
+        }
+
+        .btn-cancel {
+          background-color: $red-500;
+          color: #fff;
+
+          &:hover {
+            background-color: darken($red-500, 5%);
+          }
+        }
+      }
+    }
+  }
 }
 
 // 모바일 반응형

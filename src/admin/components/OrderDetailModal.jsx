@@ -2,11 +2,33 @@ import { useState } from "react";
 import Modal from "../../components/common/Modal";
 import Button from "../../components/common/Button";
 import ProductModal from "./ProductModal";
-import { formatDateShort } from "../../utils/dateFormat";
+import Select from "../../components/common/Select";
+import { updateOrder } from "../../api/admin";
+import { alertComfirm, alertError, alertSuccess } from "../../utils/alert";
+import FormGroup from "../../components/common/FormGroup";
 
-function OrderDetailModal({ order, isOpen, onClose, onDelete }) {
+const STATUS_OPTIONS = [
+  { value: "결제 완료", label: "결제 완료" },
+  { value: "배송중", label: "배송중" },
+  { value: "배송완료", label: "배송완료" },
+];
+
+function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  // 배송 정보 편집 상태
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempRecipientName, setTempRecipientName] = useState(
+    order?.recipient_name || ""
+  );
+  const [tempRecipientPhone, setTempRecipientPhone] = useState(
+    order?.recipient_phone || ""
+  );
+  const [tempRecipientAddress, setTempRecipientAddress] = useState(
+    order?.recipient_address || ""
+  );
+  const [tempStatus, setTempStatus] = useState(order?.status || "");
 
   if (!order) return;
 
@@ -16,7 +38,48 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete }) {
     setIsProductModalOpen(true);
   };
 
-  return (
+  const handleEditClick = () => {
+    setTempRecipientName(order.recipient_name);
+    setTempRecipientPhone(order.recipient_phone);
+    setTempRecipientAddress(order.recipient_address);
+    setTempStatus(order.status);
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      const payload = {
+        recipient_name: tempRecipientName,
+        recipient_phone: tempRecipientPhone,
+        recipient_address: tempRecipientAddress,
+        status: tempStatus,
+      };
+      const confirm = await alertComfirm(
+        "배송 정보 변경",
+        "정말로 변경하시겠습니까?"
+      );
+      if (!confirm.isConfirmed) return;
+
+      const updatedOrder = await updateOrder(order.id, payload);
+
+      // 부모에게 업데이트
+      onUpdate(updatedOrder);
+      await alertSuccess(
+        "배송 정보 변경 성공",
+        "배송 정보가 성공적으로 변경되었습니다."
+      );
+      setIsEditing(false);
+    } catch (e) {
+      console.error(e);
+      await alertError("배송 정보 수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
+ return (
     <>
       <Modal
         isOpen={isOpen}
@@ -48,28 +111,79 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete }) {
             <span>상태</span> {order.status}
           </p>
           <p>
-            <span>주문일</span> {formatDateShort(order.created_at)}
+            <span>주문일</span> {new Date(order.created_at).toLocaleString()}
           </p>
           <p>
-            <span>수정일</span> {formatDateShort(order.updated_at)}
+            <span>수정일</span> {new Date(order.updated_at).toLocaleString()}
           </p>
         </div>
 
-        {/* 수령인 정보 */}
-        {(order.recipient_name || order.recipient_phone) && (
-          <div className="recipient-info">
-            <h4>배송 정보</h4>
-            <p>
-              <span>이름</span> {order.recipient_name}
-            </p>
-            <p>
-              <span>전화번호</span> {order.recipient_phone}
-            </p>
-            <p>
-              <span>주소</span> {order.recipient_address}
-            </p>
-          </div>
-        )}
+        {/* 배송 정보 */}
+        <div className="recipient-info">
+          <h4 className="recipient-title">
+            배송 정보
+            {!isEditing && (
+              <Button variant="secondary" size="sm" onClick={handleEditClick}>
+                수정
+              </Button>
+            )}
+          </h4>
+
+          {isEditing ? (
+            <div className="recipient-edit">
+              <FormGroup
+                label="이름"
+                value={tempRecipientName}
+                onChange={(e) => setTempRecipientName(e.target.value)}
+              />
+              <FormGroup
+                label="전화번호"
+                value={tempRecipientPhone}
+                onChange={(e) => setTempRecipientPhone(e.target.value)}
+              />
+              <FormGroup
+                label="주소"
+                type="textarea"
+                value={tempRecipientAddress}
+                onChange={(e) => setTempRecipientAddress(e.target.value)}
+              />
+              <Select
+                label="상태"
+                value={tempStatus}
+                onChange={(e) => setTempStatus(e.target.value)}
+              >
+                {STATUS_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Select>
+              <div className="form-actions">
+                <Button variant="primary" size="md" onClick={handleSave}>
+                  저장
+                </Button>
+                <Button variant="secondary" size="md" onClick={handleCancel}>
+                  취소
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p>
+                <span>이름</span> {order.recipient_name}
+              </p>
+              <p>
+                <span>전화번호</span> {order.recipient_phone}
+              </p>
+              <p>
+                <span>주소</span> {order.recipient_address}
+              </p>
+              <p>
+                <span>상태</span> {order.status}
+              </p>
+            </>
+          )}
+        </div>
 
         {/* 주문 상품 리스트 */}
         <h4>주문 상품</h4>

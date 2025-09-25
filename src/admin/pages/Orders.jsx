@@ -24,7 +24,7 @@ function Orders() {
       try {
         setIsLoading(true);
         setError(null);
-        
+
         const res = await getOrders({ page: currentPage, size: 10 });
 
         setOrders(res.results);
@@ -50,8 +50,8 @@ function Orders() {
   // 주문 삭제
   const handleDelete = useCallback(async (orderNumber) => {
     // 삭제 확인
-    const res = await alertComfirm("주문 삭제", "정말 삭제하시겠습니까?");
-    if (!res.isConfirmed) return;
+    const confirm = await alertComfirm("주문 삭제", "정말 삭제하시겠습니까?");
+    if (!confirm.isConfirmed) return;
 
     // 상태에서 삭제
     setOrders((prev) => prev.filter((o) => o.order_number !== orderNumber));
@@ -59,6 +59,14 @@ function Orders() {
 
     // 성공 알림
     await alertSuccess("삭제 성공", "주문이 삭제되었습니다");
+  }, []);
+
+  // 주문 업데이트 (상세 모달에서 수정 시 호출됨)
+  const handleUpdate = useCallback((updatedOrder) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === updatedOrder.id ? updatedOrder : o))
+    );
+    setSelectedOrder(updatedOrder);
   }, []);
 
   // 테이블 컬럼 정의
@@ -112,15 +120,10 @@ function Orders() {
         cell: ({ row, getValue }) => (
           <StatusCell
             value={getValue()}
-            orderNumber={row.original.order_number}
-            onChangeStatus={(orderNumber, newStatus) => {
-              setOrders((prev) =>
-                prev.map((order) =>
-                  order.order_number === orderNumber
-                    ? { ...order, status: newStatus }
-                    : order
-                )
-              );
+            orderId={row.original.id}
+            orderData={row.original}
+            onChangeStatus={(updatedOrder) => {
+              handleUpdate(updatedOrder); // 부모의 handleUpdate 실행
             }}
           />
         ),
@@ -143,7 +146,7 @@ function Orders() {
         cell: (info) => formatDateShort(info.getValue()),
       },
     ],
-    []
+    [handleUpdate]
   );
 
   // 테이블 생성
@@ -183,6 +186,7 @@ function Orders() {
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         onDelete={handleDelete}
+        onUpdate={handleUpdate}
       />
     </div>
   );

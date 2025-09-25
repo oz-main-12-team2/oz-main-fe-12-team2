@@ -9,7 +9,6 @@ import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
 
 function MainPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [bestBooks, setBestBooks] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
   const [page, setPage] = useState(1);
@@ -107,8 +106,6 @@ const BookListRowLoop = ({ books, onCardClick }) => {
   };
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
 
     // 일간 베스트 10 초기 세팅
     setBestBooks([
