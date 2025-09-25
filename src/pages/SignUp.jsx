@@ -5,6 +5,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 import AddressAutoComplete from '../components/AddressAutoComplete';
+import { register } from '../api/user';
+import { alertError, alertSuccess } from '../utils/alert';
 
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +62,8 @@ function SignUpPage() {
     }
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async (e) => {
+    e?.preventDefault();
     // 초기화
     setEmailError("");
     setPasswordError("");
@@ -94,6 +97,13 @@ function SignUpPage() {
 
     // ✅ 모든 검증 통과 시: 회원가입 API 호출
     // await axios.post('/api/signup', { email, password: inputPassword, name, address });
+    try {
+      const res = await register(email, name, inputPassword, confirmInputPassword, address);
+
+      await alertSuccess("회원가입 성공", res.message);
+    } catch (e) {
+      await alertError("회원가입 실패", e.message)
+    }
   };
   
   return (
@@ -103,7 +113,7 @@ function SignUpPage() {
           <img className="signup-logo" src="../../public/logo.svg" alt="러블리 로고" />
         </Link>
 
-        <div className="signup-container">
+        <form className="signup-container" onSubmit={handleSignUp}>
           <FormGroup 
             type="email" 
             placeholder="이메일" 
@@ -224,12 +234,12 @@ function SignUpPage() {
 
           <div className='signup-options'>
             <div className='email-signup-button'>
-              <Button variant='primary' size='lg' type='submit' onClick={handleSignUp}>
+              <Button variant='primary' size='lg' type='submit'>
                 회원가입
               </Button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );
