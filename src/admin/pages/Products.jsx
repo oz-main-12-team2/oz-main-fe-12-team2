@@ -29,7 +29,11 @@ function Products() {
         setLoading(true);
         setError(null);
 
-        const res = await getProducts({ page: currentPage, size: 8, ordering:"category" });
+        const res = await getProducts({
+          page: currentPage,
+          size: 8,
+          ordering: "name",
+        });
         console.log(res.results);
         setBooks(res.results || []);
         setTotalPages(Math.ceil((res.count || 1) / 10));
@@ -110,8 +114,8 @@ function Products() {
 
     // 가격
     const price = Number(selectedBook.price);
-    if (selectedBook.price === "" || isNaN(price) || price < 0) {
-      newErrors.price = "가격은 0 이상의 숫자여야 합니다.";
+    if (selectedBook.price === "" || isNaN(price) || price <= 0) {
+      newErrors.price = "가격은 1 이상의 숫자여야 합니다.";
     }
 
     // 재고
@@ -184,11 +188,15 @@ function Products() {
 
       await alertSuccess("상품 등록 성공", "상품이 등록되었습니다");
 
+      setBooks((prev) =>
+        prev.map((b) => (b.id === selectedBook.id ? selectedBook : b))
+      );
+
       // 모달 닫기 + 선택 초기화
       setIsCreateOpen(false);
       setSelectedBook(null);
 
-      setCurrentPage(1); // 첫 페이지로 이동해서 다시 불러오기
+    //   setCurrentPage(1); // 첫 페이지로 이동해서 다시 불러오기
     } catch (e) {
       console.error("상품 등록 실패:", e);
       setError(e.message || "상품 등록 중 오류가 발생했습니다.");
