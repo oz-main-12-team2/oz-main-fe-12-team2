@@ -72,8 +72,6 @@ function ResetPasswordPage() {
     }
     if (!validate()) return;
 
-    console.log("reset payload", { uid, token, new_password: password, new_password_confirm: password2 });
-
     try {
       setIsSaving(true);
       await confirmPasswordReset({
