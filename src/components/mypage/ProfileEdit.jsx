@@ -4,29 +4,28 @@ import FormGroup from "../common/FormGroup";
 import Loading from "../common/Loading";
 import { getUserMe, updateUserMe } from "../../api/user";
 import { alertError, alertSuccess, alertComfirm } from "../../utils/alert";
-
-// 이메일 정규식 (모달에서 사용하던 로직 이관)
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import AddressAutoComplete from "../AddressAutoComplete";
+import "../../styles/profile-edit.scss";
 
 function ProfileEdit() {
   // 서버에서 불러온 초기값
   const [initial, setInitial] = useState({
     email: "",
-    username: "",
+    name: "",
     address: "",
   });
 
   // 폼 상태
   const [form, setForm] = useState({
     email: "",
-    username: "",
+    name: "",
     address: "",
   });
 
   // 에러 상태
   const [errors, setErrors] = useState({
     email: "",
-    username: "",
+    name: "",
   });
 
   // 로딩/저장 상태
@@ -37,7 +36,7 @@ function ProfileEdit() {
   const isDirty = useMemo(
     () =>
       form.email !== initial.email ||
-      form.username !== initial.username ||
+      form.name !== initial.name ||
       form.address !== initial.address,
     [form, initial]
   );
@@ -54,7 +53,7 @@ function ProfileEdit() {
         // 데모용 (삭제 가능)
         const data = {
           email: me.email ?? "",
-          username: me.name ?? "",
+          name: me.name ?? "",
           address: me.address ?? "",
         };
 
@@ -84,110 +83,141 @@ function ProfileEdit() {
     }
   };
 
-  // 이메일 blur 검증 (모달의 handleBlur 이관)
-  const onEmailBlur = () => {
-    if (!form.email) {
-      setErrors((prev) => ({ ...prev, email: "이메일을 입력해주세요." }));
-      return;
-    }
-    if (!EMAIL_REGEX.test(form.email)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: "올바른 이메일 형식을 입력해주세요.",
-      }));
-    }
+  const normalize = (info) =>
+    String(info ?? "")
+      .replace(/\u3000/g, " ")   // 전각 공백 → 일반 공백
+      .trim()
+      .replace(/\s+/g, " ");
+
+  const onAddressSelect = (v) => {
+    const str = typeof v === "string" ? v : v?.display || "";
+    const norm = normalize(str);
+    setForm((prev) => ({ ...prev, address: norm }));
+    if (errors.address) setErrors((prev) => ({ ...prev, address: "" }));
   };
 
   // 간단 검증 함수
   const validate = () => {
-    const next = { email: "", username: "" };
-    if (!form.email) next.email = "이메일을 입력해주세요.";
-    else if (!EMAIL_REGEX.test(form.email))
-      next.email = "올바른 이메일 형식을 입력해주세요.";
-    if (!form.username) next.username = "이름을 입력해주세요.";
+    const next = { name: "", address: "" };
+    const normalizeName = normalize(form.name);
+    const normalizeAddress = normalize(form.address);
+
+    if (!normalizeName) next.name = "이름을 입력해주세요.";
+
+    if (!normalizeAddress) next.address = "주소를 입력해주세요.";
+
     setErrors(next);
-    return !next.email && !next.username;
+    return !next.name && !next.address;
   };
 
   // 저장
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    e?.preventDefault();
+    if (isSaving) return;
+
+    const normalizeName = normalize(form.name);
+    const normalizeAddress = normalize(form.address);
+
+    if (!isDirty && !errors.name && !errors.address) return;
     if (!validate()) return;
+
+    // ✅ 확인창 띄우기
+    const result = await alertComfirm("개인정보 수정", "입력하신 내용으로 수정하시겠습니까?");
+    if (!result.isConfirmed) return; // "예" 눌렀을 때만 진행
 
     try {
       setIsSaving(true);
-      // TODO: 실제 API로 교체 (PUT /users/me)
-      // const res = await fetch("/api/users/me", {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(form),
-      // });
-      // if (!res.ok) throw new Error("저장 실패");
 
-      // 데모용 딜레이
-      await new Promise((r) => setTimeout(r, 500));
+      const updated = await updateUserMe(normalizeName, normalizeAddress);
 
-      setInitial(form); // 저장 성공 시 초기값 갱신
-      // TODO: 토스트로 “저장되었습니다”
+      const next = {
+        email: updated.email ?? form.email,
+        name: updated.name ?? normalizeName,
+        address: updated.address ?? normalizeAddress,
+      };
+      setForm(next);
+      setInitial(next);
+
+      await alertSuccess("수정 완료", "개인정보가 업데이트되었습니다.");
+      window.location.reload();
     } catch (e) {
-      console.error(e);
-      // TODO: 서버 에러 메시지 맵핑해서 errors에 반영/토스트
+      await alertError("수정 실패", e.message || "개인정보 수정에 실패했습니다.");
     } finally {
       setIsSaving(false);
     }
   };
 
   // 취소 (변경 취소)
-  const onCancel = () => {
+  const onCancel = async () => {
     if (isDirty && !window.confirm("변경 사항을 취소할까요?")) return;
     setForm(initial);
-    setErrors({ email: "", username: "" });
+    setErrors({ name: "", address: "" });
   };
 
   if (isLoading) {
-    return <div className="profile-edit-loading">불러오는 중…</div>;
+    return <Loading loadingText="사용자 정보를 불러오는 중" size={44} />;
   }
 
   return (
-    <div className="edit-data-form">
+    <form className="edit-data-form" onSubmit={onSubmit}>
       {/* 기존 SCSS 오버라이드와 호환되도록 className 유지 */}
       <div className="edit-data-email">
         <FormGroup
           type="email"
           label="이메일"
           value={form.email}
-          onChange={onChange("email")}
-          onBlur={onEmailBlur}
-          error={errors.email}
           placeholder="example@domain.com"
           disabled
         />
       </div>
 
-      <div className="edit-data-username">
+      <div className="edit-data-name">
         <FormGroup
           type="text"
           label="유저이름"
-          value={form.username}
-          onChange={onChange("username")}
-          error={errors.username}
+          value={form.name}
+          onChange={onChange("name")}
+          error={errors.name}
           placeholder="이름을 입력하세요"
         />
       </div>
 
       <div className="edit-data-address">
-        <FormGroup
+        {/* <FormGroup
           type="text"
           label="주소"
           value={form.address}
           onChange={onChange("address")}
+          error={errors.address}
           placeholder="주소를 입력하세요"
-        />
+        /> */}
+        <div className="input-wrap">
+          <label className="input-label">주소</label>
+
+          <AddressAutoComplete
+            value={form.address}
+            onChangeValue={onAddressSelect}
+            placeholder="주소를 입력하세요5"
+
+            // ⬇️ FormGroup 인풋과 동일 클래스
+            inputClassName={`input-field ${errors.address ? "input-error" : ""}`}
+
+            // 드롭다운은 별도 클래스 계속 사용
+            dropdownClassName="addr-dropdown"
+            optionClassName="addr-option"
+            // 여기선 errorText 넘기지 말고(중복 방지), 아래에서 통일 렌더
+          />
+
+          {errors.address && (
+            <span className="input-error-message">{errors.address}</span>
+          )}
+        </div>
       </div>
 
       <div className="edit-data-actions">
         <Button
           onClick={onSubmit}
-          disabled={isSaving || (!isDirty && !errors.email && !errors.username)}
+          disabled={isSaving || !isDirty}
         >
           {isSaving ? "저장 중..." : "수정하기"}
         </Button>
@@ -195,7 +225,7 @@ function ProfileEdit() {
           취소
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
 

@@ -47,7 +47,8 @@
         margin-top: 0.5rem;
 
         .mypage-email,
-        .mypage-address {
+        .mypage-address,
+        .mypage-register-date {
           display: flex;
           align-items: flex-start;
           gap: 0.5rem;
@@ -213,6 +214,14 @@
 /* ====== 페이지 탭용 폼 공통 (모달 → 페이지 전환에 맞춘 범위 축소) ====== */
 .edit-data-form,
 .edit-password-form {
+  .edit-data-email,
+  .edit-data-name,
+  .edit-data-address,
+  .edit-data-action {
+    position: relative;
+    margin-top: 1rem;
+  }
+
   .edit-data-actions {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
@@ -359,22 +368,4 @@
     }
   }
 
-  /* 모달 본문 좌측 정렬 */
-  .account-delete-modal-body {
-    text-align: left;
-  }
-
-  .modal-title {
-    display: flex;
-    width: 100%;
-    text-align: center;
-    margin: 0 0 1rem;
-    padding-right: 36px; /* 닫기 아이콘 영역 확보 */
-    line-height: 1.2;
-
-    .edit-data-title {
-      display: inline-block;
-      font-weight: 600;
-    }
-  }
 }
