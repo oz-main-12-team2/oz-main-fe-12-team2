@@ -23,6 +23,22 @@ function Products() {
   const [isLoading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 메시지
 
+  // api 호출 후 상품리스트 업뎃 위한 공통함수
+  const refreshProducts = async (page = currentPage) => {
+    try {
+      const res = await getProducts({
+        page,
+        size: 8,
+        ordering: "name",
+      });
+      setBooks(res.results || []);
+      setTotalPages(Math.ceil((res.count || 1) / 8));
+    } catch (e) {
+      console.error("상품 목록 새로고침 실패:", e);
+      setError(e.message || "상품 목록을 불러오는 중 오류가 발생했습니다.");
+    }
+  };
+
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -82,8 +98,9 @@ function Products() {
     try {
       await deleteProduct(id);
 
-      // 삭제 성공후 상태갱신
-      setBooks((prev) => prev.filter((b) => b.id !== id));
+      // 삭제 후 새로고침
+      await refreshProducts();
+
       setIsModalOpen(false);
 
       await alertSuccess("상품 삭제 성공", "상품이 삭제되었습니다");
@@ -162,10 +179,7 @@ function Products() {
     try {
       await updateProduct(selectedBook.id, selectedBook);
 
-      // 로컬 상태 직접 업데이트
-      setBooks((prev) =>
-        prev.map((b) => (b.id === selectedBook.id ? selectedBook : b))
-      );
+      await refreshProducts(); // 수정 후 새로고침
 
       await alertSuccess("상품 수정 성공", "수정이 완료되었습니다");
       setIsModalOpen(false);
@@ -188,14 +202,8 @@ function Products() {
 
       await alertSuccess("상품 등록 성공", "상품이 등록되었습니다");
 
-      // 등록 후 바로 다시 불러오기
-      const refresh = await getProducts({
-        page: 1,
-        size: 8,
-        ordering: "name",
-      });
-      setBooks(refresh.results || []);
-      setTotalPages(Math.ceil((refresh.count || 1) / 8));
+      await refreshProducts(1); // 등록 후 첫 페이지 새로고침
+
       setCurrentPage(1); // 첫 페이지로 이동해서 다시 불러오기
 
       // 모달 닫기 + 선택 초기화
