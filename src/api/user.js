@@ -112,3 +112,70 @@ export const activateAccount = async (uid, token) => {
     throw new Error(e.message || "이메일 인증 중 오류가 발생했습니다.");
   }
 };
+
+// 개인정보 수정
+export const updateUserMe = async (name, address) => {
+  try {
+    const res = await api.put("/user/me/", {name, address});
+
+    return res.data ?? { name, address };
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data;
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(`${key}: ${data[key].join(", ")}`);
+        else msgs.push(`${key}: ${String(data[key])}`);
+      }
+      throw new Error(msgs.join("\n") || "개인정보 수정에 실패했습니다.");
+    }
+
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "개인정보 수정 중 오류가 발생했습니다.");
+  }
+}
+
+// 비밀번호 수정
+export const updatePassword = async (old_password, new_password, new_password_confirm) => {
+  try {
+    const res = await api.put("/user/change-password/", {old_password, new_password, new_password_confirm});
+
+    return res.data ?? {old_password, new_password, new_password_confirm};
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data;
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(`${key}: ${data[key].join(", ")}`);
+        else msgs.push(`${key}: ${String(data[key])}`);
+      }
+      const err = new Error(msgs.join("\n") || "비밀번호 수정에 실패했습니다.");
+      err.fieldErrors = data;
+      throw err;
+    }
+
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "비밀번호 수정 중 오류가 발생했습니다.");
+  }
+}
+
+// 회원 탈퇴
+export const deleteUserMe = async () => {
+  try {
+    const res = await api.delete("/user/me/delete/", { withCredentials: true });
+    return res.data ?? { success: true };
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data;
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(`${key}: ${data[key].join(", ")}`);
+        else msgs.push(`${key}: ${String(data[key])}`);
+      }
+      throw new Error(msgs.join("\n") || "회원 탈퇴에 실패했습니다.");
+    }
+
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "회원 탈퇴 중 오류가 발생했습니다.");
+  }
+}
