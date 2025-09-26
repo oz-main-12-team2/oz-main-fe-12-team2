@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../common/Button";
-import { logout, getUserMe, deleteUserMe } from "../../api/user";
+import { getUserMe, deleteUserMe } from "../../api/user";
 import { alertComfirm, alertSuccess, alertError } from "../../utils/alert";
 import Loading from "../common/Loading";
 
