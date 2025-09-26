@@ -246,3 +246,24 @@ export async function updateProduct(productId, payload) {
     };
   }
 }
+
+// 대시보드 통계 조회 (GET /admin/stats/dashboard/)
+export async function getDashboardStats() {
+  try {
+    const res = await api.get(`/admin/stats/dashboard/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error ||
+          "대시보드 데이터를 불러오는 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}

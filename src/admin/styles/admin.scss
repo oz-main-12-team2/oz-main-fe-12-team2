@@ -121,7 +121,7 @@
     padding: 1.5rem;
     border: 1px solid #e2e8f0;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    border-left: 5px solid #3b82f6;
+    border-left: 5px solid $sub-color-hover;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     .dashboard-card-title {
@@ -161,11 +161,11 @@
       min-height: 90px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      border-left: 4px solid #3b82f6;
+      border-left: 5px solid $sub-color-hover;
 
       .dashboard-sales-icon {
         font-size: 1.5rem;
-        color: #3b82f6;
+        color: $sub-color-hover;
       }
 
       .dashboard-sales-title {
@@ -259,6 +259,7 @@
       background: #fff;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
+      min-width: 1000px;
 
       th,
       td {
@@ -474,13 +475,15 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
-
+    min-width: 1000px;
+    
     th,
     td {
       padding: 12px 14px;
       text-align: left;
       border-bottom: 1px solid #e5e7eb;
       font-size: 14px;
+      max-width: 150px;
     }
 
     th {
@@ -561,6 +564,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
+    min-width: 1200px;
 
     th,
     td {

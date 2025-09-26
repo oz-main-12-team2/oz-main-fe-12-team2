@@ -29,7 +29,7 @@ function Products() {
       const res = await getProducts({
         page,
         size: 8,
-        ordering: "name",
+        ordering: "-id",
       });
       setBooks(res.results || []);
       setTotalPages(Math.ceil((res.count || 1) / 8));
@@ -48,7 +48,7 @@ function Products() {
         const res = await getProducts({
           page: currentPage,
           size: 8,
-          ordering: "name",
+          ordering: "-id",
         });
         console.log(res.results);
         setBooks(res.results || []);
