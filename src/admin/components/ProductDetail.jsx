@@ -3,7 +3,7 @@ function ProductDetail({ selectedBook }) {
     <div className="product-detail">
       <div className="product-detail-left">
         <img
-          src={selectedBook.image_url || "/no-image.jpg"}
+          src={selectedBook.image || "/no-image.jpg"}
           alt={selectedBook.name}
           className="product-detail-image"
           onError={(e) => {

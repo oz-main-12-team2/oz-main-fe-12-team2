@@ -125,7 +125,7 @@ export async function getOrderDetail(orderId) {
   }
 }
 
-// 주문 상태/배송정보 수정
+// 주문 상태/배송정보 수정 (PUT /admin/orders/:orderId/)
 export async function updateOrder(orderId, payload) {
   try {
     const res = await api.put(`/admin/orders/${orderId}/`, payload);
@@ -135,6 +135,108 @@ export async function updateOrder(orderId, payload) {
       throw {
         message:
           e.response.data?.error || "주문 정보 수정 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}
+
+// 상품 등록(POST /admin/products/create/)
+export async function createProduct(payload) {
+  try {
+    const formData = new FormData();
+
+    // 텍스트 데이터 추가
+    formData.append("name", payload.name);
+    formData.append("description", payload.description);
+    formData.append("author", payload.author);
+    formData.append("publisher", payload.publisher);
+    formData.append("price", payload.price);
+    formData.append("stock", payload.stock);
+    formData.append("category", payload.category);
+
+    // 이미지 파일이 있을 경우 추가
+    if (payload.imageFile) {
+      formData.append("image", payload.imageFile);
+    }
+
+    const res = await api.post(`/admin/products/create/`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error || "상품 등록 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}
+
+// 상품 삭제 (DELETE /admin/products/:productId/)
+export async function deleteProduct(productId) {
+  try {
+    const res = await api.delete(`/admin/products/${productId}/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error || "상품 삭제 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}
+
+// 상품 수정 (PUT /admin/products/:productId/)
+export async function updateProduct(productId, payload) {
+  try {
+    const formData = new FormData();
+
+    // 텍스트 데이터 추가
+    formData.append("name", payload.name);
+    formData.append("description", payload.description);
+    formData.append("author", payload.author);
+    formData.append("publisher", payload.publisher);
+    formData.append("price", payload.price);
+    formData.append("stock", payload.stock);
+    formData.append("category", payload.category);
+
+    // 이미지 파일이 있을 경우 추가
+    if (payload.imageFile) {
+      formData.append("image", payload.imageFile);
+    }
+
+    const res = await api.put(`/admin/products/${productId}/`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data; 
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error || "상품 수정 중 오류가 발생했습니다.",
         code: e.response.status,
       };
     }

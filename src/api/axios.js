@@ -51,7 +51,7 @@ api.interceptors.response.use(
 
       try {
         // 리프레시토큰 요청 (서버에서 새 access token 발급)
-        await axios.post(`${url}/user/token/refresh`, null, {
+        await axios.post(`${url}/user/token/refresh/`, null, {
           withCredentials: true, // refresh 요청에도 쿠키 포함
         });
         processQueue(); // 대기 중인 요청들 재시작
