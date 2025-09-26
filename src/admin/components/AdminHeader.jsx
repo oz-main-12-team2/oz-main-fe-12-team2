@@ -22,7 +22,7 @@ function AdminHeader() {
     clearUser(); // zustand에서 user 정보 삭제
     await logout(); // 서버 로그아웃 호출
     await alertSuccess("로그아웃 성공", "로그아웃이 완료되었습니다");
-    navigate("/", { replace: true });
+    navigate("/admin/login", { replace: true });
   };
 
   return (

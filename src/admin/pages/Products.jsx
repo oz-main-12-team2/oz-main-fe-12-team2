@@ -8,6 +8,7 @@ import ProductModal from "../components/ProductModal";
 import ProductCreateModal from "../components/ProductCreateModal";
 import { getProducts } from "../../api/products";
 import { formatDateShort } from "../../utils/dateFormat";
+import Loading from "../../components/common/Loading";
 
 function Products() {
   const [books, setBooks] = useState([]);
@@ -18,16 +19,24 @@ function Products() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [errors, setErrors] = useState({});
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const res = await getProducts({ page: currentPage, size: 10 });
-        // console.log(res.results);
+        setLoading(true);
+        setError(null);
+        
+        const res = await getProducts({ page: currentPage, size: 8 });
+        
         setBooks(res.results || []);
         setTotalPages(Math.ceil((res.count || 1) / 10));
       } catch (e) {
         console.error("상품 불러오기 실패 : ", e);
+        setError(e.message || "상품 목록을 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -259,15 +268,22 @@ function Products() {
         </Button>
       </div>
 
+      {isLoading && <Loading loadingText={"상품 목록 불러오는 중"} />}
+      {error && <p className="error">{error}</p>}
       {/* 상품 테이블 */}
-      <ProductsTable table={table} onRowClick={openDetailModal} />
+      {!isLoading && !error && (
+        <>
+          {/* 상품 테이블 */}
+          <ProductsTable table={table} onRowClick={openDetailModal} />
 
-      {/* 페이지네이션 */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+          {/* 페이지네이션 */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      )}
 
       {/* ProductModal.jsx (상세/수정) */}
       {selectedBook && selectedBook.id && (

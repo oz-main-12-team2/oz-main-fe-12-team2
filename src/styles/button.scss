@@ -23,8 +23,9 @@ $color-disabled: $disabled-color;
   line-height: 1.2;
 
   &--sm {
+    margin-top: 0.2rem;
     font-size: 0.875rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.375rem 0.75rem;
   }
   &--md {
     font-size: 1rem;
