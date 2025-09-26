@@ -12,16 +12,16 @@ import Loading from "../../components/common/Loading";
 import { createProduct, deleteProduct, updateProduct } from "../../api/admin";
 
 function Products() {
-  const [books, setBooks] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [books, setBooks] = useState([]); // 상품 목록 데이터
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [isModalOpen, setIsModalOpen] = useState(false); // 상세/수정 모달 열림 boolean
+  const [isEditMode, setIsEditMode] = useState(false); // 상세 모달에서 수정 모드 boolean
+  const [selectedBook, setSelectedBook] = useState(null); // 선택된 상품 데이터
+  const [errors, setErrors] = useState({}); // 폼 입력값 에러 상태
+  const [isCreateOpen, setIsCreateOpen] = useState(false); // 상품 등록 모달 열림 boolaen
+  const [isLoading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 메시지
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -188,15 +188,19 @@ function Products() {
 
       await alertSuccess("상품 등록 성공", "상품이 등록되었습니다");
 
-      setBooks((prev) =>
-        prev.map((b) => (b.id === selectedBook.id ? selectedBook : b))
-      );
+      // 등록 후 바로 다시 불러오기
+      const refresh = await getProducts({
+        page: 1,
+        size: 8,
+        ordering: "name",
+      });
+      setBooks(refresh.results || []);
+      setTotalPages(Math.ceil((refresh.count || 1) / 8));
+      setCurrentPage(1); // 첫 페이지로 이동해서 다시 불러오기
 
       // 모달 닫기 + 선택 초기화
       setIsCreateOpen(false);
       setSelectedBook(null);
-
-    //   setCurrentPage(1); // 첫 페이지로 이동해서 다시 불러오기
     } catch (e) {
       console.error("상품 등록 실패:", e);
       setError(e.message || "상품 등록 중 오류가 발생했습니다.");
