@@ -113,6 +113,59 @@ export const activateAccount = async (uid, token) => {
   }
 };
 
+// 비밀번호 재설정 메일 발송
+export const requestPasswordReset = async (email) => {
+  try {
+    const res = await api.post("/user/password-reset/request/", { email });
+    // 보통 200/202 반환. 메세지가 있다면 그대로 리턴
+    return res.data ?? { success: true };
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data; // 예: { email: ["등록되지 않은 이메일입니다."] }
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(`${data[key].join(", ")}`);
+        else msgs.push(`${String(data[key])}`);
+      }
+      const err = new Error(msgs.join("\n") || "메일 발송에 실패했습니다.");
+      err.fieldErrors = data;
+      throw err;
+    }
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "메일 발송 중 오류가 발생했습니다.");
+  }
+};
+
+// 비밀번호 찾기 - 비밀번호 재설정
+export const confirmPasswordReset = async ({ uid, token, new_password, new_password_confirm }) => {
+  try {
+    const url = `/user/password-reset/confirm/?uid=${encodeURIComponent(uid)}&token=${encodeURIComponent(token)}`;
+    const payload = {
+      new_password,
+      new_password_confirm,
+      // 호환용(Djoser류): re_new_password도 함께 넣어두면 안전
+      re_new_password: new_password_confirm,
+    };
+
+    const res = await api.post(url, payload, { headers: { "Content-Type": "application/json" } });
+    return res.data ?? { success: true };
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data; // 예: { new_password: ["8자 이상이어야 합니다."] }
+      const msgs = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) msgs.push(data[key].join(", "));
+        else msgs.push(String(data[key]));
+      }
+      const err = new Error(msgs.join("\n") || "비밀번호 재설정에 실패했습니다.");
+      err.fieldErrors = data; // 필드별 에러 전달
+      throw err;
+    }
+    if (e.request) throw new Error("서버 응답이 없습니다. 네트워크를 확인해주세요.");
+    throw new Error(e.message || "비밀번호 재설정 중 오류가 발생했습니다.");
+  }
+};
+
 // 개인정보 수정
 export const updateUserMe = async (name, address) => {
   try {
