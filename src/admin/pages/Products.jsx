@@ -9,27 +9,48 @@ import ProductCreateModal from "../components/ProductCreateModal";
 import { getProducts } from "../../api/products";
 import { formatDateShort } from "../../utils/dateFormat";
 import Loading from "../../components/common/Loading";
+import { createProduct, deleteProduct, updateProduct } from "../../api/admin";
 
 function Products() {
-  const [books, setBooks] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [books, setBooks] = useState([]); // 상품 목록 데이터
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [isModalOpen, setIsModalOpen] = useState(false); // 상세/수정 모달 열림 boolean
+  const [isEditMode, setIsEditMode] = useState(false); // 상세 모달에서 수정 모드 boolean
+  const [selectedBook, setSelectedBook] = useState(null); // 선택된 상품 데이터
+  const [errors, setErrors] = useState({}); // 폼 입력값 에러 상태
+  const [isCreateOpen, setIsCreateOpen] = useState(false); // 상품 등록 모달 열림 boolaen
+  const [isLoading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 메시지
+
+  // api 호출 후 상품리스트 업뎃 위한 공통함수
+  const refreshProducts = async (page = currentPage) => {
+    try {
+      const res = await getProducts({
+        page,
+        size: 8,
+        ordering: "name",
+      });
+      setBooks(res.results || []);
+      setTotalPages(Math.ceil((res.count || 1) / 8));
+    } catch (e) {
+      console.error("상품 목록 새로고침 실패:", e);
+      setError(e.message || "상품 목록을 불러오는 중 오류가 발생했습니다.");
+    }
+  };
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
         setError(null);
-        
-        const res = await getProducts({ page: currentPage, size: 8 });
-        
+
+        const res = await getProducts({
+          page: currentPage,
+          size: 8,
+          ordering: "name",
+        });
+        console.log(res.results);
         setBooks(res.results || []);
         setTotalPages(Math.ceil((res.count || 1) / 10));
       } catch (e) {
@@ -74,10 +95,19 @@ function Products() {
     const del = await alertComfirm("상품 삭제", "정말 삭제하시겠습니까?");
     if (!del.isConfirmed) return;
 
-    setBooks((prev) => prev.filter((b) => b.id !== id));
-    setIsModalOpen(false);
+    try {
+      await deleteProduct(id);
 
-    await alertSuccess("삭제 성공", "삭제가 완료되었습니다");
+      // 삭제 후 새로고침
+      await refreshProducts();
+
+      setIsModalOpen(false);
+
+      await alertSuccess("상품 삭제 성공", "상품이 삭제되었습니다");
+    } catch (e) {
+      console.error("상품 삭제 실패:", e);
+      setError(e.message || "상품 삭제 중 오류가 발생했습니다.");
+    }
   };
 
   // 유효성 검사
@@ -101,8 +131,8 @@ function Products() {
 
     // 가격
     const price = Number(selectedBook.price);
-    if (selectedBook.price === "" || isNaN(price) || price < 0) {
-      newErrors.price = "가격은 0 이상의 숫자여야 합니다.";
+    if (selectedBook.price === "" || isNaN(price) || price <= 0) {
+      newErrors.price = "가격은 1 이상의 숫자여야 합니다.";
     }
 
     // 재고
@@ -131,7 +161,7 @@ function Products() {
 
       if (!allowedExtensions.includes(fileExtension)) {
         newErrors.imageFile =
-          "이미지 파일만 업로드 가능합니다 (jpg, png, gif, webp).";
+          "이미지 파일만 업로드 가능합니다 (jpg, jpeg, png, gif, webp, svg).";
       }
     }
 
@@ -146,12 +176,18 @@ function Products() {
     const res = await alertComfirm("상품 수정", "수정 하시겠습니까?");
     if (!res.isConfirmed) return;
 
-    setBooks((prev) =>
-      prev.map((b) => (b.id === selectedBook.id ? selectedBook : b))
-    );
+    try {
+      await updateProduct(selectedBook.id, selectedBook);
 
-    await alertSuccess("저장 성공", "수정이 완료되었습니다");
-    setIsModalOpen(false);
+      await refreshProducts(); // 수정 후 새로고침
+
+      await alertSuccess("상품 수정 성공", "수정이 완료되었습니다");
+      setIsModalOpen(false);
+      setSelectedBook(null);
+    } catch (e) {
+      console.error("상품 수정 실패:", e);
+      setError(e.message || "상품 수정 중 오류가 발생했습니다.");
+    }
   };
 
   // 등록 저장
@@ -161,29 +197,22 @@ function Products() {
     const res = await alertComfirm("상품 등록", "등록하시겠습니까?");
     if (!res.isConfirmed) return;
 
-    // 새로운 book 객체 생성 (ID 자동 증가)
-    const newBook = {
-      id: books.length > 0 ? Math.max(...books.map((b) => b.id)) + 1 : 1,
-      name: selectedBook.name,
-      description: selectedBook.description,
-      author: selectedBook.author,
-      publisher: selectedBook.publisher,
-      price: selectedBook.price,
-      stock: selectedBook.stock,
-      category: selectedBook.category,
-      image_url: selectedBook.imageFile
-        ? URL.createObjectURL(selectedBook.imageFile) // 미리보기용 URL
-        : "",
-    };
+    try {
+      await createProduct(selectedBook);
 
-    // 상태에 추가
-    setBooks((prev) => [...prev, newBook]);
+      await alertSuccess("상품 등록 성공", "상품이 등록되었습니다");
 
-    await alertSuccess("등록 성공", "상품이 등록되었습니다");
+      await refreshProducts(1); // 등록 후 첫 페이지 새로고침
 
-    // 모달 닫기 & 선택 초기화
-    setIsCreateOpen(false);
-    setSelectedBook(null);
+      setCurrentPage(1); // 첫 페이지로 이동해서 다시 불러오기
+
+      // 모달 닫기 + 선택 초기화
+      setIsCreateOpen(false);
+      setSelectedBook(null);
+    } catch (e) {
+      console.error("상품 등록 실패:", e);
+      setError(e.message || "상품 등록 중 오류가 발생했습니다.");
+    }
   };
 
   // 테이블 컬럼 정의
@@ -191,7 +220,7 @@ function Products() {
     () => [
       {
         header: "이미지",
-        accessorKey: "image_url",
+        accessorKey: "image",
         cell: (info) => (
           <img
             src={info.getValue() || "/no-image.jpg"}

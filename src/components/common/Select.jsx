@@ -9,14 +9,14 @@ import "../../styles/select.scss";
  * ## Props
  * - `label` (string, optional): 셀렉트 박스 위에 표시할 라벨 텍스트
  *
- * - `error` (string, optional): 에러 메시지  
+ * - `error` (string, optional): 에러 메시지
  *   - 값이 있으면 `select-error` 클래스가 추가되고, 하단에 에러 메시지 표시
  *
  * - `children` (ReactNode): `<option>` 요소들을 포함 (드롭다운 선택 항목)
  *
  * - `id` (string, optional): 셀렉트와 라벨을 연결하는 고유 ID, 자동 생성
  *
- * - `...rest`: `<select>` 태그에 전달되는 기본 속성들  
+ * - `...rest`: `<select>` 태그에 전달되는 기본 속성들
  *   - (예: `value`, `defaultValue`, `onChange`, `disabled`, `required` 등)
  *
  * ## 동작

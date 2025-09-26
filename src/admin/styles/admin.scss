@@ -322,6 +322,10 @@
     .product-detail-name {
       font-size: 1.5rem;
       font-weight: bold;
+      width: 350px;
+      white-space: normal; // 자동 줄바꿈 허용
+      word-break: break-word; // 단어가 길어도 줄바꿈
+      overflow-wrap: break-word;
     }
 
     .product-detail-category {
