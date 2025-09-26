@@ -26,20 +26,20 @@ function MainPage() {
     navigate(`/book/${book.id}`);
   };
 
-  // ====== 기본적이고 확실한 캐러셀 ======
+  // ====== 개선된 캐러셀 ======
   const BookListRowLoop = ({ books, onCardClick }) => {
     const containerRef = useRef(null);
 
     // 자동 스크롤
     useEffect(() => {
-      if (!isAutoScrolling) return;
+      if (!isAutoScrolling || books.length === 0) return;
 
       autoScrollIntervalRef.current = setInterval(() => {
         setCurrentIndex(prev => {
           const nextIndex = (prev + 1) % books.length;
           return nextIndex;
         });
-      }, 3000);
+      }, 4000); // 4초로 조정
 
       return () => {
         if (autoScrollIntervalRef.current) {
@@ -50,24 +50,24 @@ function MainPage() {
 
     // 컨테이너 스크롤 위치 업데이트
     useEffect(() => {
-      if (containerRef.current) {
-        const scrollLeft = currentIndex * 350; // 카드 너비 + 갭
+      if (containerRef.current && books.length > 0) {
+        const cardWidth = 320; // 카드 너비 + 갭
+        const scrollLeft = currentIndex * cardWidth;
         containerRef.current.scrollTo({
           left: scrollLeft,
           behavior: 'smooth'
         });
       }
-    }, [currentIndex]);
+    }, [currentIndex, books.length]);
 
     // 마우스 휠 이벤트
     useEffect(() => {
       const container = containerRef.current;
-      if (!container) return;
+      if (!container || books.length === 0) return;
 
       const handleWheel = (e) => {
         e.preventDefault();
         
-        // 휠 방향에 따라 인덱스 변경
         if (e.deltaY > 0) {
           // 아래로 스크롤 = 다음
           setCurrentIndex(prev => (prev + 1) % books.length);
@@ -98,117 +98,89 @@ function MainPage() {
       setCurrentIndex(index);
     };
 
+    if (!books || books.length === 0) {
+      return (
+        <div className="carousel-loading">
+          도서 데이터를 불러오는 중...
+        </div>
+      );
+    }
+
     return (
       <div 
-        className="carousel-wrapper"
+        className="enhanced-carousel-wrapper"
         onMouseEnter={() => setIsAutoScrolling(false)}
         onMouseLeave={() => setIsAutoScrolling(true)}
       >
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          📚 Best 10 일간 베스트
-        </h2>
+        {/* 배경 장식 요소들 */}
+        <div className="background-decoration decoration-1" />
+        <div className="background-decoration decoration-2" />
 
-        <div className="carousel-container">
-          {/* 이전 버튼 */}
-          <button 
-            className="nav-button prev" 
-            onClick={handlePrev}
-            style={{
-              position: 'absolute',
-              left: '10px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 10,
-              background: 'rgba(255,255,255,0.8)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              fontSize: '20px',
-              cursor: 'pointer'
-            }}
-          >
-            ‹
-          </button>
+        {/* 섹션 헤더 */}
+        <div className="carousel-section-header">
+          <h2 className="carousel-section-title">
+            <span className="title-icon-before">📚</span>
+            Best 10 일간 베스트
+            <span className="title-icon-after">✨</span>
+          </h2>
+        </div>
 
-          {/* 캐러셀 컨테이너 */}
+        <div className="enhanced-carousel-container">
+          {/* 그라디언트 오버레이 */}
+          <div className="gradient-overlay left"></div>
+          <div className="gradient-overlay right"></div>
+
+          {/* 네비게이션 컨트롤 */}
+          <div className="navigation-controls">
+            <button className="nav-btn prev-btn" onClick={handlePrev}>
+              ‹
+            </button>
+            <button className="nav-btn next-btn" onClick={handleNext}>
+              ›
+            </button>
+          </div>
+
+          {/* 캐러셀 트랙 */}
           <div 
             ref={containerRef}
-            className="carousel-track"
-            style={{
-              display: 'flex',
-              overflow: 'hidden',
-              gap: '20px',
-              padding: '20px',
-              scrollBehavior: 'smooth'
-            }}
+            className="enhanced-carousel-track"
           >
             {books.map((book, index) => (
               <div
                 key={book.id}
-                className="book-card"
+                className="enhanced-book-card"
                 onClick={() => onCardClick(book)}
-                style={{
-                  flex: '0 0 300px',
-                  height: '400px',
-                  backgroundColor: 'white',
-                  borderRadius: '15px',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                  cursor: 'pointer',
-                  transition: 'transform 0.3s ease',
-                  position: 'relative'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-10px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0px)';
-                }}
               >
-                {/* 베스트 배지 */}
-                <div style={{
-                  position: 'absolute',
-                  top: '10px',
-                  left: '10px',
-                  background: 'gold',
-                  color: 'white',
-                  padding: '5px 10px',
-                  borderRadius: '10px',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  zIndex: 2
-                }}>
-                  #{index + 1}
+                {/* 카드 글로우 효과 */}
+                <div className="card-glow" />
+
+                {/* 베스트셀러 배지 */}
+                <div className="bestseller-badge">
+                  👑 #{index + 1}
                 </div>
 
-                {/* 책 이미지 영역 */}
-                <div style={{
-                  height: '250px',
-                  backgroundColor: '#f0f0f0',
-                  borderRadius: '15px 15px 0 0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '60px'
-                }}>
-                  📚
+                {/* 책 이미지 컨테이너 */}
+                <div className="enhanced-book-image">
+                  {/* 배경 장식 요소들 */}
+                  <div className="image-decoration decoration-float" />
+                  <div className="image-decoration decoration-morph" />
+
+                  {/* Image Not Available 표시 */}
+                  <div className="book-placeholder">
+                    <div className="book-icon">📚</div>
+                    <div className="image-not-available-text">
+                      Image Not Available
+                    </div>
+                  </div>
                 </div>
 
-                {/* 책 정보 */}
-                <div style={{ padding: '20px' }}>
-                  <h3 style={{
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    marginBottom: '10px',
-                    color: '#333'
-                  }}>
+                {/* 책 상세 정보 */}
+                <div className="enhanced-book-details">
+                  <h3 className="enhanced-book-title">
                     {book.title}
                   </h3>
-                  <p style={{
-                    fontSize: '18px',
-                    fontWeight: 'bold',
-                    color: '#007bff'
-                  }}>
+                  <p className="enhanced-book-price">
+                    <span className="price-icon">💰</span>
                     {book.price.toLocaleString()}원
                   </p>
                 </div>
@@ -216,63 +188,27 @@ function MainPage() {
             ))}
           </div>
 
-          {/* 다음 버튼 */}
-          <button 
-            className="nav-button next" 
-            onClick={handleNext}
-            style={{
-              position: 'absolute',
-              right: '10px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 10,
-              background: 'rgba(255,255,255,0.8)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              fontSize: '20px',
-              cursor: 'pointer'
-            }}
-          >
-            ›
-          </button>
-        </div>
+          {/* 도트 인디케이터 */}
+          <div className="dot-indicators">
+            {books.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleDotClick(index)}
+                className={`dot-indicator ${index === currentIndex ? 'active' : ''}`}
+              />
+            ))}
+          </div>
 
-        {/* 도트 인디케이터 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '10px',
-          marginTop: '20px'
-        }}>
-          {books.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleDotClick(index)}
-              style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                border: 'none',
-                backgroundColor: index === currentIndex ? '#007bff' : '#ccc',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-            />
-          ))}
-        </div>
-
-        {/* 상태 표시 */}
-        <div style={{
-          textAlign: 'center',
-          marginTop: '15px',
-          fontSize: '14px',
-          color: '#666'
-        }}>
-          <span>{isAutoScrolling ? '자동 스크롤 중' : '일시 정지됨'}</span>
-          <span style={{ margin: '0 10px' }}>|</span>
-          <span>{currentIndex + 1} / {books.length}</span>
+          {/* 자동 스크롤 상태 표시 */}
+          <div className="auto-scroll-indicator">
+            <span className="auto-scroll-status">
+              {isAutoScrolling ? '🔄 자동 스크롤 중' : '⏸️ 일시 정지됨'}
+            </span>
+            <span className="indicator-divider">|</span>
+            <span className="current-book-indicator">
+              {currentIndex + 1} / {books.length}
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -286,7 +222,7 @@ function MainPage() {
     const newBooks = Array.from({ length: 10 }, (_, idx) => ({
       id: pageNum * 10 + idx,
       title: `도서 ${pageNum * 10 + idx}`,
-      image: "src/assets/logo.png",
+      image: "no-image.jpg",
     }));
 
     setAllBooks((prev) => [...prev, ...newBooks]);
@@ -349,7 +285,7 @@ function MainPage() {
   }, []);
 
   return (
-    <div>
+    <div className="main-page-container">
       <Header />
 
       <MainBanner
@@ -365,13 +301,8 @@ function MainPage() {
       />
 
       <div className="base-container">
-        {/* 기능 우선 캐러셀 */}
-        <div style={{ 
-          position: 'relative',
-          maxWidth: '1200px', 
-          margin: '0 auto',
-          padding: '40px 20px'
-        }}>
+        {/* 개선된 일간 베스트 캐러셀 */}
+        <div className="book-daily-best">
           <BookListRowLoop books={bestBooks} onCardClick={handleCardClick} />
         </div>
 

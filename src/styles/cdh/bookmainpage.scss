@@ -1,26 +1,36 @@
-// bookmainpage.scss - 고급스럽고 러블리한 서점 테마
-// 서점 컨셉에 맞는 따뜻하고 아늑한 느낌의 디자인
+// bookmainpage.scss - 개선된 서점 테마 디자인
+// 제공된 색상 팔레트를 활용한 모던하고 세련된 서점 디자인
 
-// ===== 색상 변수 정의 =====
-$primary-green: #024B3A;
-$accent-green: #00F981;
-$soft-green: #2CD495;
-$warm-cream: #FFF8F0;
-$book-brown: #8B4513;
-$gold-accent: #D4AF37;
-$rose-pink: #FFB6C1;
-$lavender: #E6E6FA;
-$soft-gray: #F5F5F5;
-$text-dark: #2C1810;
-$text-medium: #5D4E37;
-$shadow-warm: rgba(139, 69, 19, 0.15);
-$shadow-soft: rgba(44, 24, 16, 0.1);
+// ===== 색상 변수 정의 (제공된 컬러 팔레트 기반) =====
+$rich-black: #000F31;
+$dark-gray: #032221;
+$bangladesh-green: #024B3A;
+$mountain-meadow: #2CD495;
+$caribbean-green: #00F981;
+$anti-flash-white: #FFF8F0;
+
+// 보조 색상
+$pine: #083D19;
+$basil: #04453A;
+$forest: #095544;
+$frog: #178763;
+$mint: #2FAC95;
+$stone: #707070;
+$pistachio: #AAC8C4;
+
+// 그라디언트 및 투명도 변수
+$primary-gradient: linear-gradient(135deg, $bangladesh-green, $mountain-meadow, $caribbean-green);
+$background-gradient: linear-gradient(135deg, $anti-flash-white 0%, rgba(255, 249, 240, 0.8) 100%);
+$card-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 240, 0.9));
+$shadow-primary: rgba(2, 75, 58, 0.15);
+$shadow-accent: rgba(0, 249, 129, 0.3);
 
 // ===== 전체 메인 페이지 스타일 =====
 .main-page-container {
-  background: linear-gradient(135deg, $warm-cream 0%, #FDF5E6 50%, $soft-gray 100%);
+  background: $background-gradient;
   min-height: 100vh;
   font-family: 'Axiforma', 'Georgia', serif;
+  color: $rich-black;
 }
 
 // ===== 베이스 컨테이너 =====
@@ -38,7 +48,7 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
     left: 0;
     right: 0;
     height: 300px;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300F981' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
     opacity: 0.3;
     z-index: 0;
   }
@@ -54,473 +64,430 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
   width: 100%;
   margin: 4rem 0;
   padding: 0;
+}
 
-  // 섹션 헤더
-  .section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(255, 182, 193, 0.1), rgba(230, 230, 250, 0.1));
-    border-radius: 25px;
-    border: 2px solid rgba(212, 175, 55, 0.2);
-    backdrop-filter: blur(10px);
+// ===== 개선된 캐러셀 래퍼 =====
+.enhanced-carousel-wrapper {
+  position: relative;
+  background: $background-gradient;
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  box-shadow: 
+    0 20px 40px $shadow-primary,
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(2, 75, 58, 0.1);
+  overflow: hidden;
 
-    .section-title {
-      font-size: 3rem;
-      font-weight: 700;
-      background: linear-gradient(45deg, $book-brown, $gold-accent, $primary-green);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.8rem;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      
-      &::before {
-        content: "📚";
-        font-size: 2.5rem;
-        animation: bookFloat 3s ease-in-out infinite;
-      }
-
-      &::after {
-        content: "✨";
-        font-size: 2rem;
-        animation: sparkle 2s ease-in-out infinite alternate;
-      }
-
-      .title-accent {
-        font-size: 1.4rem;
-        font-weight: 500;
-        color: $text-medium;
-        -webkit-text-fill-color: $text-medium;
-        font-style: italic;
-      }
-    }
-
-    .section-subtitle {
-      color: $text-medium;
-      font-size: 1.2rem;
-      font-style: italic;
-      font-weight: 300;
-      letter-spacing: 0.5px;
-    }
-  }
-
-  // 캐러셀 컨테이너
-  .enhanced-carousel-container {
-    position: relative;
-    background: linear-gradient(135deg, 
-      rgba(255, 248, 240, 0.9), 
-      rgba(255, 182, 193, 0.1), 
-      rgba(230, 230, 250, 0.1)
-    );
-    border-radius: 30px;
-    padding: 3rem 2rem;
-    backdrop-filter: blur(20px);
-    border: 3px solid transparent;
-    background-clip: padding-box;
-    box-shadow: 
-      0 20px 40px rgba(139, 69, 19, 0.1),
-      0 0 0 1px rgba(212, 175, 55, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    overflow: hidden;
-
-    // 장식적인 코너 요소들
-    &::before {
-      content: '';
-      position: absolute;
+  // 배경 장식 요소들
+  .background-decoration {
+    position: absolute;
+    border-radius: 50%;
+    
+    &.decoration-1 {
       top: 15px;
-      left: 15px;
-      width: 40px;
-      height: 40px;
-      background: radial-gradient(circle, $gold-accent 30%, transparent 70%);
-      border-radius: 50%;
-      opacity: 0.6;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 15px;
       right: 15px;
       width: 50px;
       height: 50px;
-      background: radial-gradient(circle, $rose-pink 40%, transparent 70%);
-      border-radius: 50%;
-      opacity: 0.4;
+      background: radial-gradient(circle, rgba(0, 249, 129, 0.3) 30%, transparent 70%);
+      animation: float 4s ease-in-out infinite;
+    }
+    
+    &.decoration-2 {
+      bottom: 15px;
+      left: 15px;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, rgba(44, 212, 149, 0.4) 40%, transparent 70%);
+      animation: morph 6s ease-in-out infinite;
+    }
+  }
+}
+
+// ===== 캐러셀 섹션 헤더 =====
+.carousel-section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  .carousel-section-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: $primary-gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+    .title-icon-before {
+      font-size: 2.5rem;
+      animation: bookFloat 3s ease-in-out infinite;
     }
 
-    // 그라디언트 오버레이
-    .gradient-overlay {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100px;
-      pointer-events: none;
-      z-index: 10;
-
-      &.left {
-        left: 0;
-        background: linear-gradient(90deg, 
-          rgba(255, 248, 240, 1), 
-          rgba(255, 248, 240, 0.8),
-          transparent
-        );
-      }
-
-      &.right {
-        right: 0;
-        background: linear-gradient(-90deg, 
-          rgba(255, 248, 240, 1), 
-          rgba(255, 248, 240, 0.8),
-          transparent
-        );
-      }
+    .title-icon-after {
+      font-size: 2rem;
+      animation: sparkle 2s ease-in-out infinite alternate;
     }
+  }
+}
 
-    // 네비게이션 컨트롤
-    .navigation-controls {
-      position: absolute;
-      top: 50%;
+// ===== 개선된 캐러셀 컨테이너 =====
+.enhanced-carousel-container {
+  position: relative;
+  background: linear-gradient(135deg, 
+    rgba(255, 248, 240, 0.9), 
+    rgba(0, 249, 129, 0.05), 
+    rgba(44, 212, 149, 0.05)
+  );
+  border-radius: 25px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(2, 75, 58, 0.1);
+  overflow: hidden;
+
+  // 그라디언트 오버레이
+  .gradient-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    pointer-events: none;
+    z-index: 5;
+
+    &.left {
       left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 1rem;
-      transform: translateY(-50%);
-      pointer-events: none;
-
-      .nav-btn {
-        width: 60px;
-        height: 60px;
-        border: none;
-        border-radius: 50%;
-        background: linear-gradient(145deg, 
-          $warm-cream, 
-          rgba(212, 175, 55, 0.3)
-        );
-        color: $book-brown;
-        font-size: 2rem;
-        font-weight: bold;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        pointer-events: auto;
-        box-shadow: 
-          0 8px 20px rgba(139, 69, 19, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.5);
-        border: 2px solid rgba(212, 175, 55, 0.3);
-
-        &:hover {
-          transform: scale(1.15);
-          background: linear-gradient(145deg, 
-            $gold-accent, 
-            rgba(212, 175, 55, 0.8)
-          );
-          color: white;
-          box-shadow: 
-            0 12px 30px rgba(212, 175, 55, 0.4),
-            0 0 20px rgba(212, 175, 55, 0.3);
-        }
-
-        &:active {
-          transform: scale(1.05);
-        }
-      }
+      background: linear-gradient(90deg, 
+        rgba(255, 248, 240, 1), 
+        rgba(255, 248, 240, 0.8),
+        transparent
+      );
     }
 
-    // 자동 스크롤 인디케이터
-    .auto-scroll-indicator {
-      position: absolute;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
+    &.right {
+      right: 0;
+      background: linear-gradient(-90deg, 
+        rgba(255, 248, 240, 1), 
+        rgba(255, 248, 240, 0.8),
+        transparent
+      );
+    }
+  }
+
+  // 네비게이션 컨트롤
+  .navigation-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 -10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 10;
+
+    .nav-btn {
+      width: 60px;
+      height: 60px;
+      border: 2px solid rgba(2, 75, 58, 0.2);
+      border-radius: 50%;
+      background: linear-gradient(145deg, $anti-flash-white, rgba(0, 249, 129, 0.3));
+      color: $bangladesh-green;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 0.8rem 1.5rem;
-      border-radius: 25px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-
-      .indicator-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: rgba(139, 69, 19, 0.3);
-        transition: all 0.4s ease;
-
-        &.active {
-          background: $gold-accent;
-          box-shadow: 
-            0 0 15px rgba(212, 175, 55, 0.6),
-            0 2px 8px rgba(212, 175, 55, 0.3);
-          transform: scale(1.3);
-        }
-      }
-
-      .auto-scroll-text {
-        font-size: 0.9rem;
-        color: $text-medium;
-        font-weight: 500;
-        font-style: italic;
-      }
-
-      .current-book {
-        font-size: 0.8rem;
-        color: $gold-accent;
-        font-weight: bold;
-        background: rgba(212, 175, 55, 0.1);
-        padding: 0.2rem 0.6rem;
-        border-radius: 10px;
-      }
-    }
-  }
-
-  // 도서 리스트 행
-  .book-list-row {
-    display: flex;
-    gap: 2.5rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 2rem 0;
-    
-    /* 스크롤바 스타일링 */
-    &::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(212, 175, 55, 0.1);
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: linear-gradient(90deg, $gold-accent, $book-brown);
-      border-radius: 4px;
-      
-      &:hover {
-        background: linear-gradient(90deg, $book-brown, $gold-accent);
-      }
-    }
-
-    // 도서 아이템 카드
-    .book-item {
-      flex: 0 0 300px;
-      max-width: 300px;
-      background: linear-gradient(145deg, 
-        rgba(255, 255, 255, 0.95), 
-        rgba(255, 248, 240, 0.9)
-      );
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
-      border: 2px solid transparent;
-      box-shadow: 
-        0 10px 30px rgba(139, 69, 19, 0.1),
-        0 0 0 1px rgba(212, 175, 55, 0.1);
-
-      // 카드 배경 패턴
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 20% 20%, rgba(255, 182, 193, 0.05) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 80%, rgba(230, 230, 250, 0.05) 0%, transparent 50%);
-        z-index: 0;
-      }
-
-      > * {
-        position: relative;
-        z-index: 1;
-      }
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: auto;
+      box-shadow: 0 8px 20px $shadow-primary;
 
       &:hover {
-        transform: translateY(-15px) scale(1.03);
-        box-shadow: 
-          0 25px 50px rgba(139, 69, 19, 0.2),
-          0 0 30px rgba(212, 175, 55, 0.3),
-          0 0 0 3px rgba(212, 175, 55, 0.2);
-        border-color: $gold-accent;
-
-        .card-glow {
-          opacity: 1;
-        }
-
-        .bestseller-badge {
-          transform: scale(1.1) rotate(5deg);
-        }
-
-        .book-image .book-placeholder .book-icon {
-          transform: scale(1.2) rotate(10deg);
-        }
-      }
-
-      // 카드 글로우 효과
-      .card-glow {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg, 
-          transparent, 
-          rgba(212, 175, 55, 0.1), 
-          rgba(255, 182, 193, 0.1),
-          transparent
-        );
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      // 베스트셀러 배지
-      .bestseller-badge {
-        position: absolute;
-        top: 1.5rem;
-        left: 1.5rem;
-        background: linear-gradient(135deg, $gold-accent, #DAA520);
+        transform: scale(1.15);
+        background: linear-gradient(145deg, $caribbean-green, rgba(0, 249, 129, 0.8));
         color: white;
-        padding: 0.6rem 1rem;
-        border-radius: 15px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        z-index: 5;
-        box-shadow: 
-          0 4px 12px rgba(212, 175, 55, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(218, 165, 32, 0.8);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
-
-        &::before {
-          content: '👑';
-          margin-right: 0.3rem;
-        }
+        box-shadow: 0 12px 30px $shadow-accent;
       }
 
-      // 도서 이미지 컨테이너
-      .book-image {
-        width: 100%;
-        height: 350px;
-        background: linear-gradient(135deg, $primary-green, $book-brown, $gold-accent);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        border-radius: 20px 20px 0 0;
-
-        // 이미지 위 장식 요소들
-        &::before {
-          content: '';
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          width: 30px;
-          height: 30px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 50%;
-          animation: float 4s ease-in-out infinite;
-        }
-
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 15px;
-          left: 15px;
-          width: 40px;
-          height: 40px;
-          background: rgba(255, 182, 193, 0.3);
-          border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-          animation: morph 6s ease-in-out infinite;
-        }
-
-        .book-placeholder {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1.5rem;
-          color: white;
-          text-align: center;
-          padding: 2rem;
-          z-index: 2;
-
-          .book-icon {
-            font-size: 4rem;
-            transition: all 0.4s ease;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-          }
-
-          .book-title-preview {
-            font-size: 1.3rem;
-            font-weight: 600;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            line-height: 1.3;
-            max-width: 200px;
-          }
-        }
-
-        img {
-          width: 75%;
-          height: 90%;
-          object-fit: cover;
-          border-radius: 10px;
-          transition: transform 0.4s ease;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-          z-index: 2;
-        }
+      &:active {
+        transform: scale(1.05);
       }
 
-      // 도서 상세 정보
-      .book-list-details {
-        display: flex;
-        flex-direction: column;
-        padding: 2rem;
-        background: linear-gradient(135deg, 
-          rgba(255, 255, 255, 0.9), 
-          rgba(255, 248, 240, 0.8)
-        );
+      &.prev-btn {
+        margin-left: -10px;
+      }
 
-        .book-title {
-          font-size: 1.4rem;
-          font-weight: 600;
-          margin-bottom: 1rem;
-          color: $text-dark;
-          line-height: 1.4;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-family: 'Georgia', serif;
-        }
-
-        .book-price {
-          color: $gold-accent;
-          font-size: 1.6rem;
-          font-weight: 700;
-          text-shadow: 0 1px 3px rgba(212, 175, 55, 0.3);
-          
-          &::before {
-            content: '💰 ';
-            font-size: 1.2rem;
-            margin-right: 0.3rem;
-          }
-        }
+      &.next-btn {
+        margin-right: -10px;
       }
     }
   }
+}
+
+// ===== 개선된 캐러셀 트랙 =====
+.enhanced-carousel-track {
+  display: flex;
+  overflow: hidden;
+  gap: 20px;
+  padding: 20px 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  /* 스크롤바 숨기기 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+// ===== 개선된 도서 카드 =====
+.enhanced-book-card {
+  flex: 0 0 300px;
+  height: 450px;
+  background: $card-gradient;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px $shadow-primary;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+
+  // 카드 글로우 효과
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+      transparent, 
+      rgba(0, 249, 129, 0.1), 
+      rgba(44, 212, 149, 0.1),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &:hover {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 
+      0 25px 50px $shadow-primary,
+      0 0 30px $shadow-accent;
+    border-color: $caribbean-green;
+
+    .card-glow {
+      opacity: 1;
+    }
+
+    .bestseller-badge {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .book-icon {
+      transform: scale(1.2) rotate(10deg);
+    }
+  }
+
+  // 베스트셀러 배지
+  .bestseller-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, $caribbean-green, $mountain-meadow);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0, 249, 129, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+}
+
+// ===== 개선된 도서 이미지 컨테이너 =====
+.enhanced-book-image {
+  height: 300px;
+  background: $primary-gradient;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // 이미지 장식 요소들
+  .image-decoration {
+    position: absolute;
+    
+    &.decoration-float {
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    &.decoration-morph {
+      bottom: 15px;
+      left: 15px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 248, 240, 0.3);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation: morph 6s ease-in-out infinite;
+    }
+  }
+
+  // 도서 플레이스홀더
+  .book-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    z-index: 2;
+
+    .book-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      transition: all 0.4s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .image-not-available-text {
+      font-size: 14px;
+      font-weight: 500;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+// ===== 개선된 도서 상세 정보 =====
+.enhanced-book-details {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  background: $card-gradient;
+  position: relative;
+  z-index: 2;
+
+  .enhanced-book-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: $bangladesh-green;
+    line-height: 1.4;
+    font-family: 'Georgia', serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .enhanced-book-price {
+    color: $caribbean-green;
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 249, 129, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .price-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+// ===== 도트 인디케이터 =====
+.dot-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+
+  .dot-indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(2, 75, 58, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &.active {
+      background-color: $caribbean-green;
+      box-shadow: 0 0 15px rgba(0, 249, 129, 0.6);
+      transform: scale(1.3);
+    }
+
+    &:hover:not(.active) {
+      background-color: $mountain-meadow;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// ===== 자동 스크롤 인디케이터 =====
+.auto-scroll-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(2, 75, 58, 0.1);
+
+  .auto-scroll-status {
+    font-size: 14px;
+    color: $bangladesh-green;
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  .indicator-divider {
+    color: $mountain-meadow;
+    font-weight: bold;
+  }
+
+  .current-book-indicator {
+    font-size: 14px;
+    color: $caribbean-green;
+    font-weight: bold;
+    background: rgba(0, 249, 129, 0.1);
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+}
+
+// ===== 캐러셀 로딩 =====
+.carousel-loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: $mountain-meadow;
+  font-style: italic;
 }
 
 // ===== 전체 도서 섹션 =====
@@ -532,16 +499,16 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
     rgba(255, 248, 240, 0.6)
   );
   border-radius: 25px;
-  border: 2px solid rgba(212, 175, 55, 0.15);
+  border: 2px solid rgba(2, 75, 58, 0.15);
   backdrop-filter: blur(10px);
 
   h2 {
     font-size: 2.5rem;
-    color: $text-dark;
+    color: $bangladesh-green;
     text-align: center;
     margin-bottom: 2rem;
     font-weight: 600;
-    background: linear-gradient(45deg, $book-brown, $gold-accent);
+    background: linear-gradient(45deg, $bangladesh-green, $caribbean-green);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     
@@ -559,25 +526,47 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
 
 // ===== 애니메이션 정의 =====
 @keyframes bookFloat {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(5deg); }
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-10px) rotate(5deg); 
+  }
 }
 
 @keyframes sparkle {
-  0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
-  100% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+  0% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: scale(1.2) rotate(180deg); 
+    opacity: 1; 
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-15px); 
+  }
 }
 
 @keyframes morph {
-  0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-  25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
-  50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
-  75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+  0%, 100% { 
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; 
+  }
+  25% { 
+    border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; 
+  }
+  50% { 
+    border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; 
+  }
+  75% { 
+    border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; 
+  }
 }
 
 // ===== 반응형 디자인 =====
@@ -586,12 +575,10 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
     padding: 1.5rem;
   }
   
-  .book-daily-best {
-    .enhanced-carousel-container {
-      padding: 2rem 1.5rem;
-    }
+  .enhanced-carousel-wrapper {
+    padding: 2rem 1.5rem;
     
-    .book-list-row .book-item {
+    .enhanced-carousel-track .enhanced-book-card {
       flex: 0 0 280px;
     }
   }
@@ -604,64 +591,67 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
 
   .book-daily-best {
     margin: 2rem 0;
+  }
 
-    .section-header {
-      padding: 1.5rem;
-      
-      .section-title {
+  .enhanced-carousel-wrapper {
+    padding: 1.5rem 1rem;
+    border-radius: 20px;
+
+    .carousel-section-header {
+      .carousel-section-title {
         font-size: 2.2rem;
         flex-direction: column;
         gap: 0.5rem;
         
-        .title-accent {
-          font-size: 1.1rem;
+        .title-icon-before,
+        .title-icon-after {
+          font-size: 2rem;
         }
-      }
-      
-      .section-subtitle {
-        font-size: 1rem;
       }
     }
 
     .enhanced-carousel-container {
-      padding: 1.5rem 1rem;
-      border-radius: 20px;
-
       .navigation-controls {
         display: none;
       }
 
       .auto-scroll-indicator {
-        position: static;
-        transform: none;
-        justify-content: center;
-        margin-top: 1rem;
-        padding: 0.6rem 1rem;
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px 12px;
       }
     }
 
-    .book-list-row {
-      gap: 1.5rem;
+    .enhanced-carousel-track {
+      gap: 15px;
       padding: 1rem 0;
 
-      .book-item {
+      .enhanced-book-card {
         flex: 0 0 240px;
         max-width: 240px;
+        height: 400px;
 
-        .book-image {
+        .enhanced-book-image {
           height: 280px;
         }
 
-        .book-list-details {
-          padding: 1.5rem;
+        .enhanced-book-details {
+          padding: 15px;
           
-          .book-title {
-            font-size: 1.2rem;
+          .enhanced-book-title {
+            font-size: 16px;
           }
           
-          .book-price {
-            font-size: 1.4rem;
+          .enhanced-book-price {
+            font-size: 18px;
           }
+        }
+
+        .bestseller-badge {
+          top: 10px;
+          left: 10px;
+          padding: 6px 10px;
+          font-size: 12px;
         }
       }
     }
@@ -679,75 +669,175 @@ $shadow-soft: rgba(44, 24, 16, 0.1);
 }
 
 @media (max-width: 480px) {
-  .book-daily-best {
-    .section-header .section-title {
+  .enhanced-carousel-wrapper {
+    .carousel-section-header .carousel-section-title {
       font-size: 1.8rem;
     }
 
-    .book-list-row .book-item {
+    .enhanced-carousel-track .enhanced-book-card {
       flex: 0 0 200px;
       max-width: 200px;
+      height: 360px;
 
-      .book-image {
+      .enhanced-book-image {
         height: 240px;
+
+        .book-placeholder {
+          padding: 1.5rem;
+
+          .book-icon {
+            font-size: 3rem;
+          }
+
+          .image-not-available-text {
+            font-size: 12px;
+            padding: 4px 8px;
+          }
+        }
+      }
+
+      .enhanced-book-details {
+        padding: 12px;
+        
+        .enhanced-book-title {
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+        
+        .enhanced-book-price {
+          font-size: 16px;
+        }
       }
 
       .bestseller-badge {
-        top: 1rem;
-        left: 1rem;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
+        padding: 4px 8px;
+        font-size: 11px;
       }
     }
+
+    .dot-indicators {
+      gap: 8px;
+      margin-top: 15px;
+
+      .dot-indicator {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    .auto-scroll-indicator {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+  }
+
+  .book-list h2 {
+    font-size: 1.8rem;
   }
 }
 
 // ===== 다크모드 지원 (선택사항) =====
 @media (prefers-color-scheme: dark) {
   .main-page-container {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #3a3a3a 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+    color: $anti-flash-white;
   }
 
   .base-container::before {
     filter: invert(1) opacity(0.1);
   }
 
-  .book-daily-best {
-    .section-header {
-      background: linear-gradient(135deg, rgba(44, 24, 16, 0.2), rgba(139, 69, 19, 0.1));
-      border-color: rgba(212, 175, 55, 0.3);
-    }
+  .enhanced-carousel-wrapper {
+    background: linear-gradient(135deg, 
+      rgba(10, 10, 10, 0.9), 
+      rgba(2, 75, 58, 0.3)
+    );
+    border-color: rgba(0, 249, 129, 0.2);
+  }
 
-    .enhanced-carousel-container {
-      background: linear-gradient(135deg, 
-        rgba(26, 26, 26, 0.9), 
-        rgba(44, 24, 16, 0.3)
-      );
-      border-color: rgba(212, 175, 55, 0.2);
-    }
+  .enhanced-carousel-container {
+    background: linear-gradient(135deg, 
+      rgba(26, 26, 26, 0.9), 
+      rgba(2, 75, 58, 0.2)
+    );
+    border-color: rgba(0, 249, 129, 0.2);
 
-    .book-list-row .book-item {
-      background: linear-gradient(145deg, 
-        rgba(58, 58, 58, 0.95), 
-        rgba(44, 24, 16, 0.3)
-      );
-      color: white;
+    .gradient-overlay {
+      &.left {
+        background: linear-gradient(90deg, 
+          rgba(26, 26, 26, 1), 
+          rgba(26, 26, 26, 0.8),
+          transparent
+        );
+      }
 
-      .book-list-details .book-title {
-        color: #f0f0f0;
+      &.right {
+        background: linear-gradient(-90deg, 
+          rgba(26, 26, 26, 1), 
+          rgba(26, 26, 26, 0.8),
+          transparent
+        );
       }
     }
+  }
+
+  .enhanced-book-card {
+    background: linear-gradient(145deg, 
+      rgba(42, 42, 42, 0.95), 
+      rgba(2, 75, 58, 0.3)
+    );
+    color: $anti-flash-white;
+
+    .enhanced-book-details {
+      background: linear-gradient(145deg, 
+        rgba(42, 42, 42, 0.95), 
+        rgba(2, 75, 58, 0.2)
+      );
+
+      .enhanced-book-title {
+        color: $anti-flash-white;
+      }
+    }
+  }
+
+  .auto-scroll-indicator {
+    background: rgba(42, 42, 42, 0.9);
+    border-color: rgba(0, 249, 129, 0.2);
   }
 
   .book-list {
     background: linear-gradient(135deg, 
       rgba(26, 26, 26, 0.8), 
-      rgba(44, 24, 16, 0.4)
+      rgba(2, 75, 58, 0.4)
     );
-    border-color: rgba(212, 175, 55, 0.2);
+    border-color: rgba(0, 249, 129, 0.2);
 
     h2 {
-      color: #f0f0f0;
+      color: $anti-flash-white;
     }
+  }
+}
+
+// ===== 접근성 향상 =====
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ===== 고해상도 디스플레이 지원 =====
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .enhanced-book-card {
+    box-shadow: 
+      0 20px 60px rgba(2, 75, 58, 0.15),
+      0 0 0 0.5px rgba(0, 249, 129, 0.1);
+  }
+
+  .navigation-controls .nav-btn {
+    box-shadow: 
+      0 16px 40px rgba(2, 75, 58, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 }
