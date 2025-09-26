@@ -50,7 +50,7 @@ function Products() {
           size: 8,
           ordering: "-id",
         });
-        console.log(res.results);
+        
         setBooks(res.results || []);
         setTotalPages(Math.ceil((res.count || 1) / 10));
       } catch (e) {
