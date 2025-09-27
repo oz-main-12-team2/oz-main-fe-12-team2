@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import "../../styles/headeruserdropdown.scss";
 import { useNavigate } from "react-router-dom";
-import { LuUserRound, LuShoppingCart, LuLogOut } from "react-icons/lu";
+import { LuShoppingCart, LuLogOut } from "react-icons/lu";
+import { AiOutlineUser } from "react-icons/ai";
 
 function HeaderUserDropdown({ user, onLogout }) {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ function HeaderUserDropdown({ user, onLogout }) {
 
           <div className="dropdown-actions">
             <div className="dropdown-item" onClick={() => navigate("/mypage")}>
-              <LuUserRound className="dropdown-item-icon" />
+              <AiOutlineUser className="dropdown-item-icon" />
               <span className="dropdown-item-text">마이페이지</span>
             </div>
             <div className="dropdown-item" onClick={() => navigate("/cart")}>

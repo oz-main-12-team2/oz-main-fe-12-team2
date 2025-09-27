@@ -17,17 +17,20 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ConfirmEmail from "./pages/ConfirmEmail";
 import useUserStore from "./stores/userStore";
 import { useCallback, useEffect } from "react";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
+  const { user } = useUserStore();
 
   const getUser = useCallback(() => {
     getUserFromStore();
   }, [getUserFromStore]);
 
   useEffect(() => {
+    if (!user) return;
     getUser();
-  }, [getUser]);
+  }, [getUser, user]);
 
   // 라우트 배열
   const element = useRoutes([
@@ -54,6 +57,8 @@ function App() {
         // { path: "cart" element: <Cart /> }, // 장바구니 추가 예정
       ],
     },
+
+    { path: "/search", element: <SearchPage /> },
 
     // 관리자라우트
     ...adminRoutes,

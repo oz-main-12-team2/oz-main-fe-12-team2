@@ -33,7 +33,7 @@ function AdminProtectedRoute({ children }) {
     checkAdmin();
   }, [user, setUser]);
 
-  if (loading) return <Loading loadingText={"접근 권한을 확인하고 있어요"} size={100}/>;
+  if (loading) return <Loading loadingText={"접근 권한을 확인하고 있어요"} size={60}/>;
 
   if (!isAdmin) {
     return <Navigate to="/admin/login" replace />;

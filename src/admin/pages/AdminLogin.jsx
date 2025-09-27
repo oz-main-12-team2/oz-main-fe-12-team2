@@ -46,7 +46,7 @@ function AdminLogin() {
     <div className="admin-login-page">
       <div className="admin-login-card">
         <img
-          src="/logo.svg"
+          src="/new-logo.svg"
           alt="로고"
           className="admin-login-logo"
           onClick={() => navigate("/")}
@@ -74,7 +74,7 @@ function AdminLogin() {
           <Button
             type="submit"
             variant="primary"
-            size="md"
+            size="lg"
             disabled={isloading}
           >
             {isloading ? "로그인 중..." : "로그인"}
