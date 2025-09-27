@@ -46,7 +46,7 @@ export const logout = async () => {
 export const getUserMe = async () => {
   try {
     const res = await api.get("/user/me/");
-    
+
     return res.data;
   } catch (e) {
     if (e.response) {

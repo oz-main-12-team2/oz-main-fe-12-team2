@@ -21,16 +21,16 @@ import SearchPage from "./pages/SearchPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
-  const { user } = useUserStore();
+//   const { user } = useUserStore();
 
   const getUser = useCallback(() => {
     getUserFromStore();
   }, [getUserFromStore]);
 
   useEffect(() => {
-    if (!user) return;
+    // if (!user) return;
     getUser();
-  }, [getUser, user]);
+  }, [getUser]);
 
   // 라우트 배열
   const element = useRoutes([
