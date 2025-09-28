@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../components/common/Modal";
 import Button from "../../components/common/Button";
 import ProductModal from "./ProductModal";
@@ -6,6 +6,7 @@ import Select from "../../components/common/Select";
 import { updateOrder } from "../../api/admin";
 import { alertComfirm, alertError, alertSuccess } from "../../utils/alert";
 import FormGroup from "../../components/common/FormGroup";
+import phoneFormat from "../../utils/phoneFormat";
 
 const STATUS_OPTIONS = [
   { value: "결제 완료", label: "결제 완료" },
@@ -16,6 +17,16 @@ const STATUS_OPTIONS = [
 function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && order) {
+      setTempRecipientName(order.recipient_name || "");
+      setTempRecipientPhone(order.recipient_phone || "");
+      setTempRecipientAddress(order.recipient_address || "");
+      setTempStatus(order.status || "");
+      setIsEditing(false); // 수정중인 상태도 초기화
+    }
+  }, [isOpen, order]);
 
   // 배송 정보 편집 상태
   const [isEditing, setIsEditing] = useState(false);
@@ -79,7 +90,34 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
     setIsEditing(false);
   };
 
- return (
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: (data) => {
+        let fullAddress = data.address; // 선택한 기본 주소 (도로명, 지번)
+        let extraAddress = ""; // //건물명이나 법정동 등 추가주소정보
+
+        // 법정동/건물명 같이 보조 주소 붙여주기
+        if (data.addressType === "R") {
+          if (data.bname !== "") extraAddress += data.bname; // 법정동명이 있으면 추가
+
+          // 건물명이 있으면 추가, 이미 법정동이 있으면 쉼표로 구분
+          if (data.buildingName !== "") {
+            extraAddress +=
+              extraAddress !== ""
+                ? `, ${data.buildingName}`
+                : data.buildingName;
+          }
+          if (extraAddress !== "") {
+            fullAddress += ` (${extraAddress})`;
+          }
+        }
+
+        setTempRecipientAddress(fullAddress);  // 최종 주소를 상태로 저장 input표시용
+      },
+    }).open();
+  };
+
+  return (
     <>
       <Modal
         isOpen={isOpen}
@@ -87,7 +125,10 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
         onClose={onClose}
         footer={
           <>
-            <Button variant="danger" onClick={() => onDelete(order.order_number)}>
+            <Button
+              variant="danger"
+              onClick={() => onDelete(order.order_number)}
+            >
               삭제
             </Button>
             <Button variant="secondary" onClick={onClose}>
@@ -139,14 +180,24 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
               <FormGroup
                 label="전화번호"
                 value={tempRecipientPhone}
-                onChange={(e) => setTempRecipientPhone(e.target.value)}
+                onChange={(e) =>
+                  setTempRecipientPhone(phoneFormat(e.target.value))
+                }
               />
+              {/* 주소 입력 */}
               <FormGroup
                 label="주소"
-                type="textarea"
                 value={tempRecipientAddress}
                 onChange={(e) => setTempRecipientAddress(e.target.value)}
               />
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={handleAddressSearch}
+                style={{ marginTop: "0.5rem" }}
+              >
+                주소 검색
+              </Button>
               <Select
                 label="상태"
                 value={tempStatus}
