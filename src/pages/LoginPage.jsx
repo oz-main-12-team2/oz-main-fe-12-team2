@@ -9,7 +9,7 @@ import googlelogin from "../assets/web_neutral_sq_SI@4x.png";
 import useUserStore from "../stores/userStore";
 import { alertError, alertSuccess } from "../utils/alert";
 import { login } from "../api/user";
-import { getGoogleStartUrl, markExpectingOAuth, rememberPostLoginRedirect } from "../utils/oauth";
+import { getGoogleStartUrl, getNaverStartUrl, markExpectingOAuth, rememberPostLoginRedirect } from "../utils/oauth";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +46,12 @@ function LoginPage() {
     markExpectingOAuth();        // 소셜 콜백 대기 플래그
     window.location.assign(getGoogleStartUrl()); // 백엔드로 전체 리다이렉트
   };
+
+  const startNaver = () => {
+    rememberPostLoginRedirect(); // 돌아갈 곳 저장
+    markExpectingOAuth();        // 소셜 콜백 대기 플래그
+    window.location.assign(getNaverStartUrl()); // 백엔드로 전체 리다이렉트
+  }
 
   return (
     <div className="base-container">
@@ -103,7 +109,7 @@ function LoginPage() {
           <Link to="#" className="google-login">
             <img src={googlelogin} alt="구글로그인" />
           </Link> */}
-          <button type="button" className="naver-login" disabled>
+          <button type="button" className="naver-login" onClick={startNaver}>
             <img src={naverlogin} alt="네이버로그인" />
           </button>
           <button type="button" className="google-login" onClick={startGoogle}>

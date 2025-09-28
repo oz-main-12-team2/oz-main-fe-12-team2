@@ -32,6 +32,6 @@ export function getGoogleStartUrl() {
 }
 
 // (네이버 필요 시)
-// export function getNaverStartUrl() {
-//   return "https://lov2ly.kro.kr/api/user/login/naver/";
-// }
+export function getNaverStartUrl() {
+  return "https://lov2ly.kro.kr/api/user/login/naver/";
+}
