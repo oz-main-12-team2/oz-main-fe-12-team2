@@ -18,6 +18,7 @@ import ConfirmEmail from "./pages/ConfirmEmail";
 import useUserStore from "./stores/userStore";
 import { useCallback, useEffect } from "react";
 import SearchPage from "./pages/SearchPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -59,6 +60,8 @@ function App() {
     },
 
     { path: "/search", element: <SearchPage /> },
+    // 결제 라우트
+    { path: "checkout", element: <CheckoutPage /> },
 
     // 관리자라우트
     ...adminRoutes,
