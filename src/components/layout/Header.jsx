@@ -6,16 +6,22 @@ import {
   FaBars,
   FaTimes,
   FaUserCircle,
-  FaHome,
 } from "react-icons/fa";
 import NavBar from "./NavBar"; //검색 임시 숨김
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderUserDropdown from "./HeaderUserDropdown";
 import Button from "../common/Button";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import useUserStore from "../../stores/userStore";
 import { alertSuccess } from "../../utils/alert";
 import { logout } from "../../api/user";
+import { AiOutlineUser } from "react-icons/ai";
+import useDebounce from "../../hooks/useDebounce";
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,6 +32,17 @@ function Header() {
   const { user, clearUser } = useUserStore(); // user 가져오기
   const isLogin = !!user; // user가 있으면 로그인 상태
 
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
+  const [searchValue, setSearchValue] = useState(query);
+  const debouncedSearch = useDebounce(searchValue, 500);
+
+  // 항상 searchValue를 url query와 동기화
+  useEffect(() => {
+    setSearchValue(query);
+  }, [query]);
+
   const handleLogout = async () => {
     try {
       clearUser(); // zustand에서 user 정보 삭제
@@ -33,38 +50,88 @@ function Header() {
       await alertSuccess("로그아웃 성공", "로그아웃 되었습니다.");
       navigate("/", { replace: true });
     } catch (e) {
-      console.error("로그아웃 실패:", e);
+      console.error("로그아웃 실패 : ", e);
     } finally {
       setIsMobileMenuOpen(false);
       setCartCount(0);
     }
   };
 
+  const handleSearch = () => {
+    if (!searchValue.trim()) return;
+
+    navigate(`/search?query=${encodeURIComponent(searchValue)}`);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
+  // 검색어 입력 멈춤 디바운스 처리
+  useEffect(() => {
+    const trimmed = debouncedSearch.trim();
+
+    if (trimmed) {
+      // 검색어가 있으면 검색 페이지로 이동
+      navigate(`/search?query=${encodeURIComponent(trimmed)}`, {
+        replace: location.pathname.startsWith("/search"),
+      });
+    } else {
+      // 검색창이 비워졌고 현재 검색 페이지면 메인 이동
+      if (location.pathname.startsWith("/search")) {
+        navigate("/", { replace: true });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
+
   return (
     <header className="header">
       <div className="header-wrap">
         <Link to="/" className="header-logo">
-          <img src="/logo.svg" alt="로고" />
+          <img src="/new-logo.svg" alt="로고" />
         </Link>
 
-        {/* 모바일 검색 */}
-        <div
-          className={`header-search-wrap ${isMobileSearchOpen ? "active" : ""}`}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setIsMobileSearchOpen(false);
-          }}
-        >
+        {/* PC 검색 (기존 그대로, pc-only 클래스 추가) */}
+        <div className="header-search-wrap pc-only">
           <FaSearch
             className="header-search-icon"
-            onClick={() => setIsMobileSearchOpen((s) => !s)}
+            onClick={handleSearch}
             aria-hidden="true"
           />
           <input
             type="text"
             className="header-search-input"
-            placeholder="도서 검색"
+            placeholder="도서를 검색해보세요"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
+
+        {/* 모바일 검색 (768px 이하에서만 노출) */}
+        <div
+          className={`mobile-search-wrap mobile-only ${
+            isMobileSearchOpen ? "active" : ""
+          }`}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setIsMobileSearchOpen(false);
+          }}
+        >
+          <FaSearch
+            className="mobile-search-icon"
+            onClick={() => setIsMobileSearchOpen((s) => !s)}
+          />
+          <input
+            type="text"
+            className="mobile-search-input"
+            placeholder="도서를 검색해보세요"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
         {/* 우측 영역 */}
         <div className="header-right">
           {/* PC 아이콘 + 로그인 */}
@@ -98,7 +165,7 @@ function Header() {
               //   setIsMobileSearchOpen(false);
             }}
           >
-            <FaBars size={22} color={"#888"} />
+            <FaBars size={22} />
           </button>
         </div>
       </div>
@@ -158,7 +225,7 @@ function Header() {
                   )}
                 </div>
 
-                <FaHome
+                <AiOutlineUser
                   size={26}
                   className="mobile-action-icon"
                   onClick={() => navigate("/mypage")}

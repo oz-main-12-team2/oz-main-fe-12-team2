@@ -1,0 +1,47 @@
+@import "./var.scss";
+
+.search-page {
+  padding: 2rem 0;
+
+  .search-header {
+    .search-info {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+
+      .count {
+        font-weight: 400;
+        color: #999;
+        margin-left: 0.5rem;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  // 카테고리 버튼 영역
+  .category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+
+    button {
+      padding: 0.4rem 1.2rem;
+      border: 1px solid $gray-300;
+      border-radius: 25px;
+      background: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #f7f7f7;
+      }
+
+      &.active {
+        background: $main-color;
+        color: #fff;
+      }
+    }
+  }
+}

@@ -1,7 +1,13 @@
 import api from "./axios";
 
 // 상품 목록 조회
-export async function getProducts({ page = 1, size = 20, ordering } = {}) {
+export async function getProducts({
+  page = 1,
+  size = 20,
+  ordering,
+  query,
+  category,
+} = {}) {
   try {
     const params = new URLSearchParams();
 
@@ -14,6 +20,12 @@ export async function getProducts({ page = 1, size = 20, ordering } = {}) {
       params.append("ordering", ordering);
     }
 
+    if (query) params.append("query", query); // 검색어 있으면 추ㅜ가
+
+    if (category) {
+      params.append("category", category); // 카테고리 추가
+    }
+    
     const res = await api.get(`/products/?${params.toString()}`);
     return res.data;
   } catch (e) {

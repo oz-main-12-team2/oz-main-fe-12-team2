@@ -1,7 +1,7 @@
 import "../../styles/booklistcol.scss";
 import { BookCardCol } from "./BookCard";
 
-export function BookListCol({ books, onCardClick }) {
+export function BookListCol({ books, onCardClick, actions }) {
   if (!books || books.length === 0) {
     return <p className="book-list-col-empty">상품이 없습니다.</p>;
   }
@@ -9,7 +9,12 @@ export function BookListCol({ books, onCardClick }) {
   return (
     <div className="book-list-col">
       {books.map((book) => (
-        <BookCardCol key={book.id} book={book} onClick={onCardClick} />
+        <BookCardCol
+          key={book.id}
+          book={book}
+          onClick={onCardClick}
+          actions={actions ? actions(book) : null} // actions가 있으면 실행 후 전달
+        />
       ))}
     </div>
   );
