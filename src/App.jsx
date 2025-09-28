@@ -18,6 +18,7 @@ import ConfirmEmail from "./pages/ConfirmEmail";
 import useUserStore from "./stores/userStore";
 import { useCallback, useEffect } from "react";
 import SearchPage from "./pages/SearchPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -59,6 +60,12 @@ function App() {
     },
 
     { path: "/search", element: <SearchPage /> },
+    // 장바구니
+    {
+      path: "/cart",
+      element: <MyPage />, // 사이드바 유지
+      children: [{ index: true, element: <CartPage /> }],
+    },
 
     // 관리자라우트
     ...adminRoutes,
