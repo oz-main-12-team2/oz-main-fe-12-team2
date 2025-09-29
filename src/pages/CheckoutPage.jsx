@@ -6,9 +6,10 @@ import Modal from "../components/common/Modal"; // ✅ 이미 있는 모달
 import { alertError, alertSuccess, alertComfirm } from "../utils/alert";
 // import { createOrder, createPayment } from "../api/order"; // 앞서 만든 axios 래퍼 (orders/payments)
 import "../styles/checkoutpage.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import { BookListCol } from "../components/common/BookListCol";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
 
@@ -18,6 +19,8 @@ function normalizePhone(v) {
 
 // function CheckoutPage({ selectedItems = [] }) {
 function CheckoutPage() {
+  const navigate = useNavigate();
+
   // 수취인 폼
   const [name, setName] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
@@ -84,6 +87,10 @@ function CheckoutPage() {
     setOpenPayModal(true);
   };
 
+  const onClickCancel = () => {
+    navigate("/cart")
+  }
+
   const onConfirmPay = async () => {
     const { isConfirmed } = await alertComfirm("결제 진행", `선택한 결제수단: ${method}\n계속 진행할까요?`);
     if (!isConfirmed) return;
@@ -129,10 +136,16 @@ function CheckoutPage() {
           {/* <Link to="/">
             <img className="checkout-logo" src="/new-logo.svg" alt="러블리 로고" />
           </Link> */}
-          <h1 className="checkout-title">수취인 정보 입력</h1>
+          <div className="selected-products">
+            <h1 className="selected-products-title">선택한 상품 목록</h1>
+
+            <BookListCol />
+          </div>
 
           {/* 수취인 폼 */}
           <div className="checkout-form">
+            <h1 className="checkout-title">수취인 정보 입력</h1>
+
             <FormGroup
               label="수취인 이름"
               value={name}
@@ -187,6 +200,7 @@ function CheckoutPage() {
               <Button
                 variant="secondary"
                 size="lg"
+                onClick={onClickCancel}
               >
                 취소하기
               </Button>
