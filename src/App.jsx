@@ -19,6 +19,7 @@ import useUserStore from "./stores/userStore";
 import { useCallback, useEffect } from "react";
 import SearchPage from "./pages/SearchPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -66,6 +67,7 @@ function App() {
       element: <MyPage />, // 사이드바 유지
       children: [{ index: true, element: <CartPage /> }],
     },
+    { path: "checkout", element: <CheckoutPage /> },
 
     // 관리자라우트
     ...adminRoutes,

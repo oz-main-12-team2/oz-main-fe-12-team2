@@ -1,0 +1,86 @@
+@import "./var.scss";
+
+.checkout-container {
+  max-width: 600px; // 가운데 좁게
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  .checkout-logo {
+    display: flex;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    width: 35%;
+    max-width: 150px;
+    height: auto;
+    cursor: pointer;
+  }
+
+  .checkout-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input {
+      padding: 0.75rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+      }
+    }
+
+    .checkout-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+      gap: 12px;
+
+      button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.2s;
+
+        &.btn-primary {
+          background-color: #4a90e2;
+          color: white;
+
+          &:hover {
+            background-color: #357ab7;
+          }
+        }
+
+        &.btn-secondary {
+          background-color: #f5f5f5;
+          color: #333;
+          margin-right: 1rem;
+
+          &:hover {
+            background-color: #e0e0e0;
+          }
+        }
+      }
+    }
+  }
+}
