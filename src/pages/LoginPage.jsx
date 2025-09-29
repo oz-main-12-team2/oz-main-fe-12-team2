@@ -56,7 +56,7 @@ function LoginPage() {
   return (
     <div className="base-container">
       <Link to="/">
-        <img className="login-logo" src="/logo.svg" alt="러블리 로고" />
+        <img className="login-logo" src="/new-logo.svg" alt="러블리 로고" />
       </Link>
 
       <form className="login-container" onSubmit={handleLogin}>

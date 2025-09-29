@@ -110,7 +110,7 @@ function SignUpPage() {
     <>
       <div className="base-container">
         <Link to="/">
-          <img className="signup-logo" src="../../public/logo.svg" alt="러블리 로고" />
+          <img className="signup-logo" src="/new-logo.svg" alt="러블리 로고" />
         </Link>
 
         <form className="signup-container" onSubmit={handleSignUp}>
