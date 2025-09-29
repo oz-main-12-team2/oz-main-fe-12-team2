@@ -65,7 +65,6 @@ export function BookCardRow({ book, onClick, children, left }) {
         <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
         <p className="book-price">{(book.price ?? 0).toLocaleString()}원</p>
-        <p className="book-stock">재고: {book.stock}권</p>
       </div>
 
       {children && <div className="book-card-row-actions">{children}</div>}
