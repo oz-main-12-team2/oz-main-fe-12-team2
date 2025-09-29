@@ -180,15 +180,24 @@ $light-gray: #f5f5f5;
       color: $deep-green;
     }
 
+    /* 💡 캐러셀 가격 스타일 수정 */
     .enhanced-book-price {
       font-size: 0.9rem;
-      color: $bangladesh-green;
       font-weight: bold;
       margin-bottom: 0.2rem;
-
-      .price-icon {
-        margin-right: 0.3rem;
-      }
+      
+      // 가격을 감싸는 span 또는 div가 없으므로 p 태그 자체에 스타일 적용
+      display: inline-block;
+      padding: 0.3rem 0.5rem;
+      color: $warm-white;
+      background-color: $bangladesh-green;
+      border-radius: 6px; /* 모든 모서리 둥글게 */
+      
+      // 요청: 왼쪽은 일자로 나오게 (왼쪽 위, 왼쪽 아래 모서리만 각지게)
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      
+      // 💰 아이콘이 포함되어 있으므로 추가적인 아이콘 스타일 제거
     }
 
     .enhanced-book-category,
@@ -225,101 +234,4 @@ $light-gray: #f5f5f5;
   text-align: center;
   margin-top: 0.6rem;
   font-size: 0.85rem;
-  color: $dark-gray;
-
-  .indicator-divider {
-    margin: 0 0.5rem;
-  }
-}
-
-// ===== 전체 도서 리스트 (BookCardCol용) =====
-.book-list {
-  margin: 3rem 0;
-
-  h2 {
-    font-size: 1.6rem;
-    margin-bottom: 1rem;
-    color: $rich-black;
-  }
-
-  .book-list-col {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-  }
-
-  .book-card-col {
-    background: $light-gray;
-    border-radius: 8px;
-    padding: 0.8rem;
-    cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .book-card-image {
-      height: 180px;
-      background: rgba(0,0,0,0.05);
-      border-radius: 6px;
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      img {
-        max-height: 100%;
-        max-width: 100%;
-        border-radius: 6px;
-      }
-    }
-
-    .book-card-content {
-      .book-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: $deep-green;
-        margin-bottom: 0.3rem;
-      }
-
-      .book-category,
-      .book-author {
-        font-size: 0.85rem;
-        color: $dark-gray;
-        margin-bottom: 0.2rem;
-      }
-
-      .book-price {
-        font-size: 0.9rem;
-        font-weight: bold;
-        color: $bangladesh-green;
-      }
-    }
-  }
-}
-
-// ===== Responsive =====
-@media (max-width: 768px) {
-  .main-banner {
-    height: 240px;
-
-    .banner-content {
-      h1 {
-        font-size: 1.6rem;
-      }
-      p {
-        font-size: 0.9rem;
-      }
-    }
-  }
-
-  .enhanced-book-card {
-    flex: 0 0 240px;
-  }
-
-  .book-list-col {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
 }

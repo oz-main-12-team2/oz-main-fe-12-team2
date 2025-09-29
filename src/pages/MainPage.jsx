@@ -1,3 +1,5 @@
+// src/pages/MainPage.jsx
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
@@ -6,10 +8,13 @@ import Footer from "../components/layout/Footer";
 import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
 
+// 💡 API 호출 함수 import
+import { getProducts } from "../api/products"; 
+
+// 💡 스타일 파일들은 외부에서 import
 import "../styles/bookcardcol.scss";
 import "../styles/bookcardrow.scss";
 import "../styles/cdh/bookmainpage.scss";
-// import { getProducts } from "../api/products";
 
 const DEFAULT_IMAGE = "/no-image.jpg";
 
@@ -19,11 +24,14 @@ export function BookCardCol({ book, onClick }) {
     e.currentTarget.src = DEFAULT_IMAGE;
   };
 
+  // 💡 수정된 가격 계산 로직: book.price가 null/undefined이면 0을 사용 후, Number()로 변환
+  const price = (Number(book.price ?? 0) || 0).toLocaleString();
+
   return (
     <div className="book-card-col" onClick={() => onClick && onClick(book)}>
       <div className="book-card-image">
         <img
-          src={book.image_url || DEFAULT_IMAGE}
+          src={book.image || DEFAULT_IMAGE} 
           alt={book.name}
           onError={handleImgError}
         />
@@ -32,7 +40,7 @@ export function BookCardCol({ book, onClick }) {
         <h3 className="book-title">{book.name}</h3>
         <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
-        <p className="book-price">{(book.price ?? 0).toLocaleString()}원</p>
+        <p className="book-price">{price}원</p> 
       </div>
     </div>
   );
@@ -43,12 +51,15 @@ export function BookCardRow({ book, onClick, children }) {
   const handleImgError = (e) => {
     e.currentTarget.src = DEFAULT_IMAGE;
   };
+  
+  // 💡 수정된 가격 계산 로직 적용
+  const price = (Number(book.price ?? 0) || 0).toLocaleString();
 
   return (
     <div className="book-card-row" onClick={() => onClick && onClick(book)}>
       <div className="book-card-row-image">
         <img
-          src={book.image_url || DEFAULT_IMAGE}
+          src={book.image || DEFAULT_IMAGE}
           alt={book.name}
           onError={handleImgError}
         />
@@ -57,7 +68,7 @@ export function BookCardRow({ book, onClick, children }) {
         <h3 className="book-title">{book.name}</h3>
         <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
-        <p className="book-price">{(book.price ?? 0).toLocaleString()}원</p>
+        <p className="book-price">{price}원</p>
         <p className="book-stock">재고: {book.stock}권</p>
       </div>
       {children && <div className="book-card-row-actions">{children}</div>}
@@ -189,7 +200,7 @@ function MainPage() {
                 <div className="enhanced-book-details">
                   <h3 className="enhanced-book-title">{book.name}</h3>
                   <p className="enhanced-book-price">
-                    💰 {book.price.toLocaleString()}원
+                    💰 {(Number(book.price ?? 0) || 0).toLocaleString()}원
                   </p>
                   <p className="enhanced-book-category">{book.category}</p>
                   <p className="enhanced-book-author">
@@ -224,126 +235,48 @@ function MainPage() {
     );
   };
 
-  /* 전체 도서 무한 스크롤 */
-  const fetchBooks = async (pageNum) => {
+  /* 전체 도서 무한 스크롤 (API 호출 적용) */
+  const fetchAllBooks = async (pageNum) => { 
+    if (loading || !hasMore) return; 
+
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    try {
+      // getProducts 호출
+      const data = await getProducts({ page: pageNum, size: 20 }); 
+      
+      const newBooks = data.results; 
 
-    const newBooks = Array.from({ length: 10 }, (_, idx) => ({
-      id: pageNum * 10 + idx,
-      name: `도서 ${pageNum * 10 + idx}`,
-      image_url: "no-image.jpg",
-      category: "IT/컴퓨터",
-      author: "홍길동",
-      publisher: "좋은출판사",
-      price: 20000 + idx * 1000,
-      stock: 10 + idx,
-    }));
+      setAllBooks((prev) => [...prev, ...newBooks]); 
 
-    setAllBooks((prev) => [...prev, ...newBooks]);
-    if (pageNum === 5) setHasMore(false);
-    setLoading(false);
+      // API 응답의 next 필드 유무로 다음 페이지 존재 여부 확인
+      setHasMore(!!data.next); 
+      
+    } catch (error) {
+      console.error("전체 도서 목록 호출 실패:", error);
+      setHasMore(false); 
+    } finally {
+      setLoading(false);
+    }
   };
 
-  /* 초기 데이터 */
+  /* 초기 데이터 로드 (베스트셀러와 첫 페이지 전체 도서) */
   useEffect(() => {
+    // 1. 베스트셀러 데이터 호출
+    const fetchBestBooks = async () => {
+        try {
+            // getProducts 호출: ordering을 판매량 내림차순('-stock')으로 지정
+            const data = await getProducts({ page: 1, size: 10, ordering: '-stock' }); 
+            setBestBooks(data.results);
+        } catch (error) {
+            console.error("베스트셀러 호출 실패:", error);
+            setBestBooks([]);
+        }
+    };
 
-
-    // 일간 베스트 10 초기 세팅
-    setBestBooks([
-      {
-        id: 1,
-        name: "인공지능과 미래 사회",
-        image_url: "no-image.jpg",
-        price: 15000,
-        category: "IT/인공지능",
-        author: "김철수",
-        publisher: "미래출판사",
-      },
-      {
-        id: 2,
-        name: "웹 개발의 모든 것",
-        image_url: "no-image.jpg",
-        price: 22000,
-        category: "IT/웹",
-        author: "이영희",
-        publisher: "웹출판사",
-      },
-      {
-        id: 3,
-        name: "데이터 사이언스 입문",
-        image_url: "no-image.jpg",
-        price: 18000,
-        category: "IT/데이터",
-        author: "박민수",
-        publisher: "데이터북스",
-      },
-      {
-        id: 4,
-        name: "리액트 완벽 가이드",
-        image_url: "no-image.jpg",
-        price: 25000,
-        category: "IT/프론트엔드",
-        author: "최지훈",
-        publisher: "코딩출판사",
-      },
-      {
-        id: 5,
-        name: "파이썬으로 배우는 머신러닝",
-        image_url: "no-image.jpg",
-        price: 28000,
-        category: "IT/인공지능",
-        author: "강수진",
-        publisher: "머신러닝북스",
-      },
-      {
-        id: 6,
-        name: "클라우드 컴퓨팅 실무",
-        image_url: "no-image.jpg",
-        price: 20000,
-        category: "IT/클라우드",
-        author: "정우성",
-        publisher: "클라우드출판사",
-      },
-      {
-        id: 7,
-        name: "블록체인 기술의 이해",
-        image_url: "no-image.jpg",
-        price: 24000,
-        category: "IT/블록체인",
-        author: "김현우",
-        publisher: "블록체인북스",
-      },
-      {
-        id: 8,
-        name: "모바일 앱 개발",
-        image_url: "no-image.jpg",
-        price: 26000,
-        category: "IT/모바일",
-        author: "이서윤",
-        publisher: "앱북스",
-      },
-      {
-        id: 9,
-        name: "DevOps 실전 가이드",
-        image_url: "no-image.jpg",
-        price: 23000,
-        category: "IT/DevOps",
-        author: "박지민",
-        publisher: "IT출판사",
-      },
-      {
-        id: 10,
-        name: "사이버 보안 완전정복",
-        image_url: "no-image.jpg",
-        price: 27000,
-        category: "IT/보안",
-        author: "최은서",
-        publisher: "보안출판사",
-      },
-    ]);
-    fetchBooks(1);
-  }, []);
+    fetchBestBooks();
+    
+  }, []); 
 
   /* 무한 스크롤 옵저버 */
   const handleObserver = useCallback(
@@ -365,7 +298,8 @@ function MainPage() {
   }, [handleObserver]);
 
   useEffect(() => {
-    if (page > 1) fetchBooks(page);
+    // page가 1 이상일 때 데이터 호출 시작
+    if (page >= 1) fetchAllBooks(page); 
   }, [page]);
 
   useEffect(() => {
@@ -399,8 +333,25 @@ function MainPage() {
         <section className="book-list" ref={bookListRef}>
           <h2>전체 도서</h2>
           <BookListCol books={allBooks} onCardClick={handleCardClick} />
-          {loading && <Loading />}
+          
+          {/* 로딩 중 메시지 */}
+          {loading && hasMore && <Loading />}
+          
           <div ref={observerRef} style={{ height: "20px" }} />
+          
+          {/* 마지막 도서 메시지 (SCSS 클래스 적용) */}
+          {!hasMore && !loading && allBooks.length > 0 && (
+            <p className="status-message no-more-books">
+              마지막 도서입니다. 🥳
+            </p>
+          )}
+          
+          {/* 초기 로딩 실패/데이터 없음 메시지 (SCSS 클래스 적용) */}
+          {!loading && allBooks.length === 0 && (
+             <p className="status-message error-message">
+              도서 목록을 불러오는 데 실패했거나 데이터가 없습니다. 🙁
+            </p>
+          )}
         </section>
       </div>
 
