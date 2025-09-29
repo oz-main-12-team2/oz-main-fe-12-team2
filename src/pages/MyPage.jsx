@@ -66,7 +66,7 @@ function MyPage() {
               <Link to="/mypage">
                 <span>계정설정</span>
               </Link>
-              <Link to="/mypage/cart">
+              <Link to="/cart">
                 <span>장바구니</span>
               </Link>
             </nav>

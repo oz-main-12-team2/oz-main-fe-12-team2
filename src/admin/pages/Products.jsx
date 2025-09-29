@@ -10,8 +10,10 @@ import { getProducts } from "../../api/products";
 import { formatDateShort } from "../../utils/dateFormat";
 import Loading from "../../components/common/Loading";
 import { createProduct, deleteProduct, updateProduct } from "../../api/admin";
+import useTitle from "../../hooks/useTitle";
 
 function Products() {
+  useTitle("상품관리");
   const [books, setBooks] = useState([]); // 상품 목록 데이터
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
@@ -50,7 +52,7 @@ function Products() {
           size: 8,
           ordering: "-id",
         });
-        
+
         setBooks(res.results || []);
         setTotalPages(Math.ceil((res.count || 1) / 10));
       } catch (e) {

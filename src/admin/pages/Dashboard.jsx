@@ -3,8 +3,10 @@ import { ResponsiveLine } from "@nivo/line";
 import { FaCalendarDay, FaCalendarWeek, FaChartBar } from "react-icons/fa";
 import Loading from "../../components/common/Loading";
 import { getDashboardStats } from "../../api/admin";
+import useTitle from "../../hooks/useTitle";
 
 function Dashboard() {
+  useTitle("대시보드");
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [chartType, setChartType] = useState("quantity");
@@ -61,7 +63,10 @@ function Dashboard() {
         </div>
         <div className="dashboard-card">
           <p className="dashboard-card-title">재고 상태</p>
-          <p className="dashboard-card-value"> {Number(stats.total_stock).toLocaleString()}</p>
+          <p className="dashboard-card-value">
+            {" "}
+            {Number(stats.total_stock).toLocaleString()}
+          </p>
         </div>
         <div className="dashboard-card">
           <p className="dashboard-card-title">오늘 주문 수</p>

@@ -27,7 +27,7 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
   const navigate = useNavigate();
-  const [cartCount, setCartCount] = useState(3); // 3개로 일단 가정
+  const [cartCount, setCartCount] = useState(0); // 3개로 일단 가정
 
   const { user, clearUser } = useUserStore(); // user 가져오기
   const isLogin = !!user; // user가 있으면 로그인 상태
@@ -136,7 +136,7 @@ function Header() {
         <div className="header-right">
           {/* PC 아이콘 + 로그인 */}
           <div className="header-icon-wrap pc-only">
-            <Link to="/mypage/cart" className="header-cart">
+            <Link to="/cart" className="header-cart">
               <LuShoppingCart className="header-cart-icon" />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
