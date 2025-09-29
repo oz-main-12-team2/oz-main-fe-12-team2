@@ -103,7 +103,10 @@ function MainPage() {
     setLoading(false);
   };
 
+
   useEffect(() => {
+
+
     // 일간 베스트 10 초기 세팅
     setBestBooks([
       { id: 1, title: "베스트1", image: "no-image.jpg", price: 15000 },
