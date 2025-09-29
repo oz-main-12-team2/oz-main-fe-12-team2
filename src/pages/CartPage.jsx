@@ -6,7 +6,7 @@ import "../styles/cart.scss";
 import { Checkbox } from "../components/common/CheckRadio";
 import useTitle from "../hooks/useTitle";
 
-const DUMMY_CART = [
+const dummyData = [
   {
     book: {
       id: 1,
@@ -57,8 +57,8 @@ function CartPage() {
 
   useEffect(() => {
     setTimeout(() => {
-      setCartItems(DUMMY_CART);
-      setSelectedItems(DUMMY_CART.map((item) => item.book.id)); //전체선택 자동
+      setCartItems(dummyData);
+      setSelectedItems(dummyData.map((item) => item.book.id)); //전체선택 자동
       setIsLoading(false);
     }, 500);
   }, []);
@@ -113,7 +113,7 @@ function CartPage() {
     const selectedProducts = cartItems.filter((item) =>
       selectedItems.includes(item.book.id)
     );
-    console.log("선택된 상품 구매 진행:", selectedProducts);
+    console.log("선택된 상품 : ", selectedProducts);
   };
 
   const totalPrice = cartItems
