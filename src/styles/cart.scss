@@ -1,50 +1,133 @@
 @import "./var.scss";
 
 .cart-page {
-  //   max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
+  padding: 1.5rem;
 
   h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
   }
 
-  .cart-toolbar {
+  .cart-tabs {
+    display: flex;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+
+    .cart-tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.75rem 0;
+      cursor: pointer;
+      font-weight: 500;
+      color: #6b7280; // 기본ㄴ 회색
+      border-bottom: 3px solid #e5e7eb;
+      transition: all 0.2s ease;
+
+      .badge {
+        margin-left: 0.3rem;
+        display: inline-flex;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: #9ca3af;
+        border-radius: 9999px;
+        line-height: 1;
+      }
+
+      &.active {
+        color: $main-color-hover;
+        border-bottom: 3px solid $main-color;
+        font-weight: 600;
+
+        .badge {
+          background-color: $main-color;
+        }
+      }
+
+      &:hover {
+        color: $main-color-hover;
+      }
+    }
+  }
+
+  .btn--secondary:hover {
+    background-color: $red-500 !important;
+    color: #fff;
+  }
+
+  // 상단 (전체선택 + 선택삭제)
+  .cart-select-all {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e5e7eb;
-
-    .cart-toolbar-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-  }
-
-  .cart-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    .cart-quantity {
-      min-width: 2rem;
-      text-align: center;
-    }
-  }
-
-  .cart-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    .cart-quantity {
-      min-width: 2rem;
-      text-align: center;
+    padding: 0.75rem 1rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    margin-left: 0.5rem;
+    
+    label {
       font-weight: 500;
+      font-size: 0.9rem;
     }
   }
+
+  // 개별 카드 액션 (수량, 삭제)
+  .cart-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .cart-quantity {
+      min-width: 2rem;
+      text-align: center;
+      font-weight: 600;
+      color: #111827;
+    }
+  }
+
+  .book-card-row-left {
+    margin-left: 0.5rem;
+  }
+
+  .book-card-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+// 하단 결제 영역
+.cart-footer {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 2rem;
+
+  .cart-total {
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    span {
+      color: $red-500;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+.book-card-row.soldout {
+  opacity: 0.7; //품절상품 연하게 처리
 }

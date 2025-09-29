@@ -4,13 +4,14 @@ import Loading from "../components/common/Loading";
 import { BookListRow } from "../components/common/BookListRow";
 import "../styles/cart.scss";
 import { Checkbox } from "../components/common/CheckRadio";
+import useTitle from "../hooks/useTitle";
 
 const DUMMY_CART = [
   {
     book: {
       id: 1,
       name: "자바스크립트",
-      category: "프론트엔드",
+      category: "프로그래밍",
       author: "이름1",
       publisher: "한빛미디어",
       price: 25000,
@@ -32,19 +33,41 @@ const DUMMY_CART = [
     },
     quantity: 1,
   },
+  {
+    book: {
+      id: 3,
+      name: "자바스크립트3",
+      category: "프로그래밍",
+      author: "이름3",
+      publisher: "한빛미디어3",
+      price: 18000,
+      stock: 0,
+      image_url: "",
+    },
+    quantity: 1,
+  },
 ];
 
 function CartPage() {
+  useTitle("장바구니");
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("available");
 
   useEffect(() => {
     setTimeout(() => {
       setCartItems(DUMMY_CART);
+      setSelectedItems(DUMMY_CART.map((item) => item.book.id)); //전체선택 자동
       setIsLoading(false);
     }, 500);
   }, []);
+
+  // 구매가능/품절 상품 분리
+  const availableItems = cartItems.filter((item) => item.book.stock > 0);
+  const soldOutItems = cartItems.filter((item) => item.book.stock === 0);
+  const filteredItems =
+    activeTab === "available" ? availableItems : soldOutItems;
 
   const handleQuantityChange = (bookId, delta) => {
     const updatedItems = cartItems.map((item) => {
@@ -65,7 +88,9 @@ function CartPage() {
 
   const handleSelectItem = (bookId) => {
     setSelectedItems((prev) =>
-      prev.includes(bookId) ? prev.filter((id) => id !== bookId) : [...prev, bookId]
+      prev.includes(bookId)
+        ? prev.filter((id) => id !== bookId)
+        : [...prev, bookId]
     );
   };
 
@@ -78,7 +103,9 @@ function CartPage() {
   };
 
   const handleRemoveSelected = () => {
-    setCartItems(cartItems.filter((item) => !selectedItems.includes(item.book.id)));
+    setCartItems(
+      cartItems.filter((item) => !selectedItems.includes(item.book.id))
+    );
     setSelectedItems([]);
   };
 
@@ -93,89 +120,131 @@ function CartPage() {
     .filter((item) => selectedItems.includes(item.book.id))
     .reduce((acc, item) => acc + item.book.price * item.quantity, 0);
 
-  if (isLoading) return <Loading loadingText="장바구니 로딩 중..." size={40} />;
+  if (isLoading)
+    return <Loading loadingText="장바구니 불러오는 중" size={40} />;
 
   return (
     <div className="cart-page">
       <h2>장바구니</h2>
 
-      {cartItems.length === 0 ? (
-        <p>장바구니가 비어 있습니다.</p>
+      {/* 탭 */}
+      <div className="cart-tabs">
+        <div
+          className={`cart-tab ${activeTab === "available" ? "active" : ""}`}
+          onClick={() => setActiveTab("available")}
+        >
+          구매 가능 상품 <span className="badge">{availableItems.length}</span>
+        </div>
+        <div
+          className={`cart-tab ${activeTab === "soldout" ? "active" : ""}`}
+          onClick={() => setActiveTab("soldout")}
+        >
+          품절된 상품 <span className="badge">{soldOutItems.length}</span>
+        </div>
+      </div>
+
+      {filteredItems.length === 0 ? (
+        <p>
+          {activeTab === "available"
+            ? "판매중인 상품이 없습니다."
+            : "품절된 상품이 없습니다."}
+        </p>
       ) : (
         <>
           {/* 전체 선택 */}
-          <div className="cart-select-all">
-            <Checkbox
-              checked={selectedItems.length === cartItems.length}
-              onChange={handleSelectAll}
-              label="전체 선택"
-            />
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={handleRemoveSelected}
-              disabled={selectedItems.length === 0}
-            >
-              선택 삭제
-            </Button>
-          </div>
+          {activeTab === "available" && (
+            <div className="cart-select-all">
+              <Checkbox
+                checked={selectedItems.length === cartItems.length}
+                onChange={handleSelectAll}
+                label="전체 선택"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleRemoveSelected}
+                disabled={selectedItems.length === 0}
+              >
+                선택 삭제
+              </Button>
+            </div>
+          )}
 
-          {/* 공통 컴포넌트 활용 */}
+          {/* 북카드리스트 */}
           <BookListRow
-            books={cartItems.map((item) => ({ ...item.book, quantity: item.quantity }))}
+            books={filteredItems.map((item) => ({
+              ...item.book,
+              quantity: item.quantity,
+              isSoldOut: item.book.stock === 0, // soldout 표시 flag
+            }))}
             onCardClick={() => {}}
             buttonActions={(book) => {
               const cartItem = cartItems.find((i) => i.book.id === book.id);
               return (
                 <div className="cart-actions">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleQuantityChange(book.id, -1)}
-                  >
-                    -
-                  </Button>
-                  <span className="cart-quantity">{cartItem.quantity}</span>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleQuantityChange(book.id, +1)}
-                  >
-                    +
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleRemoveItem(book.id)}
-                  >
-                    삭제
-                  </Button>
+                  {activeTab === "available" ? (
+                    <>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleQuantityChange(book.id, -1)}
+                      >
+                        -
+                      </Button>
+                      <span className="cart-quantity">{cartItem.quantity}</span>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleQuantityChange(book.id, +1)}
+                      >
+                        +
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleRemoveItem(book.id)}
+                      >
+                        삭제
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleRemoveItem(book.id)}
+                    >
+                      삭제
+                    </Button>
+                  )}
                 </div>
               );
             }}
-            // 왼쪽 체크박스 추가
-            leftActions={(book) => (
-              <Checkbox
-                checked={selectedItems.includes(book.id)}
-                onChange={() => handleSelectItem(book.id)}
-              />
-            )}
+            leftActions={(book) =>
+              activeTab === "available" ? (
+                <Checkbox
+                  checked={selectedItems.includes(book.id)}
+                  onChange={() => handleSelectItem(book.id)}
+                />
+              ) : null
+            }
           />
 
           {/* 하단 결제 영역 */}
-          <div className="cart-footer">
-            <span className="cart-total">
-              총 결제 금액: <strong>{totalPrice.toLocaleString()}원</strong>
-            </span>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={handleCheckoutSelected}
-              disabled={selectedItems.length === 0}
-            >
-              선택 상품 구매하기
-            </Button>
-          </div>
+          {activeTab === "available" && (
+            <div className="cart-footer">
+              <span className="cart-total">
+                총 결제금액 <span>{totalPrice.toLocaleString()}원</span>
+              </span>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleCheckoutSelected}
+                disabled={selectedItems.length === 0}
+              >
+                구매하기
+              </Button>
+            </div>
+          )}
         </>
       )}
     </div>

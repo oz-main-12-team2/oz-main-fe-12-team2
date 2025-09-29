@@ -29,10 +29,7 @@ export function BookCardCol({ book, onClick, actions }) {
         <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
         <p className="book-price">
-          {book.price != null
-            ? parseInt(book.price, 10).toLocaleString()
-            : 0}
-          원
+          {book.price != null ? parseInt(book.price, 10).toLocaleString() : 0}원
         </p>
 
         {/* actions가 있으면 버튼 영역 렌더링 */}
@@ -49,12 +46,15 @@ export function BookCardRow({ book, onClick, children, left }) {
   };
 
   return (
-    <div className="book-card-row" onClick={() => onClick && onClick(book)}>
+    <div
+      className={`book-card-row ${book.isSoldOut ? "soldout" : ""}`}
+      onClick={() => onClick && onClick(book)}
+    >
       {left && <div className="book-card-row-left">{left}</div>}
 
       <div className="book-card-row-image">
         <img
-          src={book.image || DEFAULT_IMAGE}
+          src={book.image_url || DEFAULT_IMAGE}
           alt={book.name}
           onError={handleImgError}
         />
@@ -65,6 +65,7 @@ export function BookCardRow({ book, onClick, children, left }) {
         <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
         <p className="book-price">{(book.price ?? 0).toLocaleString()}원</p>
+        <p className="book-stock">재고: {book.stock}권</p>
       </div>
 
       {children && <div className="book-card-row-actions">{children}</div>}

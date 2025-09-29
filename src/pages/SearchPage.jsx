@@ -9,6 +9,7 @@ import "../styles/searchpage.scss";
 import Button from "../components/common/Button";
 import { FiCreditCard } from "react-icons/fi";
 import { LuShoppingCart } from "react-icons/lu";
+import useTitle from "../hooks/useTitle";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -19,6 +20,7 @@ function SearchPage() {
   const [categories, setCategories] = useState(["전체"]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
+  useTitle(`${query} - 검색결과`);
   const loadProducts = useCallback(
     async (category) => {
       if (!query) {
@@ -109,7 +111,8 @@ function SearchPage() {
                       console.log("장바 클릭 : ", book);
                     }}
                   >
-                    <LuShoppingCart className="button-icon cart-icon" /> 장바구니
+                    <LuShoppingCart className="button-icon cart-icon" />{" "}
+                    장바구니
                   </Button>
                   <Button
                     variant="primary"

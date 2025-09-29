@@ -6,8 +6,10 @@ import FormGroup from "../../components/common/FormGroup";
 import { alertError, alertSuccess } from "../../utils/alert";
 import useUserStore from "../../stores/userStore";
 import { getUserMe, login } from "../../api/user";
+import useTitle from "../../hooks/useTitle";
 
 function AdminLogin() {
+  useTitle("관리자 로그인");
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +22,7 @@ function AdminLogin() {
     try {
       setIsLoading(true);
       const res = await login(email, password);
-    
+
       if (res.success) {
         const checkAdmin = await getUserMe();
 

@@ -10,8 +10,10 @@ import Loading from "../../components/common/Loading";
 import UserModal from "../components/UserModal";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
 import { formatDateShort } from "../../utils/dateFormat";
+import useTitle from "../../hooks/useTitle";
 
 function Users() {
+  useTitle("회원관리");
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);

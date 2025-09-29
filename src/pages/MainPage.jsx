@@ -24,67 +24,65 @@ function MainPage() {
   };
 
   // ====== 무한루프 캐러셀 (Best 10 전용) ======
-const BookListRowLoop = ({ books, onCardClick }) => {
-  const rowRef = useRef(null);
-  const itemWidth = 200 + 24; // 카드 width + gap
-  const totalWidth = itemWidth * books.length;
+  const BookListRowLoop = ({ books, onCardClick }) => {
+    const rowRef = useRef(null);
+    const itemWidth = 200 + 24; // 카드 width + gap
+    const totalWidth = itemWidth * books.length;
 
-  // 무한 루프용 데이터 (앞뒤 복제)
-  const loopedBooks = [...books, ...books, ...books];
+    // 무한 루프용 데이터 (앞뒤 복제)
+    const loopedBooks = [...books, ...books, ...books];
 
-  useEffect(() => {
-    const container = rowRef.current;
-    if (!container) return;
+    useEffect(() => {
+      const container = rowRef.current;
+      if (!container) return;
 
-    // 시작 위치 (가운데 원본 리스트)
-    container.scrollLeft = totalWidth;
+      // 시작 위치 (가운데 원본 리스트)
+      container.scrollLeft = totalWidth;
 
-    // 무한 루프 스크롤 처리
-    const handleScroll = () => {
-      if (container.scrollLeft <= 0) {
-        container.scrollLeft = totalWidth;
-      } else if (container.scrollLeft >= totalWidth * 2) {
-        container.scrollLeft = totalWidth;
-      }
-    };
+      // 무한 루프 스크롤 처리
+      const handleScroll = () => {
+        if (container.scrollLeft <= 0) {
+          container.scrollLeft = totalWidth;
+        } else if (container.scrollLeft >= totalWidth * 2) {
+          container.scrollLeft = totalWidth;
+        }
+      };
 
-    // 마우스 휠 → 가로 스크롤
-    const handleWheel = (e) => {
-      e.preventDefault();
-      container.scrollLeft += e.deltaY;
-    };
+      // 마우스 휠 → 가로 스크롤
+      const handleWheel = (e) => {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      };
 
-    container.addEventListener("scroll", handleScroll);
-    container.addEventListener("wheel", handleWheel, { passive: false });
+      container.addEventListener("scroll", handleScroll);
+      container.addEventListener("wheel", handleWheel, { passive: false });
 
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-      container.removeEventListener("wheel", handleWheel);
-    };
-  }, [totalWidth]);
+      return () => {
+        container.removeEventListener("scroll", handleScroll);
+        container.removeEventListener("wheel", handleWheel);
+      };
+    }, [totalWidth]);
 
-  return (
-    <div className="book-list-row" ref={rowRef}>
-      {loopedBooks.map((book, i) => (
-        <div
-          key={`${book.id}-${i}`}
-          className="book-item"
-          onClick={() => onCardClick(book)}
-        >
-          <div className="book-image">
-            <img src={book.image} alt={book.title} />
+    return (
+      <div className="book-list-row" ref={rowRef}>
+        {loopedBooks.map((book, i) => (
+          <div
+            key={`${book.id}-${i}`}
+            className="book-item"
+            onClick={() => onCardClick(book)}
+          >
+            <div className="book-image">
+              <img src={book.image} alt={book.title} />
+            </div>
+            <div className="book-list-details">
+              <p className="book-title">{book.title}</p>
+              <p className="book-price">{book.price.toLocaleString()}원</p>
+            </div>
           </div>
-          <div className="book-list-details">
-            <p className="book-title">{book.title}</p>
-            <p className="book-price">{book.price.toLocaleString()}원</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-
+        ))}
+      </div>
+    );
+  };
 
   // ====== 무한 스크롤 관련 ======
   const fetchBooks = async (pageNum) => {
@@ -106,7 +104,6 @@ const BookListRowLoop = ({ books, onCardClick }) => {
   };
 
   useEffect(() => {
-
     // 일간 베스트 10 초기 세팅
     setBestBooks([
       { id: 1, title: "베스트1", image: "no-image.jpg", price: 15000 },

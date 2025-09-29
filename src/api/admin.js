@@ -174,8 +174,7 @@ export async function createProduct(payload) {
   } catch (e) {
     if (e.response) {
       throw {
-        message:
-          e.response.data?.error || "상품 등록 중 오류가 발생했습니다.",
+        message: e.response.data?.error || "상품 등록 중 오류가 발생했습니다.",
         code: e.response.status,
       };
     }
@@ -194,8 +193,7 @@ export async function deleteProduct(productId) {
   } catch (e) {
     if (e.response) {
       throw {
-        message:
-          e.response.data?.error || "상품 삭제 중 오류가 발생했습니다.",
+        message: e.response.data?.error || "상품 삭제 중 오류가 발생했습니다.",
         code: e.response.status,
       };
     }
@@ -231,12 +229,11 @@ export async function updateProduct(productId, payload) {
       },
     });
 
-    return res.data; 
+    return res.data;
   } catch (e) {
     if (e.response) {
       throw {
-        message:
-          e.response.data?.error || "상품 수정 중 오류가 발생했습니다.",
+        message: e.response.data?.error || "상품 수정 중 오류가 발생했습니다.",
         code: e.response.status,
       };
     }

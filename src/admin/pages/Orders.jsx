@@ -8,8 +8,10 @@ import { alertComfirm, alertSuccess } from "../../utils/alert";
 import { formatDateShort } from "../../utils/dateFormat";
 import { getOrders } from "../../api/admin";
 import Loading from "../../components/common/Loading";
+import useTitle from "../../hooks/useTitle";
 
 function Orders() {
+  useTitle("주문관리");
   const [orders, setOrders] = useState([]); // 주문 목록
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
