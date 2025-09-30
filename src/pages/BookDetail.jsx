@@ -65,7 +65,7 @@ function BookDetail() {
               <div className="book-detail-bottom">
                 
                 <section className="book-detail-description">
-                  <h2 className="book-introduction">책 소개</h2>
+                  <h2 className="book-introduction">소 개</h2>
                   <p>{BookDetailDummy.description}</p>
                 </section>
 
@@ -90,7 +90,7 @@ function BookDetail() {
           </main>
           
           <section className="book-summary-section full-width-section">
-            <h2 className="book-summary-title">책 줄거리</h2>
+            <h2 className="book-summary-title">줄 거 리</h2>
             <p>{BookDetailDummy.summary}</p>
           </section>
         </div>
