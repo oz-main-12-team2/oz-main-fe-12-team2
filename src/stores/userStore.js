@@ -17,18 +17,7 @@ const useUserStore = create((set) => ({
     }
   },
   // 로그인 성공 시 사용자 상태 저장
-
-
   setUser: (userData) => set({ user: userData, justLoggedOut: false }),
-  
-  // 로딩 상태 변경
-  setLoading: (loading) => set({ loading }),
-
-  // 에러 상태 변경
-  setError: (error) => set({ error }),
-    
-  // 로그인 성공 시 사용자 상태 저장
-  setUser: (userData) => set({ user: userData }),
 
   // 로딩 상태 변경
   setLoading: (loading) => set({ loading }),

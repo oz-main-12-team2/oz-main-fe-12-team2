@@ -13,6 +13,9 @@ import useTitle from "../hooks/useTitle";
 import { addCart, getCart } from "../api/cart";
 import { alertComfirm, alertError } from "../utils/alert";
 import useCartStore from "../stores/cartStore";
+import useBuyMove from "../hooks/useBuyMove";
+import { AiOutlineStop } from "react-icons/ai";
+import useUserStore from "../stores/userStore";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -24,8 +27,11 @@ function SearchPage() {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const setCartItems = useCartStore((state) => state.setCartItems);
   const cartItems = useCartStore((state) => state.cartItems);
+  const user = useUserStore((state) => state.user);
+  const loginCheck = !!user;
 
   const navigate = useNavigate();
+  const buyMove = useBuyMove();
 
   useTitle(`${query} - 검색결과`);
 
@@ -81,14 +87,7 @@ function SearchPage() {
 
     if (hasCartCheck) {
       await alertError("장바구니 추가 실패", "이미 장바구니에 담긴 상품입니다");
-
-      const move = await alertComfirm(
-        "장바구니로 이동",
-        "장바구니로 이동하시겠습니까?"
-      );
-      if (move.isConfirmed) navigate("/cart");
-
-      return; // 아래 로직 실행 안되게
+      return;
     }
 
     // 상태에 바로 추가
@@ -105,9 +104,9 @@ function SearchPage() {
 
     try {
       await addCart({ productId: book.id, quantity: 1 });
-      
+
       setCartItems([...cartItems, newItem]); // 전역상태 업데이트
-      
+
       const res = await getCart();
       setCartItems(res[0]?.items || []);
 
@@ -124,10 +123,30 @@ function SearchPage() {
       if (!alert2.isConfirmed) return;
 
       navigate("/cart");
-    } catch (e) {
-      console.error("장바구니 추가 실패:", e);
-      alert(e.message || "장바구니 추가 중 오류가 발생했습니다.");
+    } catch {
+      alertError("장바구니 추가 오류", "장바구니 추가 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleBuyNow = (book) => {
+    // 상품 정보를 구매용 구조로 생성
+    const buyProduct = [
+      {
+        book: {
+          id: book.id,
+          name: book.name,
+          author: book.author,
+          publisher: book.publisher,
+          price: Number(book.price) || 0,
+          stock: book.stock || 0,
+          image_url: book.image || null,
+        },
+        quantity: 1,
+      },
+    ];
+
+    // 결제 페이지로 이동하며 구매 상품 정보 전달
+    buyMove(buyProduct);
   };
 
   return (
@@ -163,32 +182,55 @@ function SearchPage() {
             <BookListCol
               books={books}
               onCardClick={handleCardClick}
-              actions={(book) => (
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(book);
-                    }}
-                  >
-                    <LuShoppingCart className="button-icon cart-icon" />{" "}
-                    장바구니
-                  </Button>
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log("구매 클릭 : ", book);
-                    }}
-                  >
-                    <FiCreditCard className="button-icon" />
-                    바로구매
-                  </Button>
-                </div>
-              )}
+              actions={(book) => {
+                const isSoldOut = book.stock === 0;
+
+                return (
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <Button
+                      variant="secondary"
+                      size="md"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!loginCheck) {
+                          alertError("로그인 필요", "로그인 후 이용해 주세요.");
+                          return;
+                        }
+                        handleAddToCart(book);
+                      }}
+                    >
+                      <LuShoppingCart className="button-icon cart-icon" />
+                      장바구니
+                    </Button>
+
+                    {isSoldOut ? (
+                      <Button variant="primary" size="md" disabled>
+                        <AiOutlineStop size={16} />
+                        품절
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!loginCheck) {
+                            alertError(
+                              "로그인 필요",
+                              "로그인 후 이용해 주세요"
+                            );
+                            return;
+                          }
+                          handleBuyNow(book);
+                        }}
+                      >
+                        <FiCreditCard className="button-icon" />
+                        바로구매
+                      </Button>
+                    )}
+                  </div>
+                );
+              }}
             />
           )}
         </div>

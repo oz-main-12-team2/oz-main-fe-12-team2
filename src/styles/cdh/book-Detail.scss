@@ -158,38 +158,38 @@ $extra-light-green: #B0E0C0;
 }
 
 //  가격 정보 (포인트 라인 두께 및 글씨 크기 수정) 
-.book-price {
-  background: linear-gradient(135deg, white, $anti-flash-white, lighten($pistachio, 25%));
-  padding: 1.5rem;
+// .book-price {
+//   background: linear-gradient(135deg, white, $anti-flash-white, lighten($pistachio, 25%));
+//   padding: 1.5rem;
   
-  border-radius: 0 12px 12px 0; 
-  // 수정: 포인트 라인 두께를 3px로 얇게 조정 
-  border-left: 3px solid $caribbean-green;
-  border-right: none; 
+//   border-radius: 0 12px 12px 0; 
+//   // 수정: 포인트 라인 두께를 3px로 얇게 조정 
+//   border-left: 3px solid $caribbean-green;
+//   border-right: none; 
 
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    0 2px 8px $vibrant-shadow;
-  position: relative;
-  max-width: 320px; 
-  width: 100%; 
+//   box-shadow: 
+//     0 4px 12px rgba(0, 0, 0, 0.05),
+//     0 2px 8px $vibrant-shadow;
+//   position: relative;
+//   max-width: 320px; 
+//   width: 100%; 
 
-  &::before {
-    display: none; 
-  }
+//   &::before {
+//     display: none; 
+//   }
 
-  .original-price {
-    // 수정: 가격 글씨 크기 축소 (1.1rem -> 1.05rem) 
-    font-size: 1.05rem;
-    font-weight: bold;
-    background: linear-gradient(135deg, $bangladesh-green, $basil-green);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: flex;
-    align-items: center;
-  }
-}
+//   .original-price {
+//     // 수정: 가격 글씨 크기 축소 (1.1rem -> 1.05rem) 
+//     font-size: 1.05rem;
+//     font-weight: bold;
+//     background: linear-gradient(135deg, $bangladesh-green, $basil-green);
+//     -webkit-background-clip: text;
+//     -webkit-text-fill-color: transparent;
+//     background-clip: text;
+//     display: flex;
+//     align-items: center;
+//   }
+// }
 
 //  하단 영역 (스타일 유지) 
 .book-detail-bottom {
