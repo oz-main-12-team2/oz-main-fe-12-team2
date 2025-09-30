@@ -109,7 +109,7 @@ function ResetPasswordPage() {
         <Link to="/">
           <img
             className="reset-password-logo"
-            src="../../public/logo.svg"
+            src="/new-logo.svg"
             alt="러블리 로고"
           />
         </Link>
