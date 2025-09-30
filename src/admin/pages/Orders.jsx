@@ -55,12 +55,10 @@ function Orders() {
     if (!confirm.isConfirmed) return;
 
     try {
-      // 서버에 삭제 요청
       await deleteOrder(orderId);
 
-      // 삭제 후 최신 주문 목록 다시 불러오기
-      const res = await getOrders({ page: currentPage, size: 10 });
-      console.log(res);
+      const res = await getOrders({ page: currentPage, size: 10 }); //삭제 후 주문 api 호출
+      
       setOrders(res.results);
       setTotalPages(Math.ceil(res.count / 10));
       setTotalOrders(res.count);
