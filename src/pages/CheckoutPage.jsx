@@ -9,7 +9,7 @@ import "../styles/checkoutpage.scss";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-import { BookListCol } from "../components/common/BookListCol";
+import { BookListRow } from "../components/common/BookListRow";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
 
@@ -19,6 +19,53 @@ function normalizePhone(v) {
 
 // function CheckoutPage({ selectedItems = [] }) {
 function CheckoutPage() {
+  const KRW = (n) => n.toLocaleString("ko-KR");
+  // ✅ 더미 데이터 (장바구니에서 선택된 상품 가정)
+  const dummyBooks = [
+    {
+      id: 1,
+      name: "모던 자바스크립트 Deep Dive",
+      category: "프로그래밍",
+      author: "이웅모",
+      publisher: "위키북스",
+      price: 42000,
+      image_url: "/no-image.jpg",
+      isSoldOut: false,
+    },
+    {
+      id: 2,
+      name: "Clean Code",
+      category: "소프트웨어 공학",
+      author: "Robert C. Martin",
+      publisher: "인사이트",
+      price: 33000,
+      image_url: "/no-image.jpg",
+      isSoldOut: false,
+    },
+    {
+      id: 3,
+      name: "운영체제 공룡책",
+      category: "컴퓨터 공학",
+      author: "Abraham Silberschatz",
+      publisher: "Wiley",
+      price: 55000,
+      image_url: "/no-image.jpg",
+      isSoldOut: true, // 품절 표시
+    },
+  ];
+
+  // ✅ 합계/수량
+  const { totalQty, subtotal } = useMemo(() => {
+    return dummyBooks.reduce(
+      (acc, b) => {
+        acc.totalQty += Number(b.qty || 0);
+        acc.subtotal += Number(b.price || 0) * Number(b.qty || 0);
+        return acc;
+      },
+      { totalQty: 0, subtotal: 0 }
+    );
+  }, []);
+
   const navigate = useNavigate();
 
   // 수취인 폼
@@ -139,7 +186,35 @@ function CheckoutPage() {
           <div className="selected-products">
             <h1 className="selected-products-title">선택한 상품 목록</h1>
 
-            <BookListCol />
+            <BookListRow
+              books={dummyBooks}
+              buttonActions={(book) => (
+                <button onClick={() => console.log("삭제:", book.id)}>삭제</button>
+              )}
+              leftActions={(book) => (
+                <input
+                  type="checkbox"
+                  value={book.id}
+                  defaultChecked={!book.isSoldOut}
+                />
+              )}
+            />
+
+            <div className="order-summary">
+              <div className="summary-row">
+                <span>총 수량</span>
+                <strong>{totalQty}개</strong>
+              </div>
+              <div className="summary-row">
+                <span>상품 합계</span>
+                <strong>{KRW(subtotal)}원</strong>
+              </div>
+              {/* 배송비/할인 등 정책 생기면 여기 추가 */}
+              <div className="summary-row summary-total">
+                <span>결제 예정 금액</span>
+                <strong>{KRW(subtotal)}원</strong>
+              </div>
+            </div>
           </div>
 
           {/* 수취인 폼 */}
