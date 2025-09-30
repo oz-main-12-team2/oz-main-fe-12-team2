@@ -45,7 +45,8 @@ function AdminSidebar() {
       {/* 사이드바 pc전용 */}
       <aside className="admin-sidebar">
         <div className="logo" onClick={handleGoHome}>
-          LOV2LY
+          {/* LOV2LY */}
+          <img className="logo-image" src="/new-logo.svg" alt="" />
         </div>
 
         {/* 모바일 햄버거 버튼 */}

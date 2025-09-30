@@ -127,7 +127,7 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
           <>
             <Button
               variant="danger"
-              onClick={() => onDelete(order.order_number)}
+              onClick={() => onDelete(order.id)}
             >
               삭제
             </Button>
