@@ -177,7 +177,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
 
             <div className="carousel-section-header">
                 <h2 className="carousel-section-title">
-                    <span className="title-icon-before">📚</span>
+                    <span className="title-icon-before"></span>
                     Best 10 일간 베스트
                     <span className="title-icon-after">✨</span>
                 </h2>
@@ -356,14 +356,14 @@ const BookListRowLoop = ({ books, onCardClick }) => {
                     {/* 마지막 도서 메시지 */}
                     {!hasMore && !loading && allBooks.length > 0 && (
                         <p className="status-message no-more-books">
-                            마지막 도서입니다. 🥳
+                            마지막 도서입니다. 
                         </p>
                     )}
                     
                     {/* 초기 로딩 실패/데이터 없음 메시지 */}
                     {!loading && allBooks.length === 0 && (
                             <p className="status-message error-message">
-                            도서 목록을 불러오는 데 실패했거나 데이터가 없습니다. 🙁
+                            도서 목록을 불러오는 데 실패했거나 데이터가 없습니다. 
                         </p>
                     )}
                 </section>
