@@ -324,19 +324,18 @@ const BookListRowLoop = ({ books, onCardClick }) => {
 
     /* 렌더링 */
     return (
-        <div className="main-page-container">
-            <Header />
-
-            <MainBanner
-                image="main-banner.jpg"
+        <>
+        <Header />
+        <MainBanner 
+                        image="main-banner.jpg"
                 title="책으로 여는 하루"
                 subtitle="좋은 책과 함께 오늘을 시작하세요.."
                 buttonText="전체 도서 보기"
                 buttonClick={() =>
                     bookListRef.current?.scrollIntoView({ behavior: "smooth" })
                 }
-            />
-
+        />
+        <div className="main-page-container">
             <div className="base-container">
                 {/* 일간 베스트 */}
                 <div className="book-daily-best">
@@ -372,6 +371,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
 
             <Footer />
         </div>
+    </>
     );
 }
 
