@@ -20,19 +20,44 @@ import { useCallback, useEffect } from "react";
 import SearchPage from "./pages/SearchPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import useCartStore from "./stores/cartStore";
+import { getCart } from "./api/cart";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
-//   const { user } = useUserStore();
+  const user = useUserStore((state) => state.user);
+  const setCartCount = useCartStore((state) => state.setCartCount);
 
-  const getUser = useCallback(() => {
-    getUserFromStore();
+  const getUser = useCallback(async () => {
+    try {
+      await getUserFromStore();
+    } catch (e) {
+      console.error("사용자 정보 불러오기 실패:", e);
+    }
   }, [getUserFromStore]);
 
   useEffect(() => {
-    // if (!user) return;
     getUser();
   }, [getUser]);
+
+  useEffect(() => {
+    if (typeof user === "undefined") return;
+
+    (async () => {
+      if (user) {
+        try {
+          const res = await getCart();
+          const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+          setCartCount(items.length);
+        } catch (e) {
+          console.error("장바구니 불러오기 실패 : ", e);
+          setCartCount(0); // 에러시 0으로 초기화
+        }
+      } else {
+        setCartCount(0); // 로그아웃 0으로 초기화
+      }
+    })();
+  }, [user, setCartCount]);
 
   // 라우트 배열
   const element = useRoutes([

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import "../../styles/bookcardcol.scss";
 import "../../styles/bookcardrow.scss";
 
@@ -40,7 +41,7 @@ export function BookCardCol({ book, onClick, actions }) {
 }
 
 // 가로형 카드 (장바구니/주문내역)
-export function BookCardRow({ book, onClick, children, left }) {
+export const BookCardRow = memo(function BookCardRow({ book, onClick, children, left }) {
   const handleImgError = (e) => {
     e.currentTarget.src = DEFAULT_IMAGE;
   };
@@ -70,4 +71,5 @@ export function BookCardRow({ book, onClick, children, left }) {
       {children && <div className="book-card-row-actions">{children}</div>}
     </div>
   );
-}
+});
+
