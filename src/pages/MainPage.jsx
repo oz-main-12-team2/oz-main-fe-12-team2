@@ -7,8 +7,10 @@ import { BookListCol } from "../components/common/BookListCol.jsx";
 import "../styles/cdh/book-daily-best.scss";
 import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
+import useTitle from "../hooks/useTitle.js";
 
 function MainPage() {
+  useTitle();
   const [bestBooks, setBestBooks] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
   const [page, setPage] = useState(1);
