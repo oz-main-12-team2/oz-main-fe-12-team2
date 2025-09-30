@@ -9,32 +9,35 @@ import {
 import { GiHamburgerMenu } from "react-icons/gi"; // 햄버거 아이콘
 import { AiFillHome } from "react-icons/ai";
 import { IoPowerSharp, IoClose } from "react-icons/io5";
-import { alertComfirm } from "../../utils/alert";
+import { alertComfirm, alertSuccess } from "../../utils/alert";
+import useUserStore from "../../stores/userStore";
+import { logout } from "../../api/user";
 
 function AdminSidebar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const handleCloseMenu = () => setMenuOpen(false);
+  const clearUser = useUserStore((state) => state.clearUser);
 
   const handleGoHome = () => {
     navigate("/admin");
     setMenuOpen(false);
   };
 
-  const handleCloseMenu = () => setMenuOpen(false);
-
-  const handleUserHome = () => {
-    navigate("/");
-    setMenuOpen(false);
-  };
-
   const handleLogout = async () => {
-    const logout = await alertComfirm(
-      "로그아웃",
-      "정말 로그아웃 하시겠습니까?"
-    );
-    if (!logout.isConfirmed) return;
-    localStorage.removeItem("token");
-    handleUserHome();
+    try {
+      const confirm= await alertComfirm(
+        "로그아웃",
+        "정말 로그아웃 하시겠습니까?"
+      );
+      if (!confirm.isConfirmed) return;
+      clearUser();
+      await logout();
+      await alertSuccess("로그아웃 성공", "로그아웃 되었습니다.");
+      handleGoHome();
+    } catch (e) {
+      console.error("로그아웃 실패 : ", e);
+    }
   };
 
   return (
@@ -103,7 +106,7 @@ function AdminSidebar() {
 
             {/* 모바일 패널 아래 홈/로그아웃 버튼 */}
             <div className="panel-footer">
-              <AiFillHome className="icon-btn" onClick={handleUserHome} />
+              <AiFillHome className="icon-btn" onClick={handleGoHome} />
               <IoPowerSharp className="icon-btn" onClick={handleLogout} />
             </div>
           </div>

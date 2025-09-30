@@ -5,6 +5,7 @@ import NavBar from "../components/layout/NavBar";
 import Footer from "../components/layout/Footer";
 import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
+import useTitle from "../hooks/useTitle.js";
 
 // 💡 API 호출 함수 import
 import { getProducts } from "../api/products"; 
@@ -93,6 +94,9 @@ export function BookListCol({ books, onCardClick }) {
 
 /* MainPage */
 function MainPage() {
+
+   useTitle();
+
     const [bestBooks, setBestBooks] = useState([]);
     const [allBooks, setAllBooks] = useState([]);
     const [page, setPage] = useState(1);

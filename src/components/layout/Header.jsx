@@ -7,7 +7,7 @@ import {
   FaTimes,
   FaUserCircle,
 } from "react-icons/fa";
-import NavBar from "./NavBar"; //검색 임시 숨김
+// import NavBar from "./NavBar"; //검색 임시 숨김
 import { useEffect, useState } from "react";
 import HeaderUserDropdown from "./HeaderUserDropdown";
 import Button from "../common/Button";
@@ -18,18 +18,20 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import useUserStore from "../../stores/userStore";
-import { alertSuccess } from "../../utils/alert";
+import { alertComfirm, alertSuccess } from "../../utils/alert";
 import { logout } from "../../api/user";
 import { AiOutlineUser } from "react-icons/ai";
 import useDebounce from "../../hooks/useDebounce";
+import useCartStore from "../../stores/cartStore";
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
   const navigate = useNavigate();
-  const [cartCount, setCartCount] = useState(0); // 3개로 일단 가정
 
-  const { user, clearUser } = useUserStore(); // user 가져오기
+  const user = useUserStore((state) => state.user);
+  const clearUser = useUserStore((state) => state.clearUser);
+
   const isLogin = !!user; // user가 있으면 로그인 상태
 
   const location = useLocation();
@@ -38,6 +40,9 @@ function Header() {
   const [searchValue, setSearchValue] = useState(query);
   const debouncedSearch = useDebounce(searchValue, 500);
 
+  const setCartItems = useCartStore((state) => state.setCartItems);
+  const cartCount = useCartStore((state) => state.cartCount);
+
   // 항상 searchValue를 url query와 동기화
   useEffect(() => {
     setSearchValue(query);
@@ -45,15 +50,20 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      clearUser(); // zustand에서 user 정보 삭제
-      await logout(); // 서버 로그아웃 호출
-      await alertSuccess("로그아웃 성공", "로그아웃 되었습니다.");
+      const alert = await alertComfirm(
+        "로그아웃",
+        "정말 로그아웃 하시겠습니까?"
+      );
+      if (!alert.isConfirmed) return;
+      setCartItems([]);
+      clearUser();
+      await logout();
+      await alertSuccess("로그아웃 성공", "로그아웃이 완료되었습니다");
       navigate("/", { replace: true });
     } catch (e) {
       console.error("로그아웃 실패 : ", e);
     } finally {
       setIsMobileMenuOpen(false);
-      setCartCount(0);
     }
   };
 
@@ -138,7 +148,9 @@ function Header() {
           <div className="header-icon-wrap pc-only">
             <Link to="/cart" className="header-cart">
               <LuShoppingCart className="header-cart-icon" />
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              {cartCount > 0 && (
+                <span className="cart-badge">{cartCount}</span>
+              )}
             </Link>
 
             <div className="header-actions">

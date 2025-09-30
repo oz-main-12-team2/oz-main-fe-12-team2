@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { getProducts } from "../api/products";
@@ -10,6 +10,9 @@ import Button from "../components/common/Button";
 import { FiCreditCard } from "react-icons/fi";
 import { LuShoppingCart } from "react-icons/lu";
 import useTitle from "../hooks/useTitle";
+import { addCart, getCart } from "../api/cart";
+import { alertComfirm, alertError } from "../utils/alert";
+import useCartStore from "../stores/cartStore";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -19,8 +22,13 @@ function SearchPage() {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState(["전체"]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const setCartItems = useCartStore((state) => state.setCartItems);
+  const cartItems = useCartStore((state) => state.cartItems);
+
+  const navigate = useNavigate();
 
   useTitle(`${query} - 검색결과`);
+
   const loadProducts = useCallback(
     async (category) => {
       if (!query) {
@@ -65,7 +73,61 @@ function SearchPage() {
   }, [selectedCategory, loadProducts]);
 
   const handleCardClick = (book) => {
-    window.location.href = `/book/${book.id}`;
+    navigate(`/book/${book.id}`);
+  };
+
+  const handleAddToCart = async (book) => {
+    const hasCartCheck = cartItems.find((item) => item.product_id === book.id);
+
+    if (hasCartCheck) {
+      await alertError("장바구니 추가 실패", "이미 장바구니에 담긴 상품입니다");
+
+      const move = await alertComfirm(
+        "장바구니로 이동",
+        "장바구니로 이동하시겠습니까?"
+      );
+      if (move.isConfirmed) navigate("/cart");
+
+      return; // 아래 로직 실행 안되게
+    }
+
+    // 상태에 바로 추가
+    const newItem = {
+      product_id: book.id,
+      product_name: book.product_name || book.name,
+      product_price: book.product_price || book.price,
+      product_author: book.product_author,
+      product_publisher: book.product_publisher,
+      product_stock: book.product_stock || 0,
+      product_image: book.product_image || null,
+      quantity: 1,
+    };
+
+    try {
+      await addCart({ productId: book.id, quantity: 1 });
+      
+      setCartItems([...cartItems, newItem]); // 전역상태 업데이트
+      
+      const res = await getCart();
+      setCartItems(res[0]?.items || []);
+
+      const alert = await alertComfirm(
+        "장바구니 추가",
+        "정말 추가 하시겠습니까?"
+      );
+      if (!alert.isConfirmed) return;
+
+      const alert2 = await alertComfirm(
+        "장바구니에 추가 성공",
+        "장바구니로 이동하시겠습니까?"
+      );
+      if (!alert2.isConfirmed) return;
+
+      navigate("/cart");
+    } catch (e) {
+      console.error("장바구니 추가 실패:", e);
+      alert(e.message || "장바구니 추가 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -108,7 +170,7 @@ function SearchPage() {
                     size="md"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("장바 클릭 : ", book);
+                      handleAddToCart(book);
                     }}
                   >
                     <LuShoppingCart className="button-icon cart-icon" />{" "}
