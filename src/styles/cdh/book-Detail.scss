@@ -1,10 +1,4 @@
-// ===============================
-// book-Detail.scss
-// BookDetail.jsx 맞춤 SCSS
-// 메인페이지 디자인 감성 연계 (공용 컴포넌트 스타일 유지)
-// ===============================
-
-// ===== 색상 변수 (새로운 팔레트 적용) =====
+//  색상 변수 (새로운 팔레트 적용) 
 $rich-black: #000f31;
 $dark-gray: #022221;
 $bangladesh-green: #03624C;
@@ -27,11 +21,16 @@ $pistachio: #AAC8C4;
 $soft-shadow: rgba(0, 0, 0, 0.1);
 $vibrant-shadow: rgba(0, 200, 150, 0.15);
 
-// ===== 메인 컨테이너 =====
+//  연한 포인트 색상 정의 
+$ultra-light-green: #71E3A6; 
+$ultra-light-caribbean: #90EED4; 
+$extra-light-green: #B0E0C0; 
+
+
+//  메인 컨테이너 (스타일 유지) 
 .book-detail-page {
   background: linear-gradient(135deg, $anti-flash-white 0%, $warm-white 50%, lighten($pistachio, 15%) 100%);
   color: $dark-gray;
-  // font-family: "Noto Serif KR", serif;
   line-height: 1.6;
   min-height: 100vh;
 }
@@ -42,7 +41,7 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   padding: 2rem 1rem;
 }
 
-// ===== 도서 상세 메인 레이아웃 =====
+//  도서 상세 메인 레이아웃 (스타일 유지) 
 .book-detail-container {
   display: grid;
   grid-template-columns: 400px 1fr;
@@ -54,7 +53,6 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   position: relative;
   overflow: hidden;
 
-  // 배경 장식 요소 (새로운 색상 팔레트 적용)
   &::before {
     content: '';
     position: absolute;
@@ -63,9 +61,9 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
     width: 200px;
     height: 200px;
     background: linear-gradient(135deg, $caribbean-green, $mountain-meadow);
-    border-radius: 50%;
     opacity: 0.12;
     z-index: 0;
+    border-radius: 50%;
   }
 
   &::after {
@@ -76,9 +74,9 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
     width: 150px;
     height: 150px;
     background: linear-gradient(135deg, $basil-green, $forest-green);
-    border-radius: 50%;
     opacity: 0.1;
     z-index: 0;
+    border-radius: 50%;
   }
 
   > * {
@@ -87,7 +85,7 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   }
 }
 
-// ===== 도서 이미지 영역 =====
+//  도서 이미지 영역 (스타일 유지) 
 .book-detail-image {
   display: flex;
   justify-content: center;
@@ -106,18 +104,10 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background: linear-gradient(145deg, $light-gray, white);
     border: 2px solid transparent;
-    
-    &:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.2),
-        0 8px 20px $vibrant-shadow;
-      border-color: $mountain-meadow;
-    }
   }
 }
 
-// ===== 도서 정보 영역 =====
+//  도서 정보 영역 (우측 1fr) 
 .book-detail {
   display: flex;
   flex-direction: column;
@@ -125,10 +115,10 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   min-height: 500px;
 }
 
-// ===== 상단 정보 =====
+//  상단 정보 (스타일 유지) 
 .book-detail-up {
   h1 {
-    font-size: 2.2rem;
+    font-size: 3rem;
     font-weight: 700;
     background: linear-gradient(135deg, $deep-green, $bangladesh-green, $basil-green);
     -webkit-background-clip: text;
@@ -138,29 +128,26 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
     line-height: 1.3;
     position: relative;
     
-    // 제목 하단 강조선
     &::after {
       content: '';
       position: absolute;
-      bottom: -8px;
+      bottom: -5px;
       left: 0;
-      width: 60px;
+      width: 90px;
       height: 3px;
-      background: linear-gradient(90deg, $caribbean-green, $mountain-meadow);
+      background: linear-gradient(90deg, $ultra-light-caribbean, $ultra-light-green);
       border-radius: 2px;
-      box-shadow: 0 2px 4px rgba(0, 200, 150, 0.3);
+      box-shadow: 0 2px 4px rgba(144, 238, 212, 0.3); 
     }
   }
 
   > p {
-    font-size: 1.1rem;
+    font-size: 0.85rem; 
     color: $dark-gray;
     margin-bottom: 2rem;
-    opacity: 0.8;
+    opacity: 0.85;
     
-    // 저자/출판사 정보에 아이콘 추가
     &::before {
-      content: '👤 ';
       background: linear-gradient(135deg, $frog-green, $mint-green);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -170,34 +157,30 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   }
 }
 
-// ===== 가격 정보 =====
+//  가격 정보 (포인트 라인 두께 및 글씨 크기 수정) 
 .book-price {
   background: linear-gradient(135deg, white, $anti-flash-white, lighten($pistachio, 25%));
   padding: 1.5rem;
-  border-radius: 12px;
-  border-left: 4px solid $caribbean-green;
-  border-right: 2px solid $mountain-meadow;
-  margin-bottom: 2rem;
+  
+  border-radius: 0 12px 12px 0; 
+  // 수정: 포인트 라인 두께를 3px로 얇게 조정 
+  border-left: 3px solid $caribbean-green;
+  border-right: none; 
+
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.05),
     0 2px 8px $vibrant-shadow;
   position: relative;
+  max-width: 320px; 
+  width: 100%; 
 
-  // 가격 박스 장식 요소
   &::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    width: 20px;
-    height: 20px;
-    background: linear-gradient(135deg, $caribbean-green, $mountain-meadow);
-    border-radius: 50%;
-    opacity: 0.6;
+    display: none; 
   }
 
   .original-price {
-    font-size: 1.4rem;
+    // 수정: 가격 글씨 크기 축소 (1.1rem -> 1.05rem) 
+    font-size: 1.05rem;
     font-weight: bold;
     background: linear-gradient(135deg, $bangladesh-green, $basil-green);
     -webkit-background-clip: text;
@@ -206,72 +189,62 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
     display: flex;
     align-items: center;
   }
-
-  .sale-price {
-    font-size: 1.6rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, $forest-green, $deep-green, $pine-green);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    
-    &::before {
-      content: '🎯 특가 ';
-      font-size: 0.9rem;
-      background: linear-gradient(135deg, $caribbean-green, $mountain-meadow);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-right: 0.3rem;
-    }
-  }
-
-  .discount-rate {
-    display: inline-block;
-    background: linear-gradient(135deg, $mountain-meadow, $caribbean-green);
-    color: white;
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    margin-left: 1rem;
-    box-shadow: 0 2px 6px rgba(44, 201, 144, 0.3);
-  }
 }
 
-// ===== 하단 영역 =====
+//  하단 영역 (스타일 유지) 
 .book-detail-bottom {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  
+  .bottom-flex-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: auto; 
+    padding-top: 2rem;
+    border-top: 2px solid;
+    border-image: linear-gradient(90deg, $ultra-light-green, $extra-light-green, $ultra-light-caribbean) 1;
+  }
+  
+  .book-detail-description {
+    margin-bottom: 2rem; 
+  }
+  
+  .price-area-wrapper {
+    flex-basis: auto; 
+    display: flex;
+    align-items: flex-end; 
+    // padding-bottom: 0.1rem; 
+    
+    .book-price {
+        margin-bottom: 0; 
+    }
+  }
 }
 
-// ===== 책 소개 섹션 =====
+// 책 소개 섹션 스타일 (스타일 유지) 
 .book-detail-description {
   margin-bottom: 3rem;
 
   .book-introduction {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 600;
     background: linear-gradient(135deg, $rich-black, $dark-gray, $stone-gray);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     position: relative;
-    padding-left: 2.5rem;
+    padding-left: 0.3rem; 
     
-    // 아이콘 추가
     &::before {
-      content: '📖';
+      // content: '📖';
       position: absolute;
-      left: 0;
+      left: -2rem; 
       top: 0;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       filter: hue-rotate(120deg);
     }
   }
@@ -279,18 +252,19 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   p {
     font-size: 1rem;
     color: $dark-gray;
-    line-height: 1.8;
+    line-height: 2.5;
     background: linear-gradient(135deg, white, $anti-flash-white, lighten($pistachio, 20%));
     padding: 1.5rem;
-    border-radius: 10px;
+    
+    border-radius: 0 10px 10px 0;
     border-left: 3px solid $caribbean-green;
-    border-right: 1px solid $mountain-meadow;
+    border-right: none; 
+    
     box-shadow: 
       0 2px 8px rgba(0, 0, 0, 0.05),
       0 1px 4px $vibrant-shadow;
     position: relative;
 
-    // 인용부호 장식
     &::before {
       content: '"';
       position: absolute;
@@ -302,41 +276,41 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
       -webkit-text-fill-color: transparent;
       background-clip: text;
       opacity: 0.4;
-      // font-family: serif;
     }
 
-    // 우하단 장식 점
     &::after {
-      content: '';
-      position: absolute;
-      bottom: 10px;
-      right: 15px;
-      width: 8px;
-      height: 8px;
-      background: linear-gradient(135deg, $mountain-meadow, $caribbean-green);
-      border-radius: 50%;
-      opacity: 0.6;
+      display: none;
     }
   }
 }
 
-// ===== 액션 버튼 영역 (공용 Button 컴포넌트 감싸는 영역만 스타일링) =====
+// 액션 버튼 영역 (3px 하단 이동) 
 .book-actions {
-  display: flex;
+  flex-basis: auto; 
+  height: 3.5rem;
+  width: auto; 
+  max-width: none; 
   
-  gap: 1rem;
-  margin-top: auto;
-  padding-top: 2rem;
-  border-top: 2px solid;
-  border-image: linear-gradient(90deg, $mountain-meadow, $caribbean-green, $basil-green) 1;
+  display: flex;
+  flex-direction: row; 
+  gap: 1.5rem; 
 
-  // 공용 Button 컴포넌트에 추가 스타일 적용 (기존 스타일 유지하면서 보강)
+  margin-left: auto; 
+  //  수정: 아래로 3px 이동 
+  margin-top: 1rem; 
+  
+  padding-top: 0;
+  border-top: none;
+
   > * {
-    flex: 1;
+    width: auto; 
+    flex: 1 1 auto; 
     position: relative;
     overflow: hidden;
 
-    // 호버 시 배경 효과 (기존 버튼 스타일에 추가)
+    padding: 0.7rem 1.2rem !important;
+    font-size: 1rem !important; 
+
     &::before {
       content: '';
       position: absolute;
@@ -368,7 +342,75 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   }
 }
 
-// ===== 모달 내부 커스텀 액션 영역 =====
+//  책 줄거리 섹션 (스타일 유지) 
+.book-summary-section {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: 0 8px 32px $soft-shadow;
+    position: relative;
+    overflow: hidden;
+    
+    margin-top: 2.5rem; 
+
+    .book-summary-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, $rich-black, $dark-gray, $stone-gray);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.7rem;
+      position: relative;
+      padding-left: 0.5rem; 
+      
+      &::before {
+        content: '📝';
+        position: absolute;
+        left: -2rem;
+        top: 0;
+        font-size: 1.2rem;
+        filter: none;
+      }
+    }
+    
+    p {
+      font-size: 1rem;
+      color: $dark-gray;
+      line-height: 1.8;
+      background: linear-gradient(135deg, white, $anti-flash-white, lighten($pistachio, 20%));
+      padding: 1.5rem;
+      
+      border-radius: 0 10px 10px 0;
+      border-left: 3px solid $caribbean-green;
+      border-right: none; 
+      
+      box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        0 1px 4px $vibrant-shadow;
+      position: relative;
+
+      &::before {
+        content: '"';
+        position: absolute;
+        top: -5px;
+        left: 10px;
+        font-size: 3rem;
+        background: linear-gradient(135deg, $frog-green, $mint-green);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        opacity: .4;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+}
+
+
+//  모달 내부 커스텀 액션 영역 (스타일 유지) 
 .custom-modal-actions {
   display: flex;
   gap: 1rem;
@@ -383,7 +425,6 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    // font-family: inherit;
     position: relative;
     overflow: hidden;
   }
@@ -414,7 +455,7 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   }
 }
 
-// ===== 반응형 디자인 =====
+//  반응형 디자인 (스타일 유지) 
 @media (max-width: 1024px) {
   .book-detail-container {
     grid-template-columns: 300px 1fr;
@@ -429,6 +470,14 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
 
   .book-detail-up h1 {
     font-size: 1.8rem;
+  }
+  
+  .book-detail-bottom .price-area-wrapper {
+      flex-basis: auto; 
+  }
+  
+  .book-summary-section {
+    padding: 2rem;
   }
 }
 
@@ -468,14 +517,51 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
       text-align: center;
     }
   }
-
-  .book-actions {
+  
+  .book-detail-bottom .bottom-flex-wrapper {
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  
+  .book-detail-bottom .price-area-wrapper {
+      flex-basis: auto; 
+      align-items: center; 
+      justify-content: center;
+      padding-bottom: 0;
+      
+      .book-price {
+          max-width: 400px; 
+      }
   }
 
-  .book-detail-description {
+  .book-actions {
+    flex-direction: column; 
+    gap: 0.8rem;
+    flex-basis: auto; 
+    max-width: none; 
+    margin-left: 0; 
+    margin-top: 0; // 모바일에서는 margin-top 제거
+  }
+
+  .book-detail-description,
+  .book-summary-section p {
     text-align: left;
+  }
+  
+  .book-summary-section {
+    padding: 1.5rem;
+    margin-top: 1.5rem; 
+  }
+  
+  .book-detail-description .book-introduction,
+  .book-summary-section .book-summary-title {
+      padding-left: 0.5rem; 
+  }
+  
+  .book-detail-description .book-introduction::before,
+  .book-summary-section .book-summary-title::before {
+      left: 0;
   }
 }
 
@@ -489,7 +575,7 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   }
 
   .book-price .original-price {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .custom-modal-actions {
@@ -504,7 +590,7 @@ $vibrant-shadow: rgba(0, 200, 150, 0.15);
   }
 }
 
-// ===== 로딩 및 애니메이션 효과 =====
+// 로딩 및 애니메이션 효과 (스타일 유지) 
 @keyframes fadeInUp {
   from {
     opacity: 0;
