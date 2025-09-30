@@ -1,72 +1,141 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import FormGroup from "../components/common/FormGroup";
 import Button from "../components/common/Button";
 // import AddressAutoComplete from "../components/AddressAutoComplete";
 import Modal from "../components/common/Modal"; // ✅ 이미 있는 모달
 import { alertError, alertSuccess, alertComfirm } from "../utils/alert";
-// import { createOrder, createPayment } from "../api/order"; // 앞서 만든 axios 래퍼 (orders/payments)
+import { createOrder, createPayment } from "../api/order"; // 앞서 만든 axios 래퍼 (orders/payments)
 import "../styles/checkoutpage.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { BookListRow } from "../components/common/BookListRow";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
+const KRW = (n) => n.toLocaleString("ko-KR");
 
-function normalizePhone(v) {
-  return String(v ?? "").replace(/[^\d]/g, "").slice(0, 20);
-}
+// function normalizePhone(v) {
+//   return String(v ?? "").replace(/[^\d]/g, "").slice(0, 20);
+// }
 
 // function CheckoutPage({ selectedItems = [] }) {
 function CheckoutPage() {
-  const KRW = (n) => n.toLocaleString("ko-KR");
+  // console.log(location.state.buyProducts);
+  
   // ✅ 더미 데이터 (장바구니에서 선택된 상품 가정)
-  const dummyBooks = [
-    {
-      id: 1,
-      name: "모던 자바스크립트 Deep Dive",
-      category: "프로그래밍",
-      author: "이웅모",
-      publisher: "위키북스",
-      price: 42000,
-      image_url: "/no-image.jpg",
-      isSoldOut: false,
-    },
-    {
-      id: 2,
-      name: "Clean Code",
-      category: "소프트웨어 공학",
-      author: "Robert C. Martin",
-      publisher: "인사이트",
-      price: 33000,
-      image_url: "/no-image.jpg",
-      isSoldOut: false,
-    },
-    {
-      id: 3,
-      name: "운영체제 공룡책",
-      category: "컴퓨터 공학",
-      author: "Abraham Silberschatz",
-      publisher: "Wiley",
-      price: 55000,
-      image_url: "/no-image.jpg",
-      isSoldOut: true, // 품절 표시
-    },
-  ];
+  // const dummyBooks = [
+  //   {
+  //     id: 1,
+  //     name: "모던 자바스크립트 Deep Dive",
+  //     category: "프로그래밍",
+  //     author: "이웅모",
+  //     publisher: "위키북스",
+  //     price: 42000,
+  //     image_url: "/no-image.jpg",
+  //     isSoldOut: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Clean Code",
+  //     category: "소프트웨어 공학",
+  //     author: "Robert C. Martin",
+  //     publisher: "인사이트",
+  //     price: 33000,
+  //     image_url: "/no-image.jpg",
+  //     isSoldOut: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "운영체제 공룡책",
+  //     category: "컴퓨터 공학",
+  //     author: "Abraham Silberschatz",
+  //     publisher: "Wiley",
+  //     price: 55000,
+  //     image_url: "/no-image.jpg",
+  //     isSoldOut: true, // 품절 표시
+  //   },
+  // ];
 
   // ✅ 합계/수량
+  // const { totalQty, subtotal } = useMemo(() => {
+  //   return dummyBooks.reduce(
+  //     (acc, b) => {
+  //       acc.totalQty += Number(b.qty || 0);
+  //       acc.subtotal += Number(b.price || 0) * Number(b.qty || 0);
+  //       return acc;
+  //     },
+  //     { totalQty: 0, subtotal: 0 }
+  //   );
+  // }, []);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // ✅ CartPage에서 넘어온 선택 상품들: [{ book, quantity }]
+  // const buyProducts = location.state?.buyProducts ?? [];
+  const buyProducts = useMemo(
+    () => (Array.isArray(location.state?.buyProducts) ? location.state.buyProducts : []),
+    [location.state]
+  )
+
+  console.log(buyProducts);
+
+  // 주문 API에 보낼 선택 아이템 ID 배열
+  // 백엔드가 '장바구니 아이템 ID'를 요구한다면 여기에서 p.cart_item_id 같은 필드로 바꾸세요.
+  const selectedItemIds = useMemo(
+    () => buyProducts
+      .map((p) => p.book?.id ?? p.id) // book.id 우선, 없으면 p.id
+      .filter(Boolean),
+    [buyProducts]
+  );
+
+  // id -> quantity 맵
+  const qtyMap = useMemo(() => {
+    const m = new Map();
+    for (const it of buyProducts) {
+      m.set(it.book.id, Number(it.quantity || 0));
+    }
+    return m;
+  }, [buyProducts]);
+
+  // state가 없거나 비었으면 장바구니로 돌려보내기
+  useEffect(() => {
+    if (!Array.isArray(buyProducts) || buyProducts.length === 0) {
+      alertError("선택된 상품이 없습니다.", "장바구니에서 상품을 선택해주세요.");
+      navigate("/cart", { replace: true });
+    }
+  }, [buyProducts, navigate]);
+
+  // 👉 BookListRow가 기대하는 형태로 매핑 (row 카드 규격)
+  //    - image_url, name, price, id 등은 book 객체에서 꺼냄
+  //    - 수량 표시는 leftActions에서, 여기선 qty만 실어둠
+  const booksForRow = useMemo(
+    () =>
+      buyProducts.map((item) => ({
+        id: item.book.id,
+        name: item.book.name,
+        category: item.book.category,
+        author: item.book.author,
+        publisher: item.book.publisher,
+        price: Number(item.book.price || 0),
+        image_url: item.book.image_url,
+        isSoldOut: item.book.stock === 0,
+      })),
+    [buyProducts]
+  );
+
+  // ✅ 총 수량/총액
   const { totalQty, subtotal } = useMemo(() => {
-    return dummyBooks.reduce(
+    return booksForRow.reduce(
       (acc, b) => {
-        acc.totalQty += Number(b.qty || 0);
-        acc.subtotal += Number(b.price || 0) * Number(b.qty || 0);
+        const q = qtyMap.get(b.id) || 0;
+        acc.totalQty += q;
+        acc.subtotal += q * b.price;
         return acc;
       },
       { totalQty: 0, subtotal: 0 }
     );
-  }, []);
-
-  const navigate = useNavigate();
+  }, [booksForRow, qtyMap]);
 
   // 수취인 폼
   const [name, setName] = useState("");
@@ -80,10 +149,12 @@ function CheckoutPage() {
   // 결제 모달
   const [openPayModal, setOpenPayModal] = useState(false);
   const [method, setMethod] = useState(METHODS[0]);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [tempRecipientAddress, setTempRecipientAddress] = useState("");
+  // const [tempRecipientAddress, setTempRecipientAddress] = useState("");
+  const [displayAddress, setDisplayAddress] = useState("");
 
-  const phone = useMemo(() => normalizePhone(phoneInput), [phoneInput]);
+  // const phone = useMemo(() => normalizePhone(phoneInput), [phoneInput]);
 
   const handleAddressSearch = () => {
     new window.daum.Postcode({
@@ -107,7 +178,7 @@ function CheckoutPage() {
           }
         }
 
-        setTempRecipientAddress(fullAddress);  // 최종 주소를 상태로 저장 input표시용
+        setDisplayAddress(fullAddress);  // 최종 주소를 상태로 저장 input표시용
         setAddress(fullAddress);   // 주소 검증용 state도 함께 갱신
       },
     }).open();
@@ -121,7 +192,7 @@ function CheckoutPage() {
     if (!n) next.name = "수취인 이름을 입력해주세요.";
     else if (n.length > 10) next.name = "이름은 10자 이내여야 합니다.";
 
-    if (!phone) next.phone = "연락처를 입력해주세요.";
+    if (!phoneInput) next.phone = "연락처를 입력해주세요.";
     if (!a) next.address = "주소를 입력해주세요.";
 
     setErrors(next);
@@ -143,29 +214,31 @@ function CheckoutPage() {
     if (!isConfirmed) return;
 
     try {
-      // setSubmitting(true);
+      setSubmitting(true);
 
       // 1) 주문 생성
-      // const order = await createOrder({
-      //   recipient_name: name.trim(),
-      //   recipient_phone: phone,
-      //   recipient_address: address.trim(),
-      //   selected_items: selectedItems, // [int,...]
-      // });
+      const order = await createOrder({
+        recipient_name: name.trim(),
+        recipient_phone: phoneInput,
+        recipient_address: address.trim(),
+        selected_items: selectedItemIds, // [int,...]
+      });
+
+      console.log(order);
 
       // 서버가 어떤 키로 id를 주는지에 따라 보정
-      // const orderId = order?.id ?? order?.order_id ?? order?.order?.id;
-      // if (!orderId) throw new Error("주문 번호를 확인할 수 없습니다.");
+      const orderId = order?.id ?? order?.order_id ?? order?.order?.id;
+      if (!orderId) throw new Error("주문 번호를 확인할 수 없습니다.");
 
       // 2) 결제 생성 (대기)
-      // const payment = await createPayment({
-      //   order_id: orderId,
-      //   method,
-      //   status: "대기",
-      // });
+      const payment = await createPayment({
+        order_id: orderId,
+        method,
+        status: "대기",
+      });
 
-      // await alertSuccess("주문 접수", `주문번호 #${payment.order_id}로 접수되었습니다.`);
-      await alertSuccess("주문 접수", `주문번호로 접수되었습니다.`);
+      await alertSuccess("주문 접수", `주문번호 #${payment.order_id}로 접수되었습니다.`);
+      // await alertSuccess("주문 접수", `주문번호로 접수되었습니다.`);
       // TODO: navigate(`/orders/${orderId}`);
     } catch (e) {
       await alertError("결제 실패", e.message || "주문/결제 처리 중 문제가 발생했습니다.");
@@ -187,17 +260,19 @@ function CheckoutPage() {
             <h1 className="selected-products-title">선택한 상품 목록</h1>
 
             <BookListRow
-              books={dummyBooks}
+              books={booksForRow}
               buttonActions={(book) => (
                 <button onClick={() => console.log("삭제:", book.id)}>삭제</button>
               )}
-              leftActions={(book) => (
-                <input
-                  type="checkbox"
-                  value={book.id}
-                  defaultChecked={!book.isSoldOut}
-                />
-              )}
+              // ✅ 여기서 qtyMap으로 안전하게 수량 뱃지 표시
+              leftActions={(b) => <span className="qty-badge">x{qtyMap.get(b.id) || 0}</span>}
+              // leftActions={(book) => (
+              //   <input
+              //     type="checkbox"
+              //     value={book.id}
+              //     defaultChecked={!book.isSoldOut}
+              //   />
+              // )}
             />
 
             <div className="order-summary">
@@ -251,8 +326,8 @@ function CheckoutPage() {
             </div> */}
             <FormGroup
               label="주소"
-              value={tempRecipientAddress}
-              onChange={(e) => setTempRecipientAddress(e.target.value)}
+              value={displayAddress}
+              onChange={(e) => setDisplayAddress(e.target.value)}
             />
             <Button
               variant="secondary"
@@ -267,10 +342,9 @@ function CheckoutPage() {
                 variant="primary"
                 size="lg"
                 onClick={onClickPay}
-                // disabled={submitting || selectedItems.length === 0}
+                disabled={submitting || buyProducts.length === 0}
               >
-                {/* {submitting ? "처리 중..." : "결제하기"} */}
-                결제하기
+                {submitting ? "처리 중..." : "결제하기"}
               </Button>
               <Button
                 variant="secondary"
@@ -299,10 +373,9 @@ function CheckoutPage() {
                 <Button 
                   variant="primary" 
                   onClick={onConfirmPay} 
-                  // disabled={submitting}
+                  disabled={submitting}
                 >
-                  {/* {submitting ? "처리 중..." : "확인"} */}
-                  확인
+                  {submitting ? "처리 중..." : "확인"}
                 </Button>
               </>
             }

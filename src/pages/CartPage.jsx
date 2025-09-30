@@ -54,7 +54,7 @@ function CartPage() {
             name: item.product_name,
             author: item.product_author,
             publisher: item.product_publisher,
-            price: item.product_price,
+            price: Number(item.product_price),
             stock: item.product_stock,
             image_url: item.product_image,
           },
