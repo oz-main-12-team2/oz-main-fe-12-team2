@@ -1,7 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import FormGroup from "../components/common/FormGroup";
 import Button from "../components/common/Button";
-// import AddressAutoComplete from "../components/AddressAutoComplete";
 import Modal from "../components/common/Modal"; // ✅ 이미 있는 모달
 import { alertError, alertSuccess, alertComfirm } from "../utils/alert";
 import { createOrder, createPayment } from "../api/order"; // 앞서 만든 axios 래퍼 (orders/payments)
@@ -10,69 +9,20 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { BookListRow } from "../components/common/BookListRow";
+import phoneFormat from "../utils/phoneFormat";
+import useCartStore from "../stores/cartStore";
+import { getCart } from "../api/cart";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
 const KRW = (n) => n.toLocaleString("ko-KR");
 
-// function normalizePhone(v) {
-//   return String(v ?? "").replace(/[^\d]/g, "").slice(0, 20);
-// }
-
-// function CheckoutPage({ selectedItems = [] }) {
 function CheckoutPage() {
-  // console.log(location.state.buyProducts);
-  
-  // ✅ 더미 데이터 (장바구니에서 선택된 상품 가정)
-  // const dummyBooks = [
-  //   {
-  //     id: 1,
-  //     name: "모던 자바스크립트 Deep Dive",
-  //     category: "프로그래밍",
-  //     author: "이웅모",
-  //     publisher: "위키북스",
-  //     price: 42000,
-  //     image_url: "/no-image.jpg",
-  //     isSoldOut: false,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Clean Code",
-  //     category: "소프트웨어 공학",
-  //     author: "Robert C. Martin",
-  //     publisher: "인사이트",
-  //     price: 33000,
-  //     image_url: "/no-image.jpg",
-  //     isSoldOut: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "운영체제 공룡책",
-  //     category: "컴퓨터 공학",
-  //     author: "Abraham Silberschatz",
-  //     publisher: "Wiley",
-  //     price: 55000,
-  //     image_url: "/no-image.jpg",
-  //     isSoldOut: true, // 품절 표시
-  //   },
-  // ];
-
-  // ✅ 합계/수량
-  // const { totalQty, subtotal } = useMemo(() => {
-  //   return dummyBooks.reduce(
-  //     (acc, b) => {
-  //       acc.totalQty += Number(b.qty || 0);
-  //       acc.subtotal += Number(b.price || 0) * Number(b.qty || 0);
-  //       return acc;
-  //     },
-  //     { totalQty: 0, subtotal: 0 }
-  //   );
-  // }, []);
-
   const location = useLocation();
   const navigate = useNavigate();
 
+  const setStoreCartItems = useCartStore((s) => s.setCartItems);
+
   // ✅ CartPage에서 넘어온 선택 상품들: [{ book, quantity }]
-  // const buyProducts = location.state?.buyProducts ?? [];
   const buyProducts = useMemo(
     () => (Array.isArray(location.state?.buyProducts) ? location.state.buyProducts : []),
     [location.state]
@@ -224,7 +174,7 @@ function CheckoutPage() {
         selected_items: selectedItemIds, // [int,...]
       });
 
-      // console.log(order);
+      console.log(order);
 
       // 서버가 어떤 키로 id를 주는지에 따라 보정
       const orderId = order?.id ?? order?.order_id ?? order?.order?.id;
@@ -234,17 +184,34 @@ function CheckoutPage() {
       const payment = await createPayment({
         order_id: orderId,
         method,
-        status: "대기",
       });
 
-      await alertSuccess("주문 접수", `주문번호 #${payment.order_id}로 접수되었습니다.`);
+      await alertSuccess("주문 접수", `주문번호 #${order.order_number}로 접수되었습니다.\n결제상태: ${payment.status}\n결제금액: ${Number(payment.total_price||0).toLocaleString()}원`);
       // await alertSuccess("주문 접수", `주문번호로 접수되었습니다.`);
       // TODO: navigate(`/orders/${orderId}`);
+
+      const res = await getCart();
+      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+      const mapped = items.map((item) => ({
+        book: {
+          id: item.product_id,
+          name: item.product_name,
+          category: item.product_category,
+          author: item.product_author,
+          publisher: item.product_publisher,
+          price: Number(item.product_price),
+          stock: item.product_stock,
+          image_url: item.product_image,
+        },
+        quantity: item.quantity,
+      }));
+      setStoreCartItems(mapped);  // ✅ 헤더 카운트 갱신 포인트
     } catch (e) {
       await alertError("결제 실패", e.message || "주문/결제 처리 중 문제가 발생했습니다.");
     } finally {
-      // setSubmitting(false);
+      setSubmitting(false);
       setOpenPayModal(false);
+      navigate("/");
     }
   };
 
@@ -280,10 +247,6 @@ function CheckoutPage() {
                 <span>총 수량</span>
                 <strong>{totalQty}개</strong>
               </div>
-              <div className="summary-row">
-                <span>상품 합계</span>
-                <strong>{KRW(subtotal)}원</strong>
-              </div>
               {/* 배송비/할인 등 정책 생기면 여기 추가 */}
               <div className="summary-row summary-total">
                 <span>결제 예정 금액</span>
@@ -305,25 +268,11 @@ function CheckoutPage() {
             />
             <FormGroup
               label="연락처"
-              value={phoneInput}
+              value={phoneFormat(phoneInput)}
               onChange={(e) => setPhoneInput(e.target.value)}
               error={errors.phone}
-              placeholder="01012345678"
+              placeholder="010-1234-5678"
             />
-            {/* <div className="edit-data-address">
-              <label className="input-label">주소</label>
-              <AddressAutoComplete
-                value={address}
-                onChangeValue={setAddress}
-                placeholder="주소 검색"
-                errorText={errors.address}
-                // signup과 동일 스타일을 쓰고 싶다면 동일 클래스 사용
-                className="address-autocomplete"
-                inputClassName="form-input"
-                dropdownClassName="addr-dropdown"
-                optionClassName="addr-option"
-              />
-            </div> */}
             <FormGroup
               label="주소"
               value={displayAddress}

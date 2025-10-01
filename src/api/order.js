@@ -24,9 +24,9 @@ export const createOrder = async ({ recipient_name, recipient_phone, recipient_a
 };
 
 // 결제 생성
-export const createPayment = async ({ order_id, method, status = "대기" }) => {
+export const createPayment = async ({ order_id, method }) => {
   try {
-    const res = await api.post("/payments/", { order_id, method, status });
+    const res = await api.post("/payments/", { order_id, method });
     return res.data; // { id, order_id, method, total_price, status, created_at }
   } catch (e) {
     if (e.response?.data) {
