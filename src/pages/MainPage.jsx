@@ -134,7 +134,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
             setCurrentIndex((prev) => (prev + 1) % books.length);
         }, 4000);
         return () => clearInterval(autoScrollIntervalRef.current);
-    }, [isAutoScrolling, books.length]);
+    }, [ books.length]);
 
     // index 바뀔 때 스크롤 (기존 로직 유지)
     useEffect(() => {
@@ -145,7 +145,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
                 behavior: "smooth",
             });
         }
-    }, [currentIndex, books.length]);
+    }, [books.length]);
 
     // 마우스 휠로 이동 (기존 로직 유지)
     useEffect(() => {

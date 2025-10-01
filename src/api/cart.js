@@ -82,3 +82,25 @@ export async function updateCartItem(productId, quantity) {
     };
   }
 }
+
+// 장바구니 아이템 삭제 (DELETE /cart/items/{productId}/)
+export async function deleteCartItem(productId) {
+  try {
+    const res = await api.delete(`/cart/items/${productId}/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error ||
+          "장바구니에서 상품을 삭제하는 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}

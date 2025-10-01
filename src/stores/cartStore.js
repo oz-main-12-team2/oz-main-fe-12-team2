@@ -5,8 +5,12 @@ const useCartStore = create((set, get) => ({
   cartCount: 0, //장바구니 개수
 
   // API 호출 후 장바구니 초기화
-  setCartItems: (items) => set({ cartItems: items }),
-  
+  setCartItems: (items) =>
+    set({
+      cartItems: items,
+      cartCount: items.length,
+    }),
+
   // api 호출 후 장바구니 개수 저장
   setCartCount: (count) => set({ cartCount: count }),
 

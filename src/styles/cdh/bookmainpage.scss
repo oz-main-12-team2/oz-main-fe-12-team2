@@ -13,11 +13,11 @@ $warm-white: #fdfaf6;
 $light-gray: #f5f5f5;
 
 // ===== Reset =====
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+// }
 
 // ===== Layout =====
 .main-page-container {
@@ -26,11 +26,11 @@ $light-gray: #f5f5f5;
   line-height: 1.6;
 }
 
-.base-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
+// .base-container {
+//   max-width: 1200px;
+//   margin: 0 auto;
+//   padding: 2rem 1rem;
+// }
 
 // ===== Banner (MainBanner.jsx) =====
 .main-banner {

@@ -7,7 +7,7 @@
 
 // 사이드바 시작
 .admin-sidebar {
-  width: 240px;
+  min-width: 240px;
   background-color: $main-color-hover;
   color: #fff;
   display: flex;
@@ -15,12 +15,16 @@
   padding: 1rem 0;
 
   .logo {
-    font-size: 1.3rem;
-    font-weight: 700;
     text-align: center;
-    margin-bottom: 2.7rem;
-    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
     cursor: pointer;
+    padding-bottom: 1rem;
+
+    .logo-image {
+      width: 100px;
+      height: auto;
+      filter: brightness(1.8) contrast(1.5) saturate(1.2); // 좀 밝게
+    }
   }
 
   nav {
@@ -37,11 +41,10 @@
     a {
       padding: 0.8rem 1.5rem;
       text-decoration: none;
-      font-size: 1.125rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      padding-left: 2rem;
 
       &:hover {
         background-color: $main-color;
@@ -70,7 +73,8 @@
   h1 {
     font-size: 1rem;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 0.2em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   .header-icons {
@@ -260,7 +264,7 @@
       background: #fff;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
-      min-width: 1000px;
+      min-width: 1300px;
 
       th,
       td {
@@ -476,7 +480,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
-    min-width: 1000px;
+    min-width: 1200px;
 
     th,
     td {
@@ -565,7 +569,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
-    min-width: 1200px;
+    min-width: 1400px;
 
     th,
     td {
@@ -776,6 +780,14 @@
       margin: 0;
       left: 50%;
       transform: translateX(-50%);
+      height: 30px;
+
+      .logo-image {
+        position: relative;
+        top: -8px;
+        width: 90px;
+        height: auto;
+      }
     }
   }
 

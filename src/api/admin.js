@@ -145,6 +145,25 @@ export async function updateOrder(orderId, payload) {
   }
 }
 
+// 주문 삭제 (DELETE /admin/orders/:id/)
+export async function deleteOrder(orderId) {
+  try {
+    const res = await api.delete(`/admin/orders/${orderId}/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message: e.response.data?.error || "주문 삭제 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}
+
 // 상품 등록(POST /admin/products/create/)
 export async function createProduct(payload) {
   try {
