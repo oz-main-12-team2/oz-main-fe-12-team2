@@ -44,3 +44,62 @@ export async function getProducts({
     };
   }
 }
+
+// cdh - 만들기 API( 특정 상품 1개 조회용 )
+export const getProductItem = async () => {
+  try {
+    //API res.data식으로 여기서 작업하기 스웨거서 정보를 확인하고 진행하기 ( 엔드포인트가 어디인지 + 받아오는 데이터가 무엇인지 ) 
+    const res = await api.get("/user/me/");
+
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message: e.response.data?.error || "상품정보를 갖고오지 못했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+};
+
+
+// axios 호출 코드
+// export const getProduct = async (id) => {
+//   try {
+//     const res = await api.get(`/products/${id}`);
+//     return res.data; // 서버가 내려주는 Product 객체
+//   } catch (e) {
+//     if (e.response?.data) {
+//       const data = e.response.data;
+//       const msgs = [];
+//       for (const k in data) {
+//         msgs.push(Array.isArray(data[k]) ? data[k].join(", ") : String(data[k]));
+//       }
+//       throw new Error(msgs.join("\n") || "상품 조회에 실패했습니다.");
+//     }
+//     throw new Error(e.message || "상품 조회 중 오류가 발생했습니다.");
+//   }
+// };
+
+
+// axios 불러오는 코드 예시
+// const { id } = useParams(); // /products/:id 라우트에서 가져옴
+//   const [product, setProduct] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     (async () => {
+//       try {
+//         const data = await getProduct(id);
+//         setProduct(data);
+//       } catch (e) {
+//         console.error("상품 불러오기 실패:", e);
+//       } finally {
+//         setLoading(false);
+//       }
+//     })();
+//   }, [id]);
