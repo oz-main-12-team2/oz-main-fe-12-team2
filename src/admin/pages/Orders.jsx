@@ -4,9 +4,9 @@ import Pagination from "../../components/common/Pagination";
 import StatusCell from "../components/StatusCell";
 import OrdersTable from "../components/OrdersTable";
 import OrderDetailModal from "../components/OrderDetailModal";
-import { alertComfirm, alertSuccess } from "../../utils/alert";
+import { alertComfirm, alertError, alertSuccess } from "../../utils/alert";
 import { formatDateShort } from "../../utils/dateFormat";
-import { getOrders } from "../../api/admin";
+import { deleteOrder, getOrders } from "../../api/admin";
 import Loading from "../../components/common/Loading";
 import useTitle from "../../hooks/useTitle";
 
@@ -50,18 +50,26 @@ function Orders() {
   };
 
   // 주문 삭제
-  const handleDelete = useCallback(async (orderNumber) => {
-    // 삭제 확인
+  const handleDelete = useCallback(async (orderId) => {
     const confirm = await alertComfirm("주문 삭제", "정말 삭제하시겠습니까?");
     if (!confirm.isConfirmed) return;
 
-    // 상태에서 삭제
-    setOrders((prev) => prev.filter((o) => o.order_number !== orderNumber));
-    setIsDetailOpen(false);
+    try {
+      await deleteOrder(orderId);
 
-    // 성공 알림
-    await alertSuccess("삭제 성공", "주문이 삭제되었습니다");
-  }, []);
+      const res = await getOrders({ page: currentPage, size: 10 }); //삭제 후 주문 api 호출
+      
+      setOrders(res.results);
+      setTotalPages(Math.ceil(res.count / 10));
+      setTotalOrders(res.count);
+
+      setIsDetailOpen(false);
+
+      await alertSuccess("주문 삭제 성공", "주문이 삭제되었습니다");
+    } catch {
+      await alertError("쥬문 삭제 실패", "주문 삭제 중 오류가 발생했습니다.");
+    }
+  }, [currentPage]);
 
   // 주문 업데이트 (상세 모달에서 수정 시 호출됨)
   const handleUpdate = useCallback((updatedOrder) => {
