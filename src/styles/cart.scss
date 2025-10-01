@@ -27,17 +27,20 @@
       .badge {
         margin-left: 0.3rem;
         display: inline-flex;
+        justify-content: center;
+        align-items: center;
         min-width: 20px;
         height: 20px;
         padding: 0 6px;
-        justify-content: center;
-        align-items: center;
         font-size: 0.7rem;
         font-weight: 600;
         color: #fff;
         background-color: #9ca3af;
         border-radius: 9999px;
         line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       &.active {
@@ -72,7 +75,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
     margin-left: 0.5rem;
-    
+
     label {
       font-weight: 500;
       font-size: 0.9rem;
@@ -101,6 +104,23 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+}
+
+.cart-empty-message {
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 1.1rem;
+  color: $gray-500;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin: 2rem 0;
+  font-weight: 500;
+
+  &:hover {
+    color: $main-color-hover;
+    cursor: default;
   }
 }
 
