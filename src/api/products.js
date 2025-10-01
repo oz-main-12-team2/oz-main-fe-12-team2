@@ -46,11 +46,10 @@ export async function getProducts({
 }
 
 // cdh - 만들기 API( 특정 상품 1개 조회용 )
-export const getProductItem = async () => {
+export const getProductItem = async (id) => {
   try {
     //API res.data식으로 여기서 작업하기 스웨거서 정보를 확인하고 진행하기 ( 엔드포인트가 어디인지 + 받아오는 데이터가 무엇인지 ) 
-    const res = await api.get("/products/id/");
-
+    const res = await api.get(`/products/${id}/`);
     return res.data;
   } catch (e) {
     if (e.response) {
@@ -65,6 +64,32 @@ export const getProductItem = async () => {
     };
   }
 };
+
+// 데이터 서버로부터 받는 로직
+  // useEffect(() => {
+  //   const loadUsers = async () => {
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
+
+  //       const res = await getAdminUsers(currentPage);
+
+  //       setUsers(res.results || []);
+  //       setTotalItems(res.count || 0);
+
+  //       // 페이지 개수 계산
+  //       const pageSize = res.results?.length || 1;
+  //       setTotalPages(Math.ceil((res.count || 1) / pageSize));
+  //     } catch (e) {
+  //       console.error("유저 불러오기 실패 : ", e);
+  //       setError(e.message || "유저 목록을 불러오는 중 오류가 발생했습니다.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadUsers();
+  // }, [currentPage]);
 
 
 // axios 호출 코드
