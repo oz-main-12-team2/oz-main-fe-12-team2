@@ -5,9 +5,10 @@ import { BookListRow } from "../components/common/BookListRow";
 import "../styles/cart.scss";
 import { Checkbox } from "../components/common/CheckRadio";
 import useTitle from "../hooks/useTitle";
-import { getCart, updateCartItem } from "../api/cart";
-import { alertError } from "../utils/alert";
-import { useNavigate } from "react-router-dom";
+import { deleteCartItem, getCart, updateCartItem } from "../api/cart";
+import { alertComfirm, alertError, alertSuccess } from "../utils/alert";
+import useCartStore from "../stores/cartStore";
+import useBuyMove from "../hooks/useBuyMove";
 
 function CartPage() {
   useTitle("장바구니");
@@ -25,7 +26,8 @@ function CartPage() {
 
   const prevSelectedItemIdsRef = useRef([]); //이전 선택상품 id들 저장용 ref (변경 감지해야해서 추가)
   const availableItemIds = availableItems.map((item) => item.book.id); // 현재 구매 가능 상품id 리스트
-  const navigate = useNavigate();
+  const setStoreCartItems = useCartStore((state) => state.setCartItems);
+  const buyMove = useBuyMove();
 
   // 구매 가능 상품 리스트가 변경되면 선택 상품도 초기화 (기존과 다르면)
   useEffect(() => {
@@ -54,7 +56,7 @@ function CartPage() {
             name: item.product_name,
             author: item.product_author,
             publisher: item.product_publisher,
-            price: item.product_price,
+            price: Number(item.product_price),
             stock: item.product_stock,
             image_url: item.product_image,
           },
@@ -86,7 +88,7 @@ function CartPage() {
       if (newQuantity > item.book.stock) {
         alertError(
           "재고 부족",
-          "재고가 부족하여 더 이상 수량을 늘릴 수 없습니다"
+          "재고가 부족하여 더 이상 수량을 추가할 수 없습니다"
         );
         return;
       }
@@ -104,7 +106,7 @@ function CartPage() {
                   book: {
                     ...i.book,
                     name: res.product_name,
-                    price: Number(res.price),
+                    price: Number(res.product_price ?? res.price ?? 0),
                   },
                 }
               : i
@@ -125,12 +127,36 @@ function CartPage() {
 
   // 단일 상품 삭제
   const handleRemoveItem = useCallback(
-    (bookId) => {
-      const filtered = cartItems.filter((item) => item.book.id !== bookId);
-      setCartItems(filtered);
-      setSelectedItems((prev) => prev.filter((id) => id !== bookId));
+    async (bookId) => {
+      setSavingIds((s) => new Set(s).add(bookId)); // 로딩 시작
+      try {
+        const alert = await alertComfirm(
+          "장바구니 삭제",
+          "정말 삭제 하시겠습니까?"
+        );
+        if (!alert.isConfirmed) return;
+        await deleteCartItem(bookId);
+
+        // 로컬 상태 갱신
+        const filtered = cartItems.filter((item) => item.book.id !== bookId);
+        setCartItems(filtered);
+
+        // 전역 상태도 갱신 (헤더 카운트 동기화 위해)
+        setStoreCartItems(filtered);
+
+        // 선택 상태에서 삭제 상품 제거
+        setSelectedItems((prev) => prev.filter((id) => id !== bookId));
+        await alertSuccess("장바구니 삭제 성공", "삭제가 완료되었습니다");
+      } catch {
+        alertError("장바구니 삭제 오류", "상품 삭제 중 오류가 발생했습니다.");
+      }
+      setSavingIds((s) => {
+        const newSet = new Set(s);
+        newSet.delete(bookId);
+        return newSet;
+      });
     },
-    [cartItems]
+    [cartItems, setStoreCartItems]
   );
 
   // 개별 선택 토글
@@ -152,56 +178,62 @@ function CartPage() {
   }, [selectedItems, availableItems]);
 
   // 선택 삭제 (품절 상품은 삭제 불가)
-  const handleRemoveSelected = useCallback(() => {
-    const filtered = cartItems.filter(
-      (item) => item.book.stock === 0 || !selectedItems.includes(item.book.id)
+  const handleRemoveSelected = useCallback(async () => {
+    if (selectedItems.length === 0) return; // 선택이 없으면 빠져나감
+    const alert = await alertComfirm(
+      "장바구니 선택 삭제",
+      "선택한 상품들을 정말 삭제하시겠습니까?"
     );
-    setCartItems(filtered);
-    setSelectedItems([]);
-  }, [cartItems, selectedItems]);
+    if (!alert.isConfirmed) return;
+
+    setSavingIds((s) => {
+      const newSet = new Set(s);
+      selectedItems.forEach((id) => newSet.add(id));
+      return newSet;
+    });
+
+    try {
+      // 선택된 상품들을 순차적으로 삭제 API 호출
+      for (const productId of selectedItems) {
+        await deleteCartItem(productId);
+      }
+
+      // 삭제 후 로컬 상태 갱신 (선택된 상품 제외)
+      const filtered = cartItems.filter(
+        (item) => !selectedItems.includes(item.book.id)
+      );
+      setCartItems(filtered);
+
+      // 전역 상태에도 반영
+      setStoreCartItems(filtered);
+
+      // 선택 상태 초기화
+      setSelectedItems([]);
+
+      await alertSuccess("장바구니 삭제 성공", "선택 상품들이 삭제되었습니다.");
+    } catch {
+      alertError(
+        "삭제 실패",
+        "장바구니 선택 상품 삭제 중 오류가 발생했습니다."
+      );
+    } finally {
+      // 로딩 상태에서 제외
+      setSavingIds((s) => {
+        const newSet = new Set(s);
+        selectedItems.forEach((id) => newSet.delete(id));
+        return newSet;
+      });
+    }
+  }, [cartItems, selectedItems, setStoreCartItems]);
 
   //구매하기 버튼 클릭시 상품리스트만 넘겨줌
-  const handleCheckoutSelected = useCallback(async () => {
-    try {
-      const latestRes = await getCart();
-      const latestItems = Array.isArray(latestRes[0]?.items)
-        ? latestRes[0].items
-        : [];
+  const handleCheckoutSelected = useCallback(() => {
+    const selectedProducts = cartItems.filter((item) =>
+      selectedItems.includes(item.book.id)
+    );
 
-      // 선택된 상품 필터링
-      const selectedProducts = cartItems.filter((item) =>
-        selectedItems.includes(item.book.id)
-      );
-
-      // 최신 재고와 수량 검사
-      for (const selected of selectedProducts) {
-        const latest = latestItems.find(
-          (li) => li.product_id === selected.book.id
-        );
-        if (!latest) {
-          alertError("구매하기 오류", `${selected.book.name} 상품 정보가 없습니다`);
-          return;
-        }
-        if (selected.quantity > latest.product_stock) {
-          alertError(
-            "상품 재고 부족",
-            `${selected.book.name} 상품의 재고가 부족합니다. 재고: ${latest.product_stock}`
-          );
-          return;
-        }
-      }
-
-      if (selectedProducts.length === 0) {
-        alertError("구매할 상품을 선택해주세요");
-        return;
-      }
-
-      // 모든검증 통과 후에 페이지 이동
-      navigate("/checkout", { state: { buyProducts: selectedProducts } });
-    } catch {
-      alertError("구매하기 오류", "구매 목록을 확인하는 중 문제가 발생했습니다");
-    }
-  }, [cartItems, selectedItems, navigate]);
+    buyMove(selectedProducts);
+  }, [cartItems, selectedItems, buyMove]);
 
   const totalPrice = cartItems
     .filter((item) => selectedItems.includes(item.book.id))
