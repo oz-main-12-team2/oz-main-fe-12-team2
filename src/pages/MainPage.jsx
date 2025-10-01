@@ -5,10 +5,10 @@ import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
 import useTitle from "../hooks/useTitle.js";
 
-// 💡 API 호출 함수 import
+// API 호출 함수 import
 import { getProducts } from "../api/products"; 
 
-// 💡 스타일 파일들은 외부에서 import
+// 스타일 파일들은 외부에서 import
 import "../styles/bookcardcol.scss";
 import "../styles/bookcardrow.scss";
 import "../styles/cdh/bookmainpage.scss";
@@ -21,7 +21,7 @@ export function BookCardCol({ book, onClick }) {
         e.currentTarget.src = DEFAULT_IMAGE;
     };
 
-    // 💡 백엔드 데이터 필드(book.price)와 매칭
+    // 백엔드 데이터 필드(book.price)와 매칭
     const price = (Number(book.price ?? 0) || 0).toLocaleString();
 
     return (
@@ -53,7 +53,7 @@ export function BookCardRow({ book, onClick, children }) {
         e.currentTarget.src = DEFAULT_IMAGE;
     };
     
-    // 💡 백엔드 데이터 필드(book.price)와 매칭
+    // 백엔드 데이터 필드(book.price)와 매칭
     const price = (Number(book.price ?? 0) || 0).toLocaleString();
 
     return (
@@ -111,7 +111,7 @@ function MainPage() {
 
     /* 도서 클릭 -> 상세 페이지 이동 */
     const handleCardClick = (book) => {
-        // 💡 백엔드 응답 필드인 book.id 사용
+        // 백엔드 응답 필드인 book.id 사용
         navigate(`/book/${book.id}`);
     };
 
@@ -119,7 +119,7 @@ function MainPage() {
 const BookListRowLoop = ({ books, onCardClick }) => {
     const containerRef = useRef(null);
 
-    // 💡 이미지 에러 핸들러 (캐러셀 카드 전용)
+    // 이미지 에러 핸들러 (캐러셀 카드 전용)
     const handleImgError = (e) => {
         e.currentTarget.src = DEFAULT_IMAGE;
         e.currentTarget.style.opacity = 0.5; // 이미지 대체 시 약간 흐리게
@@ -199,9 +199,9 @@ const BookListRowLoop = ({ books, onCardClick }) => {
                             <div className="card-glow" />
                             <div className="bestseller-badge">👑 #{index + 1}</div>
 
-                            {/* 💡 UI 깨짐의 주 원인인 복잡한 대체 UI를 제거하고, 이미지 태그만 남깁니다. */}
+                            {/* UI 깨짐의 주 원인인 복잡한 대체 UI를 제거하고, 이미지 태그만 남깁니다. */}
                             <div className="enhanced-book-image">
-                                {/* 💡 데코레이션은 SCSS로 처리하고, 실제 이미지만 남겨 UI를 단순화 */}
+                                {/* 데코레이션은 SCSS로 처리하고, 실제 이미지만 남겨 UI를 단순화 */}
                                 <img
                                     src={book.image || DEFAULT_IMAGE}
                                     alt={book.name}
@@ -214,7 +214,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
                             <div className="enhanced-book-details">
                                 <h3 className="enhanced-book-title">{book.name}</h3>
                                 <p className="enhanced-book-price">
-                                    💰 {(Number(book.price ?? 0) || 0).toLocaleString()}원
+                                    {(Number(book.price ?? 0) || 0).toLocaleString()}원
                                 </p>
                                 <p className="enhanced-book-category">{book.category}</p>
                                 <p className="enhanced-book-author">
@@ -238,13 +238,13 @@ const BookListRowLoop = ({ books, onCardClick }) => {
                     ))}
                 </div>
 
-                <div className="auto-scroll-indicator">
+                {/* <div className="auto-scroll-indicator">
                     <span>{isAutoScrolling ? "🔄 자동 스크롤 중" : "⏸️ 일시 정지됨"}</span>
                     <span>|</span>
                     <span>
                         {currentIndex + 1} / {books.length}
                     </span>
-                </div>
+                </div> */}
             </div>
         </div>
     );
@@ -257,14 +257,14 @@ const BookListRowLoop = ({ books, onCardClick }) => {
         setLoading(true);
         
         try {
-            // 💡 getProducts 호출 (페이지 번호와 크기 지정)
+            // getProducts 호출 (페이지 번호와 크기 지정)
             const data = await getProducts({ page: pageNum, size: 20 }); 
             
             const newBooks = data.results; // 스웨거에 정의된 목록 배열 필드명
 
             setAllBooks((prev) => [...prev, ...newBooks]); 
 
-            // 💡 API 응답의 'next' 필드 유무로 다음 페이지 존재 여부 확인 (무한 스크롤 종료)
+            // API 응답의 'next' 필드 유무로 다음 페이지 존재 여부 확인 (무한 스크롤 종료)
             setHasMore(!!data.next); 
             
         } catch (error) {
@@ -280,7 +280,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
         // 1. 베스트셀러 데이터 호출
         const fetchBestBooks = async () => {
             try {
-                // 💡 getProducts 호출: ordering을 판매량 내림차순('-stock')으로 지정
+                // getProducts 호출: ordering을 판매량 내림차순('-stock')으로 지정
                 // 판매량 기준이 재고 필드 stock과 연관되었다고 가정합니다.
                 const data = await getProducts({ page: 1, size: 10, ordering: '-stock' }); 
                 setBestBooks(data.results);

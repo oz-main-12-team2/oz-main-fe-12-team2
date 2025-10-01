@@ -1,8 +1,3 @@
-// ===============================
-// bookmainpage.scss
-// MainPage.jsx 맞춤 SCSS
-// ===============================
-
 // ===== 색상 변수 =====
 $rich-black: #000f31;
 $dark-gray: #032221;
@@ -13,11 +8,17 @@ $warm-white: #fdfaf6;
 $light-gray: #f5f5f5;
 
 // ===== Reset =====
+<<<<<<< HEAD
 // * {
 //   margin: 0;
 //   padding: 0;
 //   box-sizing: border-box;
 // }
+=======
+* {
+  box-sizing: border-box;
+}
+>>>>>>> dc9d9e7 (Fix: api문서 작업 중)
 
 // ===== Layout =====
 .main-page-container {
@@ -26,11 +27,17 @@ $light-gray: #f5f5f5;
   line-height: 1.6;
 }
 
+<<<<<<< HEAD
 // .base-container {
 //   max-width: 1200px;
 //   margin: 0 auto;
 //   padding: 2rem 1rem;
 // }
+=======
+.base-container {
+  max-width: 1200px;
+}
+>>>>>>> dc9d9e7 (Fix: api문서 작업 중)
 
 // ===== Banner (MainBanner.jsx) =====
 .main-banner {
@@ -188,7 +195,7 @@ $light-gray: #f5f5f5;
       color: $deep-green;
     }
 
-    /* 💡 캐러셀 가격 스타일 수정 */
+    /*  캐러셀 가격 스타일 수정 */
     .enhanced-book-price {
       font-size: 0.9rem;
       font-weight: bold;
@@ -205,7 +212,7 @@ $light-gray: #f5f5f5;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       
-      // 💰 아이콘이 포함되어 있으므로 추가적인 아이콘 스타일 제거
+      // 아이콘이 포함되어 있으므로 추가적인 아이콘 스타일 제거
     }
 
     .enhanced-book-category,
