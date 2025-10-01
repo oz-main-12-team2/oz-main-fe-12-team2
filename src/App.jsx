@@ -22,6 +22,7 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import useCartStore from "./stores/cartStore";
 import { getCart } from "./api/cart";
+import OrderLog from "./components/mypage/OrderLog";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -92,7 +93,14 @@ function App() {
       element: <MyPage />, // 사이드바 유지
       children: [{ index: true, element: <CartPage /> }],
     },
-    { path: "checkout", element: <CheckoutPage /> },
+    { path: "/checkout", element: <CheckoutPage /> },
+
+    // 주문 내역
+    {
+      path: "/orderlog",
+      element: <MyPage />,
+      children: [{ index: true, element: <OrderLog /> }],
+    },
 
     // 관리자라우트
     ...adminRoutes,
