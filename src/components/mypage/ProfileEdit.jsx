@@ -197,7 +197,7 @@ function ProfileEdit() {
           <AddressAutoComplete
             value={form.address}
             onChangeValue={onAddressSelect}
-            placeholder="주소를 입력하세요5"
+            placeholder="주소를 입력하세요"
 
             // ⬇️ FormGroup 인풋과 동일 클래스
             inputClassName={`input-field ${errors.address ? "input-error" : ""}`}
