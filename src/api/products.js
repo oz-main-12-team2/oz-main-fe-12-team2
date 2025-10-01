@@ -49,7 +49,7 @@ export async function getProducts({
 export const getProductItem = async () => {
   try {
     //API res.data식으로 여기서 작업하기 스웨거서 정보를 확인하고 진행하기 ( 엔드포인트가 어디인지 + 받아오는 데이터가 무엇인지 ) 
-    const res = await api.get("/user/me/");
+    const res = await api.get("/products/id/");
 
     return res.data;
   } catch (e) {
