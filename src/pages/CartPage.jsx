@@ -54,6 +54,7 @@ function CartPage() {
           book: {
             id: item.product_id,
             name: item.product_name,
+            category: item.product_category,
             author: item.product_author,
             publisher: item.product_publisher,
             price: Number(item.product_price),
@@ -262,10 +263,10 @@ function CartPage() {
       </div>
 
       {filterItems.length === 0 ? (
-        <p>
+        <p className="cart-empty-message">
           {activeTab === "available"
             ? "장바구니에 상품이 없습니다."
-            : "품절된 상품이 없습니다."}
+            : "장바구니에 품절된 상품이 없습니다."}
         </p>
       ) : (
         <>

@@ -1,10 +1,12 @@
 import api from "./axios";
 
 // 관리자 유저 목록 조회 (/admin/users/)
-export const getAdminUsers = async () => {
+export const getAdminUsers = async (page, page_size = 10) => {
   try {
     // const res = await api.get(`/admin/users/?page=${page}&size=${5}`);
-    const res = await api.get(`/admin/users/`);
+    const res = await api.get(`/admin/users/`, {
+      params: { page, page_size },
+    });
 
     return res.data;
   } catch (e) {

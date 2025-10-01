@@ -103,18 +103,18 @@ function SearchPage() {
     };
 
     try {
+      const alert = await alertComfirm(
+        "장바구니 추가",
+        "정말 추가 하시겠습니까?"
+      );
+      if (!alert.isConfirmed) return;
+
       await addCart({ productId: book.id, quantity: 1 });
 
       setCartItems([...cartItems, newItem]); // 전역상태 업데이트
 
       const res = await getCart();
       setCartItems(res[0]?.items || []);
-
-      const alert = await alertComfirm(
-        "장바구니 추가",
-        "정말 추가 하시겠습니까?"
-      );
-      if (!alert.isConfirmed) return;
 
       const alert2 = await alertComfirm(
         "장바구니에 추가 성공",

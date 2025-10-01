@@ -22,6 +22,7 @@ function Users() {
   const [error, setError] = useState(null); // 에러 상태
   const [isModalOpen, setIsModalOpen] = useState(false); //모달오픈 여부 상태
   const [selectedUser, setSelectedUser] = useState(null); //선택한 유저정보를 저장하는 상태
+  const pageSize = 10;
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -29,13 +30,12 @@ function Users() {
         setLoading(true);
         setError(null);
 
-        const res = await getAdminUsers(currentPage);
+        const res = await getAdminUsers(currentPage, pageSize);
 
         setUsers(res.results || []);
         setTotalItems(res.count || 0);
 
         // 페이지 개수 계산
-        const pageSize = res.results?.length || 1;
         setTotalPages(Math.ceil((res.count || 1) / pageSize));
       } catch (e) {
         console.error("유저 불러오기 실패 : ", e);
