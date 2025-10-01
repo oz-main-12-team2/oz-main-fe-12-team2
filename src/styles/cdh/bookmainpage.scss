@@ -8,17 +8,11 @@ $warm-white: #fdfaf6;
 $light-gray: #f5f5f5;
 
 // ===== Reset =====
-<<<<<<< HEAD
 // * {
 //   margin: 0;
 //   padding: 0;
 //   box-sizing: border-box;
-// }
-=======
-* {
-  box-sizing: border-box;
-}
->>>>>>> dc9d9e7 (Fix: api문서 작업 중)
+// }   없네요
 
 // ===== Layout =====
 .main-page-container {
@@ -27,17 +21,11 @@ $light-gray: #f5f5f5;
   line-height: 1.6;
 }
 
-<<<<<<< HEAD
 // .base-container {
 //   max-width: 1200px;
 //   margin: 0 auto;
 //   padding: 2rem 1rem;
 // }
-=======
-.base-container {
-  max-width: 1200px;
-}
->>>>>>> dc9d9e7 (Fix: api문서 작업 중)
 
 // ===== Banner (MainBanner.jsx) =====
 .main-banner {
