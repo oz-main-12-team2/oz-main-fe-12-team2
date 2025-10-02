@@ -4,9 +4,14 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button";
 import "../styles/cdh/book-Detail.scss";
-import { alertComfirm, alertSuccess } from "../utils/alert";
+import { alertComfirm, alertSuccess, alertError } from "../utils/alert"; // alertError 추가
 // API 함수 import (경로는 프로젝트 구조에 맞게 수정하세요)
 import { getProductItem } from "../api/products.js";
+// 장바구니 API 함수 import (경로 확인 필수)
+import { addCart, getCart } from "../api/cart";
+// Zustand 스토어 및 useBuyMove 훅 import
+import useCartStore from "../stores/cartStore";
+import useBuyMove from "../hooks/useBuyMove";
 
 // formatPrice 함수 (이전과 동일)
 const formatPrice = (price) => {
@@ -25,6 +30,10 @@ function BookDetail() {
   const [bookDetail, setBookDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Zustand 상태 액션 및 useBuyMove 훅 호출
+  const setStoreCartItems = useCartStore((state) => state.setCartItems);
+  const navigateToCheckout = useBuyMove();
 
   useEffect(() => {
     if (!id) {
@@ -94,50 +103,30 @@ function BookDetail() {
 
   const book = bookDetail;
 
-  // 3. Description 내용 나누기 로직
-
+  // 3. Description 내용 나누기 로직 (이전과 동일)
   const descriptionLines = book.description
     ? book.description
-        // ⭐️ 1단계: <br>과 닫는 </p>, </div> 같은 흔한 HTML 줄 바꿈 태그를 \n으로 대체하여 통일
-        .replace(/<br\s*\/?>/gi, "\n") // <br>, <br/>, <BR> 등 처리
-        .replace(/<\/p>/gi, "\n") // 닫는 </p> 태그 처리
-        .replace(/<\/div>/gi, "\n") // 닫는 </div> 태그 처리
-
-        // 2단계: 여러 개의 \n이 연속될 경우 하나로 합쳐서 중복 줄바꿈 방지
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<\/p>/gi, "\n")
+        .replace(/<\/div>/gi, "\n")
         .replace(/\n\s*\n/g, "\n")
-
-        // 3단계: 통일된 \n 문자를 기준으로 배열로 분리
         .split("\n")
-
-        // 4단계: 빈 문자열은 제거
         .filter((line) => line.trim() !== "")
     : [];
 
-  // ⭐️ 3줄 기준으로 변경
   const PREVIEW_LINE_COUNT = 3;
-
-  // '소개'에 표시할 미리 보기 (최대 3줄)
   const previewLines = descriptionLines.slice(0, PREVIEW_LINE_COUNT);
   const previewDescription = previewLines.join("\n");
-
-  // '상세 정보'에 표시할 나머지 내용 (4번째 줄부터)
   const remainingLines = descriptionLines.slice(PREVIEW_LINE_COUNT);
   const remainingDescription = remainingLines.join("\n");
 
-  // 4. 하단 상세 정보 콘텐츠 로직 (3줄 초과/이하에 따라 분기)
+  // 4. 하단 상세 정보 콘텐츠 로직 (이전과 동일)
   let bottomContent = null;
 
   if (remainingDescription) {
-    // 조건 1: 3줄을 초과한 내용이 있을 경우 (remainingDescription이 존재)
-    // -> '상세 정보'에 나머지 내용을 이어서 표시
     bottomContent = <p className="description-rest">{remainingDescription}</p>;
   } else {
-    // 조건 2: 3줄 이하의 내용만 있거나 (remainingDescription이 비어있음)
-    // -> '상세 정보'에 대체 텍스트만 표시
-
     const formattedPrice = formatPrice(book.price);
-
-    // 요청하신 지정 텍스트 조합
     const fallbackText = `${
       book.name || "이 도서"
     }은 저자 여러분들의 많은 관심과 기대를 바라고 ${formattedPrice}원에 기다리고 있습니다.`;
@@ -149,7 +138,8 @@ function BookDetail() {
     );
   }
 
-  // --- 핸들러 및 최종 렌더링 (이전과 동일) ---
+  // --- 핸들러 및 최종 렌더링 수정 ---
+  // 장바구니 추가 핸들러 (API 호출 및 Zustand 갱신)
   const handleCartAdd = async () => {
     const alert = await alertComfirm(
       "장바구니에 담겠습니까?",
@@ -157,13 +147,47 @@ function BookDetail() {
     );
     if (!alert.isConfirmed) return;
 
-    console.log(`장바구니 추가 API호출: 도서 ID ${book.id}`);
-    await alertSuccess(
-      "장바구니",
-      `선택하신 도서(${book.name})가 장바구니에 담겼습니다.`
-    );
+    try {
+      // 1. API 호출: 서버 장바구니에 상품 추가 (수량 1로 가정)
+      await addCart(book.id, 1);
+      console.log(`장바구니 추가 API 호출 성공: 도서 ID ${book.id}`);
+
+      // 2. 전체 장바구니 데이터 다시 불러오기
+      const res = await getCart();
+      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+
+      // 3. Zustand 상태 갱신을 위해 API 응답을 클라이언트 상태 형태로 매핑 (CartPage와 동일한 형식)
+      const mappedItems = items.map((item) => ({
+        book: {
+          id: item.product_id,
+          name: item.product_name,
+          category: item.product_category,
+          author: item.product_author,
+          publisher: item.product_publisher,
+          price: Number(item.product_price),
+          stock: item.product_stock,
+          image_url: item.product_image,
+        },
+        quantity: item.quantity,
+      }));
+
+      // 4. Zustand 스토어 갱신 (헤더 카운트 동기화)
+      setStoreCartItems(mappedItems);
+
+      await alertSuccess(
+        "장바구니",
+        `선택하신 도서(${book.name})가 장바구니에 담겼습니다.`
+      );
+    } catch (e) {
+      console.error("장바구니 추가 실패:", e);
+      alertError(
+        "장바구니 오류",
+        "상품을 장바구니에 추가하는 중 오류가 발생했습니다."
+      );
+    }
   };
 
+  // 구매하기 핸들러 (useBuyMove 연결)
   const handlebuyAdd = async () => {
     const alert = await alertComfirm(
       "상품을 구매하시겠습니까?",
@@ -171,11 +195,16 @@ function BookDetail() {
     );
     if (!alert.isConfirmed) return;
 
-    console.log(`구매 API 호출: 도서 ID ${book.id}`);
-    await alertSuccess(
-      "구매 완료",
-      `선택하신 도서(${book.name})의 구매가 완료되었습니다.`
-    );
+    const productsToBuy = [
+      {
+        book: book, // 현재 도서 상세 정보 객체
+        quantity: 1, // 상세 페이지에서 '바로 구매'는 수량 1개로 가정
+      },
+    ];
+
+    // 'direct' 모드로 설정하여 재고 확인 없이 바로 이동
+    console.log(`즉시 구매 이동 호출: 도서 ID ${book.id}`);
+    navigateToCheckout(productsToBuy, "direct");
   };
 
   return (
@@ -199,8 +228,6 @@ function BookDetail() {
               <div className="book-detail-bottom">
                 <section className="book-detail-description">
                   <h2 className="book-introduction">소 개</h2>
-
-                  {/* 상단: description의 미리 보기(최대 3줄)만 표시 */}
                   <p className="description-preview">{previewDescription}</p>
                 </section>
 
@@ -214,6 +241,7 @@ function BookDetail() {
                   </div>
 
                   <div className="book-actions">
+                    {/* 수정된 handleCartAdd 함수 연결 */}
                     <Button
                       onClick={handleCartAdd}
                       size="lg"
@@ -221,6 +249,7 @@ function BookDetail() {
                     >
                       장바구니
                     </Button>
+                    {/* 수정된 handlebuyAdd 함수 연결 */}
                     <Button onClick={handlebuyAdd} size="lg" variant="primary">
                       구매하기
                     </Button>
@@ -233,8 +262,7 @@ function BookDetail() {
           {/* 하단 '상세 정보' 섹션 */}
           {book.description && (
             <section className="book-summary-section full-width-section">
-
-
+              <h2 className="book-summary">상세 정보</h2>
               {bottomContent}
 
               {book.summary && (
