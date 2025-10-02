@@ -27,8 +27,6 @@ function CheckoutPage() {
     () => (Array.isArray(location.state?.buyProducts) ? location.state.buyProducts : []),
     [location.state]
   )
-  console.log(location.state);
-  // console.log(buyProducts);
 
   // 주문 API에 보낼 선택 아이템 ID 배열
   // 백엔드가 '장바구니 아이템 ID'를 요구한다면 여기에서 p.cart_item_id 같은 필드로 바꾸세요.
@@ -173,8 +171,6 @@ function CheckoutPage() {
         recipient_address: address.trim(),
         selected_items: selectedItemIds, // [int,...]
       });
-
-      console.log(order);
 
       // 서버가 어떤 키로 id를 주는지에 따라 보정
       const orderId = order?.id ?? order?.order_id ?? order?.order?.id;
