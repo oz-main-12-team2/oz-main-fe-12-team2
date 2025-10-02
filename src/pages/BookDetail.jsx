@@ -144,11 +144,9 @@ function BookDetail() {
       "예를 누르면 장바구니에 상품이 담깁니다"
     );
     if (!alert.isConfirmed) return;
-
+    
     try {
-      // 1. API 호출: 서버 장바구니에 상품 추가 (수량 1로 가정)
-      await addCart(book.id, 1);
-      console.log(`장바구니 추가 API 호출 성공: 도서 ID ${book.id}`);
+      await addCart({ productId: book.id, quantity: 1 }); // 객체 형태로 인자 전달 (cart.js 정의에 따름)
 
       // 2. 전체 장바구니 데이터 다시 불러오기
       const res = await getCart();
