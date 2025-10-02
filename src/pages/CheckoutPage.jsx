@@ -266,14 +266,18 @@ function CheckoutPage() {
             <FormGroup
               label="연락처"
               value={phoneFormat(phoneInput)}
-              onChange={(e) => setPhoneInput(e.target.value)}
+              onChange={(e) => setPhoneInput(phoneFormat(e.target.value))}
               error={errors.phone}
               placeholder="010-1234-5678"
             />
             <FormGroup
               label="주소"
               value={displayAddress}
-              onChange={(e) => setDisplayAddress(e.target.value)}
+              onChange={(e) => {
+                  setDisplayAddress(e.target.value);
+                  setAddress(e.target.value);
+                }
+              }
             />
             <Button
               variant="secondary"
@@ -328,16 +332,6 @@ function CheckoutPage() {
           >
             <div className="method-list">
               {METHODS.map((m) => (
-                // <label key={m} className="method-item">
-                //   <input
-                //     type="radio"
-                //     name="pay-method"
-                //     value={m}
-                //     checked={method === m}
-                //     onChange={() => setMethod(m)}
-                //   />
-                //   <span>{m}</span>
-                // </label>
                 <Radio
                   key={m}
                   name="pay-method"
