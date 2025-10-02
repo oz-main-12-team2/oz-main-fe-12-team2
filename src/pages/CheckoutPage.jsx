@@ -12,6 +12,7 @@ import { BookListRow } from "../components/common/BookListRow";
 import phoneFormat from "../utils/phoneFormat";
 import useCartStore from "../stores/cartStore";
 import { getCart } from "../api/cart";
+import { Radio } from "../components/common/CheckRadio";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
 const KRW = (n) => n.toLocaleString("ko-KR");
@@ -327,16 +328,23 @@ function CheckoutPage() {
           >
             <div className="method-list">
               {METHODS.map((m) => (
-                <label key={m} className="method-item">
-                  <input
-                    type="radio"
-                    name="pay-method"
-                    value={m}
-                    checked={method === m}
-                    onChange={() => setMethod(m)}
-                  />
-                  <span>{m}</span>
-                </label>
+                // <label key={m} className="method-item">
+                //   <input
+                //     type="radio"
+                //     name="pay-method"
+                //     value={m}
+                //     checked={method === m}
+                //     onChange={() => setMethod(m)}
+                //   />
+                //   <span>{m}</span>
+                // </label>
+                <Radio
+                  key={m}
+                  name="pay-method"
+                  label={m}
+                  checked={method === m}
+                  onChange={() => setMethod(m)}
+                />
               ))}
             </div>
           </Modal>
