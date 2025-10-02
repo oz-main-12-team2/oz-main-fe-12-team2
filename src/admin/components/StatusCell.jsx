@@ -4,7 +4,7 @@ import Select from "../../components/common/Select";
 import { updateOrder } from "../../api/admin";
 
 const STATUS_OPTIONS = [
-  { value: "결제 완료", label: "결제 완료" },
+  { value: "주문 완료", label: "주문 완료" },
   { value: "배송중", label: "배송중" },
   { value: "배송완료", label: "배송완료" },
 ];
