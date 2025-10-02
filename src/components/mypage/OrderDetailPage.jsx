@@ -17,8 +17,6 @@ export default function OrderDetailPage() {
     (async () => {
       try {
         const res = await api.get(`/orders/${id}/`);
-
-        console.log(res.data);
         setOrder(res.data);
       } catch (e) {
         console.error("주문 상세 불러오기 실패:", e);
