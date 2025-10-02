@@ -596,164 +596,164 @@
       cursor: pointer;
     }
   }
+}
 
-  // 모달 내부 스타일
-  .order-info,
-  .recipient-info,
-  .payment-info {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
+// 모달 내부 스타일
+.order-info,
+.recipient-info,
+.payment-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
 
-    p {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-top: 0.5rem;
-      color: $gray-500;
-      font-weight: 600;
+  p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+    color: $gray-500;
+    font-weight: 600;
 
-      span {
-        display: inline-block;
-        min-width: 100px;
-      }
-    }
-
-    h4 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-  }
-
-  // 주문 상품 테이블
-  .order-items-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-
-    th,
-    td {
-      padding: 8px 10px;
-      border: 1px solid #e5e7eb;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f9fafb;
-      font-weight: 600;
-    }
-  }
-
-  .status-cell {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    .select-field {
+    span {
+      display: inline-block;
       min-width: 100px;
     }
+  }
 
-    .status-actions {
-      display: flex;
-      gap: 0.25rem;
-      margin-left: auto;
-    }
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+}
 
-    .btn-save,
-    .btn-cancel {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.75rem;
-      border-radius: 4px;
-      border: 1px solid #d1d5db;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      font-weight: 600;
-    }
+// 주문 상품 테이블
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
 
-    .btn-save {
-      background-color: $main-color;
-      color: #fff;
+  th,
+  td {
+    padding: 8px 10px;
+    border: 1px solid #e5e7eb;
+    font-size: 13px;
+    text-align: center;
+  }
 
-      &:hover {
-        background-color: $main-color-hover;
-      }
-    }
+  th {
+    background-color: #f9fafb;
+    font-weight: 600;
+  }
+}
 
-    .btn-cancel {
-      background-color: $red-500;
-      color: #fff;
+.status-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .select-field {
+    min-width: 100px;
+  }
+
+  .status-actions {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: auto;
+  }
+
+  .btn-save,
+  .btn-cancel {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: 600;
+  }
+
+  .btn-save {
+    background-color: $main-color;
+    color: #fff;
+
+    &:hover {
+      background-color: $main-color-hover;
     }
   }
-  // 주문관리 배송정보 모달창 안에 수정폼
-  .recipient-info {
-    .recipient-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
 
-    .recipient-edit {
+  .btn-cancel {
+    background-color: $red-500;
+    color: #fff;
+  }
+}
+// 주문관리 배송정보 모달창 안에 수정폼
+.recipient-info {
+  .recipient-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .recipient-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+
+    .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
+      gap: 0.25rem;
 
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $gray-500;
+      }
 
-        label {
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: $gray-500;
-        }
+      .form-input,
+      .form-textarea,
+      .form-select {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        transition: border-color 0.2s ease;
 
-        .form-input,
-        .form-textarea,
-        .form-select {
-          border: 1px solid #d1d5db;
-          border-radius: 6px;
-          padding: 0.5rem 0.75rem;
-          font-size: 0.9rem;
-          transition: border-color 0.2s ease;
-
-          &:focus {
-            border-color: $main-color;
-            outline: none;
-            box-shadow: 0 0 0 1px $main-color;
-          }
-        }
-
-        .form-textarea {
-          min-height: 80px;
-          resize: vertical;
+        &:focus {
+          border-color: $main-color;
+          outline: none;
+          box-shadow: 0 0 0 1px $main-color;
         }
       }
 
-      .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
+      .form-textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+    }
 
-        .btn-save {
-          background-color: $main-color;
-          color: #fff;
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
 
-          &:hover {
-            background-color: $main-color-hover;
-          }
+      .btn-save {
+        background-color: $main-color;
+        color: #fff;
+
+        &:hover {
+          background-color: $main-color-hover;
         }
+      }
 
-        .btn-cancel {
-          background-color: $red-500;
-          color: #fff;
+      .btn-cancel {
+        background-color: $red-500;
+        color: #fff;
 
-          &:hover {
-            background-color: darken($red-500, 5%);
-          }
+        &:hover {
+          background-color: darken($red-500, 5%);
         }
       }
     }
@@ -972,22 +972,58 @@
       background-color: #f3f4f6;
       cursor: pointer;
     }
+    .status-text {
+      font-weight: 700;
+
+      &.대기 {
+        color: $gray-500;
+      }
+      &.성공 {
+        color: $main-color;
+      }
+      &.실패 {
+        color: orange;
+      }
+      &.취소 {
+        color: $red-500;
+      }
+    }
   }
 
-  .status-text {
-    font-weight: 600;
+  .payment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.9rem;
 
-    &.대기 {
+    p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-top: 0.5rem;
       color: $gray-500;
+      font-weight: 600;
+
+      span {
+        display: inline-block;
+        min-width: 100px;
+      }
     }
-    &.성공 {
-      color: $main-color;
-    }
-    &.실패 {
-      color: orange;
-    }
-    &.취소 {
-      color: $red-500;
+
+    .status-text {
+      font-weight: 700;
+
+      &.대기 {
+        color: $gray-500;
+      }
+      &.성공 {
+        color: $main-color;
+      }
+      &.실패 {
+        color: orange;
+      }
+      &.취소 {
+        color: $red-500;
+      }
     }
   }
 

@@ -291,8 +291,8 @@ export async function getPayments({
   page,
   page_size,
   status,
-  created_at_gte,
-  created_at_lte,
+  created_at__gte,
+  created_at__lte,
 } = {}) {
   try {
     const params = {};
@@ -300,8 +300,8 @@ export async function getPayments({
     if (page) params.page = page;
     if (page_size) params.page_size = page_size;
     if (status && status !== "all") params.status = status;
-    if (created_at_gte) params.created_at_gte = created_at_gte;
-    if (created_at_lte) params.created_at_lte = created_at_lte;
+    if (created_at__gte) params.created_at__gte = created_at__gte;
+    if (created_at__lte) params.created_at__lte = created_at__lte;
 
     const res = await api.get("/admin/payments/", { params });
     return res.data;
