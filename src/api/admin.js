@@ -285,3 +285,59 @@ export async function getDashboardStats() {
     };
   }
 }
+
+// 결제관리 조회 (GET /admin/payments/)
+export async function getPayments({
+  page,
+  page_size,
+  status,
+  created_at__gte,
+  created_at__lte,
+} = {}) {
+  try {
+    const params = {};
+
+    if (page) params.page = page;
+    if (page_size) params.page_size = page_size;
+    if (status && status !== "all") params.status = status;
+    if (created_at__gte) params.created_at__gte = created_at__gte;
+    if (created_at__lte) params.created_at__lte = created_at__lte;
+
+    const res = await api.get("/admin/payments/", { params });
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error ||
+          "결제 내역을 불러오는 중 오류가 발생했습니다",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}
+
+// 결제 취소 (POST /admin/payments/:id/cancel/)
+export async function cancelPayment(paymentId) {
+  try {
+    const res = await api.post(`/admin/payments/${paymentId}/cancel/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message:
+          e.response.data?.error ||
+          "결제 취소 중 오류가 발생했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+}

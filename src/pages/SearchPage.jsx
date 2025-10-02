@@ -128,15 +128,12 @@ function SearchPage() {
     }
   };
 
-  const handleBuyNow = (book) => {
+  const handleBuyNow = async (book) => {
     // 상품 정보를 구매용 구조로 생성
     const buyProduct = [
       {
         book: {
-          id: book.id,
-          name: book.name,
-          author: book.author,
-          publisher: book.publisher,
+          ...book,
           price: Number(book.price) || 0,
           stock: book.stock || 0,
           image_url: book.image || null,
@@ -145,8 +142,18 @@ function SearchPage() {
       },
     ];
 
-    // 결제 페이지로 이동하며 구매 상품 정보 전달
-    buyMove(buyProduct);
+    try {
+      const alert = await alertComfirm(
+        "바로 구매",
+        "이 상품을 바로 구매하시겠습니까?"
+      );
+      if (!alert.isConfirmed) return;
+
+      // 결제 페이지로 이동하며 구매 상품 정보 전달
+      buyMove(buyProduct, "direct");
+    } catch {
+      alertError("구매 오류", "상품 구매 중 오류가 발생했습니다.");
+    }
   };
 
   return (
