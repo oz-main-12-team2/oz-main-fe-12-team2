@@ -1,35 +1,56 @@
-import { useEffect, useMemo, useState } from "react";
-import { fetchOrders } from "../../api/order";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import Loading from "../common/Loading";
-import Button from "../common/Button";
 import "../../styles/orderlog.scss";
-import KRW from "../../utils/krw";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../api/axios";
+import OrderTableHeader from "../orders/OrderTableHeader";
+import Pagination from "../common/Pagination";
 
 function OrderLog() {
-  const [data, setData] = useState({ count: 0, next: null, previous: null, results: [] });
+  // const [data, setData] = useState({ count: 0, next: null, previous: null, results: [] });
+  const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [pageSize, setPageSize] = useState(10); // DRF 기본 10 가정, 응답 보며 보정
   const [isLoading, setIsLoading] = useState(true);
-  const [err, setErr] = useState("");
+  const [error, setError] = useState("");
 
   // 페이지네이션이 필요하면 page 상태 사용
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
+
+  const totalPages = useMemo(
+    () => Math.max(1, Math.ceil((totalCount || 0) / (pageSize || 10))),
+    [totalCount, pageSize]
+  );
+
+  const loadOrders = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+      const res = await api.get(`/orders/?page=${currentPage}`);
+      // DRF 기본 응답: { count, next, previous, results }
+      setOrders(Array.isArray(res.data?.results) ? res.data.results : []);
+      setTotalCount(Number(res.data?.count ?? 0));
+
+      // 페이지당 사이즈 보정 (마지막 페이지 등 가변 가능)
+      const len = Array.isArray(res.data?.results) ? res.data.results.length : 0;
+      if (len > 0) setPageSize(len);
+    } catch (e) {
+      console.error(e);
+      setOrders([]);
+      setError("주문 내역을 불러오는 중 문제가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      setErr("");
-      try {
-        const res = await fetchOrders(/* { page } */);
-        setData(res || { count: 0, next: null, previous: null, results: [] });
-      } catch (e) {
-        setErr(e.message || "주문 목록을 불러오지 못했습니다.");
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [page]);
+    loadOrders();
+  }, [loadOrders]);
 
-  const orders = useMemo(() => Array.isArray(data.results) ? data.results : [], [data]);
+  // const orders = useMemo(() => Array.isArray(data.results) ? data.results : [], [data]);
 
   if (isLoading) return <Loading loadingText="주문 목록 불러오는 중" size={40} />;
 
@@ -37,76 +58,49 @@ function OrderLog() {
     <>
       <div className="myorders-page">
         <h1 className="myorders-title">주문 내역</h1>
+        <div className="orders-meta">
+          <span className="orders-total">총 {totalCount.toLocaleString()}건</span>
+        </div>
 
-        {err && <p className="myorders-error" role="alert">{err}</p>}
+        <OrderTableHeader />
 
-        {orders.length === 0 ? (
-          <div className="myorders-empty">
-            <p>주문 내역이 없습니다.</p>
-            <Link to="/">메인으로 가기</Link>
-          </div>
-        ) : (
-          <div className="orders-list">
-            {orders.map((order) => (
-              <section key={order.id} className="order-card">
-                <header className="order-card-header">
-                  <div className="order-meta">
-                    <div className="order-number">
-                      주문번호 <strong>#{order.order_number}</strong>
-                    </div>
-                    <div className="order-status">{order.status}</div>
-                  </div>
-                  <div className="order-dates">
-                    <span className="created-at">
-                      주문일 {new Date(order.created_at).toLocaleString()}
-                    </span>
-                  </div>
-                </header>
+        <div className="orders-list">
+          {isLoading && <p className="orders-loading">불러오는 중…</p>}
+          {error && <p className="orders-error">{error}</p>}
 
-                <div className="order-recipient">
-                  <div><strong>수취인</strong> {order.recipient_name}</div>
-                  <div><strong>연락처</strong> {order.recipient_phone}</div>
-                  <div><strong>주소</strong> {order.recipient_address}</div>
+          {!isLoading && !error && orders.length === 0 && (
+            <p className="orders-empty">주문 내역이 없습니다.</p>
+          )}
+
+          {!isLoading &&
+            !error &&
+            orders.map((order) => {
+              const qty = (order.items || []).reduce(
+                (acc, it) => acc + Number(it.quantity || 0),
+                0
+              );
+              const total = Number(order.total_price || 0);
+              return (
+                <div key={order.id} className="order-row" onClick={() => navigate(`/orderlog/${order.id}`)}>
+                  <span className="c c--id">{order.order_number}</span>
+                  <span className="c c--date">
+                    {new Date(order.created_at).toLocaleDateString()}
+                  </span>
+                  <span className="c c--recipient">{order.recipient_name}</span>
+                  <span className="c c--qty">{qty}개</span>
+                  <span className="c c--total">{total.toLocaleString()}원</span>
+                  <span className="c c--status">{order.status}</span>
+                  <span className="c c--chev">▶</span>
                 </div>
-
-                <ul className="order-items">
-                  {order.items?.map((it) => (
-                    <li key={it.id} className="order-item">
-                      <div className="item-thumb">
-                        <img
-                          src={it.product?.image || "/no-image.jpg"}
-                          alt={it.product?.name || "상품"}
-                          onError={(e) => { e.currentTarget.src = "/no-image.jpg"; }}
-                        />
-                      </div>
-
-                      <div className="item-info">
-                        <div className="item-title">{it.product?.name}</div>
-                        <div className="item-sub">
-                          {it.product?.author} · {it.product?.publisher} · {it.product?.category}
-                        </div>
-
-                        <div className="item-meta">
-                          <span className="qty">수량 {it.quantity}개</span>
-                          <span className="unit">단가 {KRW(it.unit_price)}원</span>
-                          <span className="total">소계 {KRW(it.total_price)}원</span>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <footer className="order-card-footer">
-                  <div className="order-total">
-                    총 결제금액 <strong>{KRW(order.total_price)}원</strong>
-                  </div>
-                  {/* 필요 시 상세 페이지 라우팅 */}
-                  {/* <Button size="sm" onClick={() => navigate(`/mypage/orders/${order.id}`)}>상세보기</Button> */}
-                </footer>
-              </section>
-            ))}
-          </div>
-        )}
+              );
+            })}
+        </div>
+        
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </>
   )

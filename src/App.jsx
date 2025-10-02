@@ -23,6 +23,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import useCartStore from "./stores/cartStore";
 import { getCart } from "./api/cart";
 import OrderLog from "./components/mypage/OrderLog";
+import OrderDetailPage from "./components/mypage/OrderDetailPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -100,6 +101,12 @@ function App() {
       path: "/orderlog",
       element: <MyPage />,
       children: [{ index: true, element: <OrderLog /> }],
+    },
+
+    {
+      path: "/orderlog/:id",
+      element: <MyPage />,
+      children: [{ index: true, element: <OrderDetailPage /> }],
     },
 
     // 관리자라우트
