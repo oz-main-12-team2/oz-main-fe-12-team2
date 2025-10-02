@@ -5,25 +5,22 @@ import { alertError } from "../utils/alert";
 function useBuyMove() {
   const navigate = useNavigate();
 
-  async function navigateToCheckout(products) {
+  async function navigateToCheckout(products, flag) {
+    if (flag === "direct") {
+      navigate("/checkout", { state: { buyProducts: products } });
+      return;
+    }
+
     try {
       // 최신 장바구니 또는 재고 정보 조회
       const res = await getCart();
       const latestItems = Array.isArray(res[0]?.items) ? res[0].items : [];
 
       // 재고 체크
-      for (const product of products) {
+      products.forEach((product) => {
         const latest = latestItems.find(
           (item) => item.product_id === product.book.id
         );
-
-        if (!latest) {
-          alertError(
-            "상품 구매 오류",
-            `${product.book.name} 상품 정보를 찾을 수 없습니다.`
-          );
-          return;
-        }
 
         if (product.quantity > latest.product_stock) {
           alertError(
@@ -32,7 +29,7 @@ function useBuyMove() {
           );
           return;
         }
-      }
+      });
 
       // 이상 없으면 checkout 페이지로 이동
       navigate("/checkout", { state: { buyProducts: products } });
