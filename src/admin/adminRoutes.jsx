@@ -3,6 +3,7 @@ import AdminProtectedRoute from "./AdminProtectedRoute";
 import AdminLogin from "./pages/AdminLogin";
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
+import Payments from "./pages/Payments";
 import Products from "./pages/Products";
 import Users from "./pages/Users";
 
@@ -23,6 +24,7 @@ const adminRoutes = [
       { path: "products", element: <Products /> }, // /admin/products
       { path: "users", element: <Users /> }, // /admin/users
       { path: "orders", element: <Orders /> }, // /admin/orders
+      { path: "payments", element: <Payments /> }, // /admin/orders
     ],
   },
 ];

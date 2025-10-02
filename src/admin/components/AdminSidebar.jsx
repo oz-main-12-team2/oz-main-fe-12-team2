@@ -12,6 +12,7 @@ import { IoPowerSharp, IoClose } from "react-icons/io5";
 import { alertComfirm, alertSuccess } from "../../utils/alert";
 import useUserStore from "../../stores/userStore";
 import { logout } from "../../api/user";
+import { MdPayment } from "react-icons/md";
 
 function AdminSidebar() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function AdminSidebar() {
 
   const handleLogout = async () => {
     try {
-      const confirm= await alertComfirm(
+      const confirm = await alertComfirm(
         "로그아웃",
         "정말 로그아웃 하시겠습니까?"
       );
@@ -72,6 +73,10 @@ function AdminSidebar() {
             <LuShoppingCart className="nav-icon" />
             <span>주문관리</span>
           </Link>
+          <Link to="/admin/payments">
+            <MdPayment className="nav-icon" />
+            <span>결제관리</span>
+          </Link>
         </nav>
       </aside>
 
@@ -101,6 +106,10 @@ function AdminSidebar() {
               <Link to="/admin/orders" onClick={handleCloseMenu}>
                 <LuShoppingCart className="nav-icon" />
                 <span>주문관리</span>
+              </Link>
+              <Link to="/admin/payments" onClick={handleCloseMenu}>
+                <MdPayment className="nav-icon" />
+                <span>결제관리</span>
               </Link>
             </nav>
 
