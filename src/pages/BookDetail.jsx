@@ -129,7 +129,7 @@ function BookDetail() {
     const formattedPrice = formatPrice(book.price);
     const fallbackText = `${
       book.name || "이 도서"
-    }은 저자 여러분들의 많은 관심과 기대를 바라고 ${formattedPrice}원에 기다리고 있습니다.`;
+    }은 저자 여러분들의 많은 관심과 기대를 바라며 정가: ${formattedPrice}원에 기다리고 있습니다.`;
 
     bottomContent = (
       <div className="book-metadata-fallback">
@@ -146,7 +146,7 @@ function BookDetail() {
       "예를 누르면 장바구니에 상품이 담깁니다"
     );
     if (!alert.isConfirmed) return;
-    
+
     try {
       await addCart({ productId: book.id, quantity: 1 }); // 객체 형태로 인자 전달 (cart.js 정의에 따름)
 
