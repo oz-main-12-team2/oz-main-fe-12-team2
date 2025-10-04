@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/layout/Header";
 import NavBar from "../components/layout/NavBar";
-import Footer from "../components/layout/Footer";
 import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
 import useTitle from "../hooks/useTitle.js";
@@ -329,7 +327,6 @@ const BookListRowLoop = ({ books, onCardClick }) => {
     /* 렌더링 */
     return (
         <>
-        <Header />
         <MainBanner 
                         image="main-banner.jpg"
                 title="책으로 여는 하루"
@@ -373,7 +370,6 @@ const BookListRowLoop = ({ books, onCardClick }) => {
                 </section>
             </div>
 
-            <Footer />
         </div>
     </>
     );

@@ -22,6 +22,7 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import useCartStore from "./stores/cartStore";
 import { getCart } from "./api/cart";
+import Layout from "./pages/Layout";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -61,43 +62,47 @@ function App() {
 
   // 라우트 배열
   const element = useRoutes([
-    { path: "/", element: <MainPage /> },
-    { path: "/book/:id", element: <BookDetail /> }, // 동적 라우트
-    { path: "/login", element: <LoginPage /> },
-    { path: "/signup", element: <SignUpPage /> },
-    { path: "/activate", element: <ConfirmEmail /> },
-    { path: "/find-password", element: <FindPasswordPage /> },
-    { path: "/password-reset/confirm", element: <ResetPasswordPage /> },
     {
-      path: "/mypage",
-      element: <MyPage />,
+      path: "/",
+      element: <Layout />, // 공통 레이아웃
       children: [
+        { index: true, element: <MainPage /> },
+        { path: "book/:id", element: <BookDetail /> }, // 동적 라우트
+        { path: "activate", element: <ConfirmEmail /> },
         {
-          path: "",
-          element: <MyPageInfo />,
+          path: "mypage",
+          element: <MyPage />,
           children: [
-            { index: true, element: <ProfileEdit /> },
-            { path: "password", element: <PasswordEdit /> },
-            { path: "delete", element: <AccountDelete /> },
+            {
+              path: "",
+              element: <MyPageInfo />,
+              children: [
+                { index: true, element: <ProfileEdit /> },
+                { path: "password", element: <PasswordEdit /> },
+                { path: "delete", element: <AccountDelete /> },
+              ],
+            },
           ],
         },
-        // { path: "cart" element: <Cart /> }, // 장바구니 추가 예정
+        { path: "search", element: <SearchPage /> },
+        {
+          path: "cart",
+          element: <MyPage />, // 사이드바 유지
+          children: [{ index: true, element: <CartPage /> }],
+        },
+        { path: "checkout", element: <CheckoutPage /> },
       ],
     },
+    // 공통 레이아웃 적용 제외 (로그인, 회원가입, 패스워드 관련)
+    { path: "/login", element: <LoginPage /> },
+    { path: "/signup", element: <SignUpPage /> },
+    { path: "/find-password", element: <FindPasswordPage /> },
+    { path: "/password-reset/confirm", element: <ResetPasswordPage /> },
 
-    { path: "/search", element: <SearchPage /> },
-    // 장바구니
-    {
-      path: "/cart",
-      element: <MyPage />, // 사이드바 유지
-      children: [{ index: true, element: <CartPage /> }],
-    },
-    { path: "checkout", element: <CheckoutPage /> },
-
-    // 관리자라우트
+    // 관리자 라우트
     ...adminRoutes,
-
-    { path: "*", element: <NotFoundPage /> }, // 404낫파운드
+    
+    { path: "*", element: <NotFoundPage /> }, //404낫파운드
   ]);
 
   return element;

@@ -7,8 +7,6 @@ import { alertError, alertSuccess, alertComfirm } from "../utils/alert";
 import { createOrder, createPayment } from "../api/order"; // 앞서 만든 axios 래퍼 (orders/payments)
 import "../styles/checkoutpage.scss";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
 import { BookListRow } from "../components/common/BookListRow";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
@@ -250,7 +248,6 @@ function CheckoutPage() {
 
   return (
     <>
-      <Header />
       <div className="base-container">
         <div className="checkout-container">
           {/* <Link to="/">
@@ -397,7 +394,6 @@ function CheckoutPage() {
           </Modal>
         </div>
       </div>
-      <Footer />
     </>
   )
 }
