@@ -59,11 +59,6 @@
     }
   }
 
-  .btn--secondary:hover {
-    background-color: $red-500 !important;
-    color: #fff;
-  }
-
   // 상단 (전체선택 + 선택삭제)
   .cart-select-all {
     display: flex;
@@ -80,6 +75,11 @@
       font-weight: 500;
       font-size: 0.9rem;
     }
+
+    .btn--secondary:hover {
+      background-color: $red-500 !important;
+      color: #fff;
+    }
   }
 
   // 개별 카드 액션 (수량, 삭제)
@@ -93,6 +93,11 @@
       text-align: center;
       font-weight: 600;
       color: #111827;
+    }
+
+    .btn--secondary:last-child:hover {
+      background-color: $red-500 !important;
+      color: #fff;
     }
   }
 
@@ -150,4 +155,9 @@
 
 .book-card-row.soldout {
   opacity: 0.7; //품절상품 연하게 처리
+
+  .btn--secondary:hover {
+    background-color: $red-500 !important;
+    color: #fff;
+  }
 }
