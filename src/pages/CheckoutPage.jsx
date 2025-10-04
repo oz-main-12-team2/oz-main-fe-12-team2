@@ -187,28 +187,45 @@ function CheckoutPage() {
       // await alertSuccess("주문 접수", `주문번호로 접수되었습니다.`);
       // TODO: navigate(`/orders/${orderId}`);
 
-      const res = await getCart();
-      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
-      const mapped = items.map((item) => ({
-        book: {
-          id: item.product_id,
-          name: item.product_name,
-          category: item.product_category,
-          author: item.product_author,
-          publisher: item.product_publisher,
-          price: Number(item.product_price),
-          stock: item.product_stock,
-          image_url: item.product_image,
-        },
-        quantity: item.quantity,
-      }));
-      setStoreCartItems(mapped);  // ✅ 헤더 카운트 갱신 포인트
+      // const res = await getCart();
+      // const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+      // const mapped = items.map((item) => ({
+      //   book: {
+      //     id: item.product_id,
+      //     name: item.product_name,
+      //     category: item.product_category,
+      //     author: item.product_author,
+      //     publisher: item.product_publisher,
+      //     price: Number(item.product_price),
+      //     stock: item.product_stock,
+      //     image_url: item.product_image,
+      //   },
+      //   quantity: item.quantity,
+      // }));
+      // setStoreCartItems(mapped);  // ✅ 헤더 카운트 갱신 포인트
+
+      const payload = {
+        orderId,
+        paymentId: payment?.id,
+        method,
+        amount: Number(payment?.total_price ?? subtotal ?? 0),
+        when: new Date().toISOString(),
+        items: buyProducts.map((p) => ({
+          id: p.book.id,
+          name: p.book.name,
+          price: Number(p.book.price || 0),
+          qty: Number(p.quantity || 0),
+          image_url: p.book.image_url,
+        })),
+      };
+
+      sessionStorage.setItem("last_payment_success", JSON.stringify(payload));
+      navigate("/checkout/success", { replace: true, state: payload });
     } catch (e) {
       await alertError("결제 실패", e.message || "주문/결제 처리 중 문제가 발생했습니다.");
     } finally {
       setSubmitting(false);
       setOpenPayModal(false);
-      navigate("/");
     }
   };
 

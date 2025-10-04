@@ -24,6 +24,7 @@ import useCartStore from "./stores/cartStore";
 import { getCart } from "./api/cart";
 import OrderLog from "./components/mypage/OrderLog";
 import OrderDetailPage from "./components/mypage/OrderDetailPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -95,6 +96,7 @@ function App() {
       children: [{ index: true, element: <CartPage /> }],
     },
     { path: "/checkout", element: <CheckoutPage /> },
+    { path: "/checkout/success", element: <PaymentSuccessPage /> },
 
     // 주문 내역
     {
