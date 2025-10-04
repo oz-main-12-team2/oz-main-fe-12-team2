@@ -285,7 +285,6 @@ function CartPage() {
                 size="sm"
                 onClick={handleRemoveSelected}
                 disabled={selectedItems.length === 0}
-                // className="test"
               >
                 선택 삭제
               </Button>
