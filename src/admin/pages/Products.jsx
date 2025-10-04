@@ -296,9 +296,9 @@ function Products() {
       <h2 className="products-page-title">상품관리</h2>
 
       <span className="products-total">
-        Total : {bookTotalCount.toLocaleString()}건
+        Total : {bookTotalCount.toLocaleString()}개
       </span>
-      
+
       {/* 상품 등록 버튼 */}
       <div className="products-actions">
         <Button variant="primary" size="md" onClick={openCreateModal}>
