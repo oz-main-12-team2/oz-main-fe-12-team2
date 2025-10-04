@@ -187,22 +187,22 @@ function CheckoutPage() {
       // await alertSuccess("주문 접수", `주문번호로 접수되었습니다.`);
       // TODO: navigate(`/orders/${orderId}`);
 
-      // const res = await getCart();
-      // const items = Array.isArray(res[0]?.items) ? res[0].items : [];
-      // const mapped = items.map((item) => ({
-      //   book: {
-      //     id: item.product_id,
-      //     name: item.product_name,
-      //     category: item.product_category,
-      //     author: item.product_author,
-      //     publisher: item.product_publisher,
-      //     price: Number(item.product_price),
-      //     stock: item.product_stock,
-      //     image_url: item.product_image,
-      //   },
-      //   quantity: item.quantity,
-      // }));
-      // setStoreCartItems(mapped);  // ✅ 헤더 카운트 갱신 포인트
+      const res = await getCart();
+      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+      const mapped = items.map((item) => ({
+        book: {
+          id: item.product_id,
+          name: item.product_name,
+          category: item.product_category,
+          author: item.product_author,
+          publisher: item.product_publisher,
+          price: Number(item.product_price),
+          stock: item.product_stock,
+          image_url: item.product_image,
+        },
+        quantity: item.quantity,
+      }));
+      setStoreCartItems(mapped);  // ✅ 헤더 카운트 갱신 포인트
 
       const payload = {
         orderId,
