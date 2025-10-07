@@ -21,7 +21,6 @@ function PaymentDetail() {
         setError("");
 
         const paymentRes = await fetchPaymentById(id);
-        console.log(paymentRes);
         setPayment(paymentRes);
 
         if (paymentRes?.order_id) {
