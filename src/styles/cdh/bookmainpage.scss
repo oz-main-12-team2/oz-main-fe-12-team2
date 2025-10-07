@@ -7,76 +7,8 @@ $golden: #cdaa5f;
 $warm-white: #fdfaf6;
 $light-gray: #f5f5f5;
 
-// ===== Reset =====
-// * {
-//   margin: 0;
-//   padding: 0;
-//   box-sizing: border-box;
-// }   없네요
 
-// ===== Layout =====
-.main-page-container {
-  background: $warm-white;
-  color: $dark-gray;
-  line-height: 1.6;
-}
-
-// .base-container {
-//   max-width: 1200px;
-//   margin: 0 auto;
-//   padding: 2rem 1rem;
-// }
-
-// ===== Banner (MainBanner.jsx) =====
-.main-banner {
-  position: relative;
-  height: 320px;
-  border-radius: 12px;
-  overflow: hidden;
-  margin: 2rem 0;
-
-  img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
-  }
-
-  .banner-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: $warm-white;
-
-    h1 {
-      font-size: 2.4rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      background: $bangladesh-green;
-      color: $warm-white;
-      padding: 0.7rem 1.4rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-
-      &:hover {
-        background: $deep-green;
-      }
-    }
-  }
-}
-
-// ===== Daily Best Carousel =====
+// Daily Best Carousel 
 .book-daily-best {
   margin: 3rem 0;
 }
@@ -101,10 +33,6 @@ $light-gray: #f5f5f5;
       margin: 0 0.4rem;
     }
   }
-}
-
-.enhanced-carousel-container {
-  position: relative;
 }
 
 .enhanced-carousel-track {
@@ -153,12 +81,6 @@ $light-gray: #f5f5f5;
     position: relative;
     overflow: hidden;
 
-      .image-decoration {
-      position: absolute;
-      pointer-events: none;
-      z-index: 0;
-    }
-
     .book-placeholder {
       text-align: center;
       color: $dark-gray;
@@ -183,24 +105,17 @@ $light-gray: #f5f5f5;
       color: $deep-green;
     }
 
-    /*  캐러셀 가격 스타일 수정 */
     .enhanced-book-price {
       font-size: 0.9rem;
       font-weight: bold;
       margin-bottom: 0.2rem;
-      
-      // 가격을 감싸는 span 또는 div가 없으므로 p 태그 자체에 스타일 적용
       display: inline-block;
       padding: 0.3rem 0.5rem;
       color: $warm-white;
       background-color: $bangladesh-green;
-      border-radius: 6px; /* 모든 모서리 둥글게 */
-      
-      // 요청: 왼쪽은 일자로 나오게 (왼쪽 위, 왼쪽 아래 모서리만 각지게)
+      border-radius: 6px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-      
-      // 아이콘이 포함되어 있으므로 추가적인 아이콘 스타일 제거
     }
 
     .enhanced-book-category,
@@ -230,11 +145,4 @@ $light-gray: #f5f5f5;
       background: $bangladesh-green;
     }
   }
-}
-
-// 자동 스크롤 상태
-.auto-scroll-indicator {
-  text-align: center;
-  margin-top: 0.6rem;
-  font-size: 0.85rem;
 }
