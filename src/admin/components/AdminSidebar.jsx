@@ -115,7 +115,7 @@ function AdminSidebar() {
 
             {/* 모바일 패널 아래 홈/로그아웃 버튼 */}
             <div className="panel-footer">
-              <AiFillHome className="icon-btn" onClick={handleGoHome} />
+              <AiFillHome className="icon-btn" onClick={() => navigate('/')} />
               <IoPowerSharp className="icon-btn" onClick={handleLogout} />
             </div>
           </div>

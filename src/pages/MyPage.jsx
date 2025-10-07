@@ -3,8 +3,6 @@ import { Outlet } from "react-router-dom";
 import { MdOutlineMailOutline, MdOutlineHome } from "react-icons/md";
 import { FiUserPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
 import { useEffect, useState } from "react";
 import { getUserMe } from "../api/user";
 import Loading from "../components/common/Loading";
@@ -31,7 +29,6 @@ function MyPage() {
 
   return (
     <>
-      <Header />
       <div className="base-container">
         <div className="mypage-layout">
           <aside className="mypage-sidebar">
@@ -76,7 +73,6 @@ function MyPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }
