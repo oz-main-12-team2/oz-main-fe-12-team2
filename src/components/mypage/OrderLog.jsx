@@ -1,50 +1,47 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Loading from "../common/Loading";
 import "../../styles/orderlog.scss";
-import { Link, useNavigate } from "react-router-dom";
-import api from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 import OrderTableHeader from "../orders/OrderTableHeader";
 import Pagination from "../common/Pagination";
+import { fetchOrders } from "../../api/order";
+
+const NO_IMG = "/no-image.jpg";
+const PAGE_SIZE = 20;
 
 function OrderLog() {
   // const [data, setData] = useState({ count: 0, next: null, previous: null, results: [] });
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [pageSize, setPageSize] = useState(10); // DRF 기본 10 가정, 응답 보며 보정
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   // 페이지네이션이 필요하면 page 상태 사용
   // const [page, setPage] = useState(1);
-
-  const totalPages = useMemo(
-    () => Math.max(1, Math.ceil((totalCount || 0) / (pageSize || 10))),
-    [totalCount, pageSize]
-  );
+  const navigate = useNavigate();
 
   const loadOrders = useCallback(async () => {
     try {
       setIsLoading(true);
       setError("");
-      const res = await api.get(`/orders/?page=${currentPage}`);
-      // DRF 기본 응답: { count, next, previous, results }
-      setOrders(Array.isArray(res.data?.results) ? res.data.results : []);
-      setTotalCount(Number(res.data?.count ?? 0));
 
-      // 페이지당 사이즈 보정 (마지막 페이지 등 가변 가능)
-      const len = Array.isArray(res.data?.results) ? res.data.results.length : 0;
-      if (len > 0) setPageSize(len);
+      // const res = await fetchOrders({ page, page_size: 20, signal });
+      const { results, count, total_pages } =
+      await fetchOrders({ page: currentPage, page_size: PAGE_SIZE });
+      
+      setOrders(results);
+      setTotalCount(count);
+      setTotalPages(total_pages);
     } catch (e) {
-      console.error(e);
+      if (e.name === "CanceledError") return;
       setOrders([]);
-      setError("주문 내역을 불러오는 중 문제가 발생했습니다.");
+      setError(e.message || "주문 내역을 불러오는 중 문제가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
   }, [currentPage]);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadOrders();
@@ -72,7 +69,50 @@ function OrderLog() {
             <p className="orders-empty">주문 내역이 없습니다.</p>
           )}
 
-          {!isLoading &&
+          {!error &&
+            orders.map((order) => {
+              const qty = (order.items || []).reduce(
+                (acc, it) => acc + Number(it.quantity || 0),
+                0
+              );
+              const total = Number(order.total_price || 0);
+
+              const firstItem = order.items?.[0];
+              const prod = firstItem?.product || {};
+              const thumb = prod.image || prod.image_url || NO_IMG;
+              const title = prod.name || "-";
+              const extra =
+                (order.items?.length || 0) > 1
+                  ? ` 외 ${order.items.length - 1}개`
+                  : "";
+              
+              return (
+                <div
+                  key={order.id}
+                  className="order-row"
+                  onClick={() => navigate(`/orderlog/${order.id}`)}
+                >
+                  <span className="c c--thumb">
+                    <div className="thumb">
+                      <img src={thumb || NO_IMG} alt={title} />
+                    </div>
+                  </span>
+
+                  <span className="c c--id">{order.order_number}</span>
+                  <span className="c c--date">
+                    {new Date(order.created_at).toLocaleDateString()}
+                  </span>
+                  <span className="c c--recipient">{order.recipient_name}</span>
+                  <span className="c c--qty">{qty}개</span>
+                  <span className="c c--total">{total.toLocaleString()}원</span>
+                  <span className="c c--status">{order.status}</span>
+                  <span className="c c--items">{title}{extra}</span>
+                </div>
+              )
+            })
+          }
+
+          {/* {!isLoading &&
             !error &&
             orders.map((order) => {
               const qty = (order.items || []).reduce(
@@ -93,7 +133,7 @@ function OrderLog() {
                   <span className="c c--chev">▶</span>
                 </div>
               );
-            })}
+            })} */}
         </div>
         
         <Pagination

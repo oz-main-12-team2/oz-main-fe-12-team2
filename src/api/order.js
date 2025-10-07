@@ -42,11 +42,28 @@ export const createPayment = async ({ order_id, method }) => {
 };
 
 // 주문 조회
-export const fetchOrders = async (params = {}) => {
+export const fetchOrders = async ({ page = 1, page_size = 20 }) => {
   try {
     // 서버가 DRF pagination이면 page, page_size 등 필요시 params로 전달 가능
-    const res = await api.get("/orders/", { params });
-    return res.data; // { count, next, previous, results: [...] }
+    const res = await api.get("/orders/", { params: {page, page_size} });
+    // return res.data; // { count, next, previous, results: [...] }
+
+    const data = res.data || {};
+    const count = Number(data.count ?? 0);
+    const results = Array.isArray(data.results) ? data.results : [];
+
+    // ✅ 여기서 총 페이지 수까지 계산해서 넘겨줌
+    const total_pages = Math.max(1, Math.ceil(count / page_size));
+
+    return {
+      count,
+      results,
+      next: data.next ?? null,
+      previous: data.previous ?? null,
+      page,           // 현재 페이지(요청 기준)
+      page_size,      // 사용한 페이지 크기(고정)
+      total_pages,    // 화면에서 바로 사용
+    };
   } catch (e) {
     if (e.response?.data) {
       const data = e.response.data;

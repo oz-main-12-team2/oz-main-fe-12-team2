@@ -110,7 +110,7 @@ function App() {
         },
       ],
     },
-    
+
     // 공통 레이아웃 적용 제외 (로그인, 회원가입, 패스워드 관련)
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
