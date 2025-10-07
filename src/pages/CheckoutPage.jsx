@@ -224,6 +224,7 @@ function CheckoutPage() {
     } finally {
       setSubmitting(false);
       setOpenPayModal(false);
+      navigate("/");
     }
   };
 
