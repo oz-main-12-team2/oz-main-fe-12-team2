@@ -41,6 +41,19 @@
       }
       }
     }
+
+    /* ✅ 소계 합계 스타일 */
+    .order-summary {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 1rem;
+
+      strong {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #111827;
+      }
+    }
   }
 
   .go-back {

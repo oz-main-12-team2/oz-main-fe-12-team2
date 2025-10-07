@@ -69,6 +69,9 @@ function MyPage() {
               <Link to="/orderlog">
                 <span>주문내역</span>
               </Link>
+              <Link to="/payments">
+                <span>결제내역</span>
+              </Link>
             </nav>
           </aside>
           <div className="mypage-main">

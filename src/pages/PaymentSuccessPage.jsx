@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button";
 import "../styles/paymentsuccess.scss";
 
@@ -36,7 +34,6 @@ export default function PaymentSuccessPage() {
   if (!data) {
     return (
       <>
-        <Header />
         <div className="success-container">
           <h1>결제가 완료되었습니다.</h1>
           <p className="dim">주문 정보가 확인되지 않아 홈으로 이동합니다.</p>
@@ -46,14 +43,12 @@ export default function PaymentSuccessPage() {
             </Button>
           </div>
         </div>
-        <Footer />
       </>
     );
   }
 
   return (
     <>
-      <Header />
       <div className="base-container success-container">
         <div className="success-head">
           <h1>결제가 완료되었습니다 🎉</h1>
@@ -114,7 +109,6 @@ export default function PaymentSuccessPage() {
           </Link>
         </div>
       </div>
-      <Footer />
     </>
   )
 }
