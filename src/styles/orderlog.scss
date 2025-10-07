@@ -1,0 +1,296 @@
+@import "./var.scss";
+
+/* ========== 주문 내역(마이페이지) ========== */
+.myorders-page {
+  padding: 1.25rem 0; /* 20px */
+
+  .myorders-title {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 700;
+    margin-bottom: 0.5rem; /* 8px */
+  }
+
+  .orders-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem; /* 12px */
+
+    .orders-total {
+      color: #666;
+      font-size: 0.875rem; /* 14px */
+    }
+  }
+
+  /* ===== 헤더 라인 ===== */
+  .orderrow-header {
+    display: grid;
+    grid-template-columns:
+      3rem        /* 썸네일 */
+      7rem        /* 주문번호 */
+      6rem        /* 주문일 */
+      5rem        /* 수취인 */
+      4rem        /* 수량 */
+      5.625rem    /* 총액 */
+      5rem        /* 상태 */
+      1fr;        /* 주문상품 요약 */
+    align-items: center;
+    column-gap: 0.75rem; /* 12px */
+    padding: 0.5rem 0.75rem; /* 8/12px */
+    color: #777;
+
+    .h {
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  }
+
+  /* ===== 리스트 ===== */
+  .orders-list {
+    margin-bottom: 1rem;
+    .order-row {
+      display: grid;
+      grid-template-columns:
+        3rem
+        7rem
+        6rem
+        5rem
+        4rem
+        5.625rem
+        5rem
+        1fr;
+      align-items: center;
+      column-gap: 0.75rem;
+      padding: 0.625rem 0.75rem; /* 10/12px */
+      min-height: 4.5rem; /* 72px */
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+
+      &:hover { background-color: #fafafa; }
+
+      /* 썸네일 */
+      .c--thumb {
+        .thumb {
+          width: 2.5rem;   /* 40px */
+          height: 3.5rem;  /* 56px */
+          border-radius: 0.375rem; /* 6px */
+          overflow: hidden;
+          background: #f6f7f8;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.04) inset;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+        }
+      }
+
+      /* 공통 텍스트 셀 */
+      .c--id,
+      .c--items,
+      .c--date,
+      .c--recipient,
+      .c--qty,
+      .c--total,
+      .c--status,
+      .c--chev {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .c--items {
+        color: #222;
+      }
+
+      .c--qty,
+      .c--total {
+        text-align: left;
+      }
+
+      .c--status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.375rem 0.625rem; /* 6/10px */
+        border-radius: 999px;
+        background: #f3f6ff;
+        color: #2f5fff;
+        font-weight: 700;
+        font-size: 0.875rem;
+      }
+
+      .c--chev {
+        text-align: center;
+      }
+    }
+
+    .orders-empty,
+    .orders-loading,
+    .orders-error {
+      padding: 1rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+/* ========== 반응형 ========== */
+
+/* ≤ 1024px : 64rem */
+// @media (max-width: 64rem) {
+//   .myorders-page {
+//     .orderrow-header,
+//     .orders-list .order-row {
+//       grid-template-columns:
+//         2.75rem        /* thumb */
+//         9rem           /* order no */
+//         1fr            /* items */
+//         7rem           /* date */
+//         6.25rem        /* recipient */
+//         5rem           /* qty */
+//         6.25rem        /* total */
+//         6.25rem        /* status */
+//         1.5rem;        /* ▶ */
+//     }
+//   }
+// }
+
+/* ≤ 1300px : 81.25rem — 수취인 감춤 */
+@media (max-width: 81.25rem) {
+  .h--recipient, .c--recipient { display: none; }
+
+  .myorders-page {
+    .orderrow-header,
+    .orders-list .order-row {
+      grid-template-columns:
+        3rem
+        7rem
+        6rem
+        4rem
+        6rem
+        6.25rem
+        1fr;
+    }
+  }
+}
+
+/* ≤ 1160px : 72.5rem — 주문일 감춤 */
+@media (max-width: 72.5rem) {
+  .h--date, .c--date { display: none; }
+
+  .myorders-page {
+    .orderrow-header,
+    .orders-list .order-row {
+      grid-template-columns:
+        3rem
+        9rem
+        6rem
+        6rem
+        6.25rem
+        1fr;
+    }
+  }
+}
+
+/* ≤ 1050px : 65.625rem — 주문번호 폭 조금 축소 */
+@media (max-width: 65.625rem) {
+
+  .myorders-page {
+    .orderrow-header,
+    .orders-list .order-row {
+      grid-template-columns:
+        2rem
+        8rem
+        6rem
+        5rem
+        6rem
+        1fr;
+      column-gap: 0.5rem; /* 8px */
+    }
+  }
+}
+
+/* ≤ 900px : 56.25rem — 상태 감춤, 핵심만 노출 */
+@media (max-width: 56.25rem) {
+  .myorders-page {
+    .orderrow-header,
+    .orders-list .order-row {
+      grid-template-columns:
+        2.5rem
+        8rem
+        6rem
+        5rem
+        6rem
+        1fr;
+    }
+
+    .orders-list .order-row .c--total {
+      text-align: left;
+    }
+  }
+}
+
+/* ≤ 600px : 37.5rem — 썸네일 + 상품명 + 금액만 남김 */
+@media (max-width: 37.5rem) {
+  .myorders-page {
+    .orderrow-header { display: none; } /* 헤더 숨김 */
+
+    .orders-list .order-row {
+      grid-template-columns:
+        3rem
+        1fr
+        1fr; /* 총액만 */
+      column-gap: 0.75rem;
+
+      .c--id,
+      .c--date,
+      .c--recipient,
+      .c--qty,
+      .c--status { display: none; }
+
+      .c--total {
+        text-align: right;
+        font-weight: 700;
+        color: #222;
+      }
+    }
+  }
+}
+
+/* ≤ 480px : 30rem — 카드형 전환 */
+@media (max-width: 37.5rem) {
+  .myorders-page {
+    .orders-list .order-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+
+      .c--thumb {
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .c--items {
+        flex: 1;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .c--total {
+        text-align: right;
+        font-weight: 700;
+        color: #2f5fff;
+      }
+    }
+  }
+}

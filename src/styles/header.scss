@@ -28,6 +28,15 @@
     }
   }
 
+  // 768 이상에선 pc-only
+  .pc-only {
+    display: flex; // PC 전용 요소 보여줌
+  }
+
+  .mobile-only {
+    display: none; // 모바일 전용 요소 숨김
+  }
+
   // 검색창 (PC : 중앙/넓게)
   .header-search-wrap {
     position: relative;
@@ -63,19 +72,69 @@
     }
   }
 
+  .mobile-search-wrap {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+
+    .mobile-search-icon {
+      font-size: 1.4rem;
+      color: $gray-500;
+      cursor: pointer;
+    }
+
+    .mobile-search-input {
+      position: absolute;
+      top: 150%;
+      left: 0;
+      width: 85vw;
+      height: 55px;
+      opacity: 0;
+      transition: all 0.3s ease;
+      border: 2px solid #333;
+      padding: 0 14px;
+      font-size: 1rem;
+      font-weight: 500;
+      background-color: #fff;
+      z-index: 250;
+      pointer-events: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      &::placeholder {
+        color: $gray-500;
+        font-size: 16px;
+      }
+    }
+
+    &.active .mobile-search-input {
+      opacity: 1;
+      transform: scaleY(1);
+      pointer-events: auto;
+    }
+  }
+
   .cart-badge {
     position: absolute;
-    top: -5px;
-    right: -8px;
+    top: -8px;
+    right: -6px;
     background-color: $red-500;
     color: #fff;
-    font-size: 0.75rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.65rem;
     font-weight: bold;
-    padding: 2px 5px;
-    border-radius: 50%;
-    min-width: 15px;
-    text-align: center;
+    padding: 1px 4px;
+    border-radius: 9999px;
+    min-width: 14px;
+    height: 16px;
     line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   // 아이콘 + 로그인/회원가입 (PC 전용)
@@ -275,49 +334,6 @@
     }
   }
 
-  // 검색: 왼쪽에 아이콘만 보이고 input은 숨김 (토글시 보임)
-  .header-search-wrap {
-    position: absolute !important;
-    left: 1rem; // 좌측 끝에 배치
-    flex: none;
-    width: 36px;
-    order: 0;
-
-    .header-search-icon {
-      position: static;
-      left: auto;
-      font-size: 1.2rem;
-      color: $gray-500;
-    }
-
-    // 모바일에서는 input을 겹쳐서 토글로 보여줌
-    .header-search-input {
-      position: fixed; // 아래 정확히 붙도록
-      top: 85px; // 헤더 높이 + 여백 (실제 header 높이에 맞춰 조정)
-      left: 0;
-      width: 100vw; // 뷰포트 전체 너비 차지
-      opacity: 0;
-      transform: scaleY(0);
-      transform-origin: top;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      border: 1px solid #d1d5db;
-      padding: 12px;
-      font-size: 1rem;
-      background-color: #fff;
-      z-index: 150;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      border-radius: 0; // 화면 전체 너비니까 둥근 모서리 제거
-      pointer-events: none;
-      height: 40px;
-    }
-
-    &.active .header-search-input {
-      opacity: 1;
-      transform: scaleX(1);
-      pointer-events: auto;
-    }
-  }
-
   // 우측 영역 (햄버거)
   .header-right {
     position: absolute;
@@ -334,5 +350,6 @@
     background: transparent;
     border: none;
     padding: 6px;
+    color: $gray-500;
   }
 }

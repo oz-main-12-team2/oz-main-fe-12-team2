@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import "../../styles/headeruserdropdown.scss";
-import { useNavigate } from "react-router-dom";
-import { LuUserRound, LuShoppingCart, LuLogOut } from "react-icons/lu";
+import { useLocation, useNavigate } from "react-router-dom";
+import { LuShoppingCart, LuLogOut } from "react-icons/lu";
+import { AiOutlineUser } from "react-icons/ai";
 
 function HeaderUserDropdown({ user, onLogout }) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -20,6 +22,11 @@ function HeaderUserDropdown({ user, onLogout }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 경로가 변경될 때 드롭다운 닫기
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+  
   return (
     <div className="header-user-dropdown" ref={dropdownRef}>
       <FaUserCircle
@@ -39,7 +46,7 @@ function HeaderUserDropdown({ user, onLogout }) {
 
           <div className="dropdown-actions">
             <div className="dropdown-item" onClick={() => navigate("/mypage")}>
-              <LuUserRound className="dropdown-item-icon" />
+              <AiOutlineUser className="dropdown-item-icon" />
               <span className="dropdown-item-text">마이페이지</span>
             </div>
             <div className="dropdown-item" onClick={() => navigate("/cart")}>

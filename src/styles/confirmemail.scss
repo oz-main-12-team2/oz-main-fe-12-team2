@@ -1,0 +1,23 @@
+@import "./var.scss";
+
+.confirm-email-container {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+
+  .confirm-paper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    width: 50%;
+    background-color: $sub-color;
+    align-items: center;
+
+    .confirm-title,
+    .confirm-desc {
+      text-align: center;
+      font-size: $font-2xl;
+    }
+  }
+}

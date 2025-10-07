@@ -2,8 +2,12 @@ import "../../styles/booklistrow.scss";
 
 import { BookCardRow } from "./BookCard";
 
-
-export function BookListRow({ books, onCardClick, buttonActions }) {
+export function BookListRow({
+  books,
+  onCardClick,
+  buttonActions,
+  leftActions,
+}) {
   if (!books || books.length === 0) {
     return <p className="book-list-row-empty">상품이 없습니다.</p>;
   }
@@ -11,8 +15,12 @@ export function BookListRow({ books, onCardClick, buttonActions }) {
   return (
     <div className="book-list-row">
       {books.map((book) => (
-        <BookCardRow key={book.id} book={book} onClick={onCardClick}>
-          {/* 필요한 경우 카드 오른쪽에 버튼 넣기 */}
+        <BookCardRow
+          key={book.id}
+          book={book}
+          onClick={onCardClick}
+          left={leftActions && leftActions(book)}
+        >
           {buttonActions && buttonActions(book)}
         </BookCardRow>
       ))}

@@ -1,4 +1,5 @@
 import "../../styles/footer.scss";
+
 function Footer() {
   return (
     <footer className="footer">
@@ -6,13 +7,13 @@ function Footer() {
         {/* 왼쪽 영역 */}
         <div className="footer-left">
           <div className="footer-company-info">
-            <span>러블2㈜ 대표이사 : 정주현, 홍엽</span>
+            <span>러블2㈜ 대표이사 : 러블2</span>
             <span>사업자등록번호 123-45-12345</span>
             <span>통신판매업신고번호 2025-서울강남-1123</span>
             <span>호스팅 서비스사업자: 러블2㈜</span>
             <span>서울 강남구 테헤란로 231 EAST 18층 401호</span>
             <span>이메일 상담 info@lovely.com</span>
-            <span>유선 상담 1661-9056</span>
+            <span>유선 상담 1661-1234</span>
             <span>© lovely Co. Ltd.</span>
           </div>
 
@@ -36,7 +37,7 @@ function Footer() {
         <div className="footer-right">
           <div className="footer-section">
             <h4>러블2 고객센터</h4>
-            <div>1661-9056</div>
+            <div>1661-1234</div>
           </div>
 
           <div className="footer-section">

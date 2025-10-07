@@ -18,7 +18,6 @@ function OrdersTable({ table, onRowClick }) {
             <tr
               key={row.id}
               onClick={() => onRowClick(row.original)}
-              className="cursor-pointer hover:bg-gray-50"
             >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
