@@ -1,6 +1,4 @@
 import { useParams } from "react-router-dom";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
 import Button from "../components/common/Button";
 import "../styles/cdh/book-Detail.scss";
 import { alertComfirm, alertSuccess } from "../utils/alert";
@@ -45,7 +43,6 @@ function BookDetail() {
 
   return (
     <>
-      <Header />
       <div className="book-detail-page">
         <div className="base-container">
 
@@ -95,7 +92,6 @@ function BookDetail() {
           </section>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

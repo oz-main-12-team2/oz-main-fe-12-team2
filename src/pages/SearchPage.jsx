@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
 import { getProducts } from "../api/products";
 import { BookListCol } from "../components/common/BookListCol";
 import Loading from "../components/common/Loading";
@@ -158,7 +156,6 @@ function SearchPage() {
 
   return (
     <>
-      <Header />
       <div className="base-container">
         <div className="search-page">
           <div className="search-header">
@@ -242,7 +239,6 @@ function SearchPage() {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 }

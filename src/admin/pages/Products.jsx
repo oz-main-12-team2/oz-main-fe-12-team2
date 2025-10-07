@@ -24,6 +24,7 @@ function Products() {
   const [isCreateOpen, setIsCreateOpen] = useState(false); // 상품 등록 모달 열림 boolaen
   const [isLoading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 메시지
+  const [bookTotalCount, setBookTotalCount] = useState(0);
 
   // api 호출 후 상품리스트 업뎃 위한 공통함수
   const refreshProducts = async (page = currentPage) => {
@@ -34,6 +35,7 @@ function Products() {
         ordering: "-id",
       });
       setBooks(res.results || []);
+      setBookTotalCount(res.count);
       setTotalPages(Math.ceil((res.count || 1) / 8));
     } catch (e) {
       console.error("상품 목록 새로고침 실패:", e);
@@ -54,6 +56,7 @@ function Products() {
         });
 
         setBooks(res.results || []);
+        setBookTotalCount(res.count);
         setTotalPages(Math.ceil((res.count || 1) / 10));
       } catch (e) {
         console.error("상품 불러오기 실패 : ", e);
@@ -292,6 +295,10 @@ function Products() {
     <div className="products-page">
       <h2 className="products-page-title">상품관리</h2>
 
+      <span className="products-total">
+        Total : {bookTotalCount.toLocaleString()}건
+      </span>
+      
       {/* 상품 등록 버튼 */}
       <div className="products-actions">
         <Button variant="primary" size="md" onClick={openCreateModal}>

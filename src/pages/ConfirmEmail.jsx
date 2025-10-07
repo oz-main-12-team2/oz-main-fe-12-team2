@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Footer from "../components/layout/Footer";
-import Header from "../components/layout/Header";
 import "../styles/confirmemail.scss";
 import { activateAccount } from "../api/user";
 import { alertError, alertSuccess } from "../utils/alert";
@@ -61,7 +59,6 @@ function ConfirmEmail() {
   
   return (
     <>
-      <Header />
       <div className="base-container">
         <div className="confirm-email-container">
           <div className="confirm-paper">
@@ -88,7 +85,6 @@ function ConfirmEmail() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   )
 }

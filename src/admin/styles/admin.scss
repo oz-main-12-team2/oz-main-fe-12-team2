@@ -241,6 +241,13 @@
 .products-page {
   padding: 1rem;
 
+  .products-total {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $gray-500;
+    display: flex;
+  }
+
   .products-actions {
     display: flex;
     justify-content: flex-end;
