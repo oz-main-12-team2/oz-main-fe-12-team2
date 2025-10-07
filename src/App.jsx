@@ -22,6 +22,9 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import useCartStore from "./stores/cartStore";
 import { getCart } from "./api/cart";
+import OrderLog from "./components/mypage/OrderLog";
+import OrderDetailPage from "./components/mypage/OrderDetailPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import Layout from "./pages/Layout";
 
 function App() {
@@ -91,15 +94,30 @@ function App() {
           children: [{ index: true, element: <CartPage /> }],
         },
         { path: "checkout", element: <CheckoutPage /> },
+        { path: "/checkout/success", element: <PaymentSuccessPage /> },
+
+        // 주문 내역
+        {
+          path: "/orderlog",
+          element: <MyPage />,
+          children: [{ index: true, element: <OrderLog /> }],
+        },
+
+        {
+          path: "/orderlog/:id",
+          element: <MyPage />,
+          children: [{ index: true, element: <OrderDetailPage /> }],
+        },
       ],
     },
+    
     // 공통 레이아웃 적용 제외 (로그인, 회원가입, 패스워드 관련)
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
     { path: "/find-password", element: <FindPasswordPage /> },
-    { path: "/password-reset/confirm", element: <ResetPasswordPage /> },
+    { path: "/password-reset/confirm", element: <ResetPasswordPage /> },    
 
-    // 관리자 라우트
+    // 관리자라우트
     ...adminRoutes,
     
     { path: "*", element: <NotFoundPage /> }, //404낫파운드

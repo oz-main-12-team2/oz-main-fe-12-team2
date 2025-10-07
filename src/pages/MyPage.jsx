@@ -66,6 +66,9 @@ function MyPage() {
               <Link to="/cart">
                 <span>장바구니</span>
               </Link>
+              <Link to="/orderlog">
+                <span>주문내역</span>
+              </Link>
             </nav>
           </aside>
           <div className="mypage-main">
