@@ -14,3 +14,13 @@
   font-size: 0.9rem;
   color: $gray-500;
 }
+
+@media (max-width: 768px) {
+  .book-list-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+}

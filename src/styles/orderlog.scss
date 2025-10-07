@@ -1,0 +1,146 @@
+@import "./var.scss";
+
+/* 페이지 래퍼 */
+.myorders-page {
+  padding: 24px 0;
+}
+
+.myorders-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.orders-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+
+  .orders-total {
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+/* 헤더 (한 줄 표 머리) */
+.orderrow-header {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 0.6fr 1fr 1fr 24px; /* 번호/날짜/수취인/수량/총액/상태/화살표 */
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  color: #777;
+  font-size: 13px;
+
+  .h { white-space: nowrap; }
+}
+
+/* 리스트 & 행 */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.order-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 0.6fr 1fr 1fr 24px; /* 헤더와 동일 */
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f1f1;
+  cursor: pointer;
+
+  &:hover {
+    background: #fafafa;
+  }
+
+  .c {
+    font-size: 14px;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.c--qty,
+    &.c--total,
+    &.c--status {
+      text-align: left;
+    }
+
+    &.c--chev {
+      text-align: center;
+      color: #bbb;
+      font-size: 12px;
+    }
+  }
+}
+
+/* 상태 컬러 예시(선택) */
+.c.c--status {
+  &.is-ordered { color: #2a7; }
+  &.is-cancelled { color: #e55; }
+}
+
+/* 빈/에러/로딩 메시지 */
+.orders-empty,
+.orders-error,
+.orders-loading {
+  padding: 24px 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 반응형: 1200px 이하에서 한 줄 → 두 줄 레이아웃 */
+@media (max-width: 1200px) {
+  .orderrow-header,
+  .order-row {
+    grid-template-columns: 1fr 1fr; /* 2열 */
+    grid-template-areas:
+      "id date"
+      "recipient recipient"
+      "qty total"
+      "status chev";
+  }
+
+  /* 헤더의 각 칸을 area에 매핑 */
+  .orderrow-header {
+    .h--id { grid-area: id; }
+    .h--date { grid-area: date; }
+    .h--recipient { grid-area: recipient; }
+    .h--qty { grid-area: qty; }
+    .h--total { grid-area: total; }
+    .h--status { grid-area: status; }
+    .h--chev { grid-area: chev; justify-self: end; }
+  }
+
+  /* 행 셀도 동일하게 매핑 */
+  .order-row {
+    .c--id { grid-area: id; }
+    .c--date { grid-area: date; }
+    .c--recipient { grid-area: recipient; }
+    .c--qty { grid-area: qty; }
+    .c--total { grid-area: total; }
+    .c--status { grid-area: status; }
+    .c--chev { grid-area: chev; justify-self: end; }
+  }
+}
+
+/* 더 좁으면(<= 640px) 거의 1열 느낌으로 */
+@media (max-width: 640px) {
+  .orderrow-header,
+  .order-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "id"
+      "date"
+      "recipient"
+      "qty"
+      "total"
+      "status"
+      "chev";
+  }
+
+  .order-row .c--chev { justify-self: start; }
+}

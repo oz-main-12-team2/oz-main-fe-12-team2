@@ -148,9 +148,7 @@ function Header() {
           <div className="header-icon-wrap pc-only">
             <Link to="/cart" className="header-cart">
               <LuShoppingCart className="header-cart-icon" />
-              {cartCount > 0 && (
-                <span className="cart-badge">{cartCount}</span>
-              )}
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
 
             <div className="header-actions">
@@ -192,7 +190,6 @@ function Header() {
         <div
           className="mobile-menu-overlay"
           onClick={() => setIsMobileMenuOpen(false)}
-          role="presentation"
         >
           <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-menu-header">
@@ -230,7 +227,10 @@ function Header() {
                   <LuShoppingCart
                     size={28}
                     className="mobile-action-icon"
-                    onClick={() => navigate("/mypage/cart")}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigate("/cart");
+                    }}
                   />
                   {cartCount > 0 && (
                     <span className="cart-badge">{cartCount}</span>
@@ -240,7 +240,10 @@ function Header() {
                 <AiOutlineUser
                   size={26}
                   className="mobile-action-icon"
-                  onClick={() => navigate("/mypage")}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate("/mypage");
+                  }}
                 />
               </div>
 
