@@ -3,7 +3,7 @@ function ProductDetail({ selectedBook }) {
     <div className="product-detail">
       <div className="product-detail-left">
         <img
-          src={selectedBook.image || "/no-image.jpg"}
+          src={selectedBook.image_url || "/no-image.jpg"}
           alt={selectedBook.name}
           className="product-detail-image"
           onError={(e) => {
@@ -19,7 +19,7 @@ function ProductDetail({ selectedBook }) {
           {selectedBook.author} · {selectedBook.publisher}
         </p>
         <p className="product-detail-price">
-          {Math.floor(Number(selectedBook.price ?? 0)).toLocaleString()}원
+          {(selectedBook.price ?? 0).toLocaleString()}원
         </p>
         <p className="product-detail-stock">재고: {selectedBook.stock}권</p>
         <p className="product-detail-description">

@@ -8,6 +8,7 @@ function Pagination({
   onPageChange,
   siblingCount = 1,
 }) {
+  if (totalPages <= 1) return null;
 
   // 페이지 번호 배열 생성
   const pages = [];

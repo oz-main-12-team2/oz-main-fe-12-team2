@@ -4,9 +4,6 @@ import Button from '../components/common/Button';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import AddressAutoComplete from '../components/AddressAutoComplete';
-import { register } from '../api/user';
-import { alertError, alertSuccess } from '../utils/alert';
 
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,13 +27,7 @@ function SignUpPage() {
   // 공통: 입력 시 해당 에러 초기화
   const handleEmailChange = (e) => { setEmail(e.target.value); if (emailError) setEmailError(""); };
   const handleNameChange = (e) => { setName(e.target.value); if (nameError) setNameError(""); };
-  // const handleAddressChange = (e) => { setAddress(e.target.value); if (addressError) setAddressError(""); };
-
-  // 공통 입력 핸들러는 유지 가능 (address는 최종 선택시만 세팅)
-  const handleAddressChangeFinalize = (v) => {
-    setAddress(v);
-    if (addressError) setAddressError("");
-  };
+  const handleAddressChange = (e) => { setAddress(e.target.value); if (addressError) setAddressError(""); };
 
   // 비번 입력 시: 빈값 에러 초기화 + 둘 다 값 있으면 불일치 검사, 아니면 match 에러 비움
   const handleInputPasswordChange = (e) => {
@@ -62,8 +53,7 @@ function SignUpPage() {
     }
   };
 
-  const handleSignUp = async (e) => {
-    e?.preventDefault();
+  const handleSignUp = () => {
     // 초기화
     setEmailError("");
     setPasswordError("");
@@ -97,23 +87,16 @@ function SignUpPage() {
 
     // ✅ 모든 검증 통과 시: 회원가입 API 호출
     // await axios.post('/api/signup', { email, password: inputPassword, name, address });
-    try {
-      const res = await register(email, name, inputPassword, confirmInputPassword, address);
-
-      await alertSuccess("회원가입 성공", res.message);
-    } catch (e) {
-      await alertError("회원가입 실패", e.message)
-    }
   };
   
   return (
     <>
       <div className="base-container">
         <Link to="/">
-          <img className="signup-logo" src="/new-logo.svg" alt="러블리 로고" />
+          <img className="signup-logo" src="../../public/logo.svg" alt="러블리 로고" />
         </Link>
 
-        <form className="signup-container" onSubmit={handleSignUp}>
+        <div className="signup-container">
           <FormGroup 
             type="email" 
             placeholder="이메일" 
@@ -219,27 +202,28 @@ function SignUpPage() {
           )}
           
           <div className='address-input'>
-            <AddressAutoComplete
+            <FormGroup 
+              type="text" 
+              placeholder="주소" 
               value={address}
-              onChangeValue={handleAddressChangeFinalize}
-              placeholder="주소"
-              errorText={addressError}
-              // 스타일 커스터마이즈
-              className=""
-              inputClassName="form-input"        // 필요 시 SCSS 클래스
-              dropdownClassName="addr-dropdown"
-              optionClassName="addr-option"
+              onChange={handleAddressChange}
             />
           </div>
 
+          {addressError && (
+            <p className='field-error-message' role='alert'>
+              {addressError}
+            </p>
+          )}
+
           <div className='signup-options'>
             <div className='email-signup-button'>
-              <Button variant='primary' size='lg' type='submit'>
+              <Button variant='primary' size='lg' type='submit' onClick={handleSignUp}>
                 회원가입
               </Button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </>
   );

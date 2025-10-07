@@ -2,32 +2,8 @@ import { useState, useEffect } from "react";
 import FormGroup from "../../components/common/FormGroup";
 import Select from "../../components/common/Select";
 
-const categories = [
-  "소설",
-  "프로그래밍",
-  "시/에세이",
-  "인문",
-  "가정/육아",
-  "요리",
-  "건강",
-  "취미/실용/스포츠",
-  "컴퓨터/IT",
-  "경제/경영",
-  "자기계발",
-  "정치/사회",
-  "역사/문화",
-  "종교",
-  "예술/대중문화",
-  "중/고등참고서",
-  "기술/공학",
-  "외국어",
-  "과학",
-  "취업/수험서",
-  "여행",
-];
-
 function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
-  const [previewUrl, setPreviewUrl] = useState(selectedBook.image || "");
+  const [previewUrl, setPreviewUrl] = useState("");
 
   // 파일 선택 시 미리보기 URL 생성
   useEffect(() => {
@@ -36,9 +12,9 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
       setPreviewUrl(objectUrl);
       return () => URL.revokeObjectURL(objectUrl); // 메모리 누수 방지
     } else {
-      setPreviewUrl(selectedBook.image || "");
+      setPreviewUrl("");
     }
-  }, [selectedBook.imageFile, selectedBook.image]);
+  }, [selectedBook.imageFile]);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -69,13 +45,12 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
         }
       >
         <option value="">선택</option>
-        {categories.map((cate) => (
-          <option key={cate} value={cate}>
-            {cate}
-          </option>
-        ))}
+        <option value="카테고리1">카테고리1</option>
+        <option value="카테고리2">카테고리2</option>
+        <option value="카테고리3">카테고리3</option>
+        <option value="카테고리4">카테고리4</option>
       </Select>
-      
+
       {/* 상품 설명 */}
       <FormGroup
         label="상품 설명"
@@ -85,7 +60,7 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
           setSelectedBook({ ...selectedBook, description: e.target.value })
         }
         error={errors.description}
-        rows={3} // 세로줄
+        rows={3} // 세로 줄 수
       />
 
       <FormGroup
@@ -110,8 +85,8 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
 
       <FormGroup
         label="가격"
-        type="text"
-        value={Number(selectedBook.price)}
+        type="number"
+        value={selectedBook.price}
         onChange={(e) =>
           setSelectedBook({ ...selectedBook, price: e.target.value })
         }
@@ -120,8 +95,8 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
 
       <FormGroup
         label="재고"
-        type="text"
-        value={Number(selectedBook.stock)}
+        type="number"
+        value={selectedBook.stock}
         onChange={(e) =>
           setSelectedBook({ ...selectedBook, stock: e.target.value })
         }
@@ -140,11 +115,7 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
                 type="button"
                 className="remove-button"
                 onClick={() =>
-                  setSelectedBook({
-                    ...selectedBook,
-                    imageFile: null,
-                    image: "",
-                  })
+                  setSelectedBook({ ...selectedBook, imageFile: null })
                 }
               >
                 ✕

@@ -1,269 +1,135 @@
-import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "../components/common/Button";
+import { useState } from "react";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import Button from "../components/common/Button"; 
 import "../styles/cdh/book-Detail.scss";
-import { alertComfirm, alertSuccess, alertError } from "../utils/alert";
-import { getProductItem } from "../api/products.js";
-import { addCart, getCart } from "../api/cart";
-import useCartStore from "../stores/cartStore";
-import useBuyMove from "../hooks/useBuyMove";
-
-// ⭐️ DEFAULT_IMAGE 상수 정의 (public 폴더의 no-image.jpg를 가리킴)
-const DEFAULT_IMAGE = "/no-image.jpg";
-
-const formatPrice = (price) => {
-  const numericPrice = Number(price);
-  if (isNaN(numericPrice)) {
-    return "가격 미정";
-  }
-  return numericPrice.toLocaleString("ko-KR", {
-    maximumFractionDigits: 0,
-  });
-};
+import Modal from "../components/common/Modal";
 
 function BookDetail() {
-  const { id } = useParams();
+    const { id } = useParams();
 
-  const [bookDetail, setBookDetail] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    // Modal 상태 관리
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
-  const setStoreCartItems = useCartStore((state) => state.setCartItems);
-  const navigateToCheckout = useBuyMove();
-
-  useEffect(() => {
-    if (!id) {
-      setError("도서 ID가 유효하지 않습니다.");
-      setLoading(false);
-      return;
+    // 임시 더미 데이터.
+    const BookDetailDummy = {
+        id,
+        title: "도서 제목",
+        author: "저자",
+        publisher: "출판사",
+        pubDate: "2024-09-01",
+        price: 15000,
+        salePrice: 12000,
+        image: "/no-image.jpg",
+        description:
+        "책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글 책에 대한 설명 글",
     }
 
-    const loadBookDetail = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const res = await getProductItem(id);
-        setBookDetail(res);
-      } catch (e) {
-        console.error(`도서(ID: ${id}) 정보 불러오기 실패 : `, e);
-        setError(
-          e.message || "도서 상세 정보를 불러오는 중 오류가 발생했습니다."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadBookDetail();
-  }, [id]);
-
-  if (loading)
-    return (
-      <div className="book-detail-page">
-        <Header />
-        <div className="base-container">
-          <main className="book-detail-container">
-            <p>도서 정보를 불러오는 중입니다...</p>
-          </main>
-        </div>
-        <Footer />
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="book-detail-page">
-        <Header />
-        <div className="base-container">
-          <main className="book-detail-container">
-            <p className="error-message">오류 발생: {error}</p>
-          </main>
-        </div>
-        <Footer />
-      </div>
-    );
-
-  if (!bookDetail)
-    return (
-      <div className="book-detail-page">
-        <Header />
-        <div className="base-container">
-          <main className="book-detail-container">
-            <p>요청하신 도서 정보를 찾을 수 없습니다.</p>
-          </main>
-        </div>
-        <Footer />
-      </div>
-    );
-
-  const book = bookDetail;
-
-  const descriptionLines = book.description
-    ? book.description
-        .replace(/<br\s*\/?>/gi, "\n")
-        .replace(/<\/p>/gi, "\n")
-        .replace(/<\/div>/gi, "\n")
-        .replace(/\n\s*\n/g, "\n")
-        .split("\n")
-        .filter((line) => line.trim() !== "")
-    : [];
-
-  const PREVIEW_LINE_COUNT = 3;
-  const previewLines = descriptionLines.slice(0, PREVIEW_LINE_COUNT);
-  const previewDescription = previewLines.join("\n");
-  const remainingLines = descriptionLines.slice(PREVIEW_LINE_COUNT);
-  const remainingDescription = remainingLines.join("\n");
-
-  let bottomContent = null;
-
-  if (remainingDescription) {
-    bottomContent = <p className="description-rest">{remainingDescription}</p>;
-  } else {
-    const formattedPrice = formatPrice(book.price);
-    const fallbackText = `${
-      book.name || "이 도서"
-    }은 독자 여러분들의 많은 관심과 기대를 바라며 정가: ${formattedPrice}원에 기다리고 있습니다.`;
-
-    bottomContent = (
-      <div className="book-metadata-fallback">
-        <p className="fallback-message">{fallbackText}</p>
-      </div>
-    );
-  }
-
-  // 장바구니 추가 핸들러 (API 호출 및 Zustand 갱신)
-  const handleCartAdd = async () => {
-    const alert = await alertComfirm(
-      "장바구니에 담겠습니까?",
-      "예를 누르면 장바구니에 상품이 담깁니다"
-    );
-    if (!alert.isConfirmed) return;
-
-    try {
-      await addCart({ productId: book.id, quantity: 1 });
-
-      const res = await getCart();
-      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
-
-      const mappedItems = items.map((item) => ({
-        book: {
-          id: item.product_id,
-          name: item.product_name,
-          category: item.product_category,
-          author: item.product_author,
-          publisher: item.product_publisher,
-          price: Number(item.product_price),
-          stock: item.product_stock,
-          image_url: item.product_image, // API 응답 필드에 따라 조정
-        },
-        quantity: item.quantity,
-      }));
-
-      setStoreCartItems(mappedItems);
-
-      await alertSuccess(
-        "장바구니",
-        `선택하신 도서(${book.name})가 장바구니에 담겼습니다.`
-      );
-    } catch (e) {
-      console.error("장바구니 추가 실패:", e);
-      alertError(
-        "장바구니 오류",
-        "상품을 장바구니에 추가하는 중 오류가 발생했습니다."
-      );
+    // 구매 확인
+    const handleConfirmPurchase = () => {
+        alert("구매 완료(계산페이지or모달창 필요)"); //추후 계산페이지로 이동or 모달창으로 계산시스템 구현 필요 
+        setIsModalOpen(false);
     }
-  };
 
-  // 구매하기 핸들러 (useBuyMove 연결)
-  const handlebuyAdd = async () => {
-    const alert = await alertComfirm(
-      "상품을 구매하시겠습니까?",
-      "예를 누르면 상품구매를 진행합니다"
-    );
-    if (!alert.isConfirmed) return;
+    // 장바구니 확인 처리
+    const handleAddToCart = () => {
+        alert("장바구니에 추가되었습니다")
+        setIsCartModalOpen(false);
+    }
 
-    const productsToBuy = [
-      {
-        book: book,
-        quantity: 1,
-      },
-    ];
-
-    console.log(`즉시 구매 이동 호출: 도서 ID ${book.id}`);
-    navigateToCheckout(productsToBuy, "direct");
-  };
-
-  return (
+    return (
     <>
-      <div className="book-detail-page">
-        <div className="base-container">
-          <main className="book-detail-container">
-            <div className="book-detail-image">
-              {/* ⭐️ [수정] 이미지가 없을 경우 DEFAULT_IMAGE로 대체 */}
-              <img
-                src={book.image || DEFAULT_IMAGE} // book.image가 없으면 DEFAULT_IMAGE 사용
-                alt={book.name}
-                // ⭐️ [추가] 이미지 로드 실패 시 DEFAULT_IMAGE로 대체하는 onError 핸들러
-                onError={(e) => {
-                  e.currentTarget.src = DEFAULT_IMAGE;
-                }}
-              />
-            </div>
-
-            <div className="book-detail">
-              <div className="book-detail-up">
-                <h1>{book.name}</h1>
-                <p>
-                  저자: {book.author} | 출판사: {book.publisher}
-                </p>
-              </div>
-
-              <div className="book-detail-bottom">
-                <section className="book-detail-description">
-                  <h2 className="book-introduction">소 개</h2>
-                  <p className="description-preview">{previewDescription}</p>
-                </section>
-
-                <div className="bottom-flex-wrapper">
-                  <div className="price-area-wrapper">
-                    <section className="book-price">
-                      <span className="original-price">
-                        가격: {formatPrice(book.price)}원
-                      </span>
-                    </section>
-                  </div>
-
-                  <div className="book-actions">
-                    <Button
-                      onClick={handleCartAdd}
-                      size="lg"
-                      variant="secondary"
-                    >
-                      장바구니
-                    </Button>
-                    <Button onClick={handlebuyAdd} size="lg" variant="primary">
-                      구매하기
-                    </Button>
-                  </div>
+        <Header />
+        <div className="book-detail-page">
+            <div className="base-container">
+            
+            <main className="book-detail-container">
+                {/* 도서 이미지 */}
+                <div className="book-detail-image">
+                    <img src={BookDetailDummy.image} alt={BookDetailDummy.title} />
                 </div>
-              </div>
+            <div className="book-detail">
+                {/* 도서 기본 정보 */}
+                <div className="book-detail-up">
+                    <h1>{BookDetailDummy.title}</h1>
+                    <p>
+                        저자: {BookDetailDummy.author} | 출판사: {BookDetailDummy.publisher} | 출판일: {" "}
+                        {BookDetailDummy.pubDate}
+                    </p>
+
+                    {/* 가격 */}
+                    <div className="book-price">
+                        <span className="original-price">가격: {BookDetailDummy.price.toLocaleString()}원</span>
+                        <span className="sale-price"></span>
+                    </div>
             </div>
-          </main>
 
-          {book.description && (
-            <section className="book-summary-section full-width-section">
-              <h2 className="book-summary">상세 정보</h2>
-              {bottomContent}
-
-              {book.summary && (
-                <p className="summary-original">{book.summary}</p>
-              )}
+            <div className="book-detail-bottom">
+            {/* 상세 설명 */}
+            <section className="book-detail-description">
+                <h2 className="book-introduction">책 소개</h2> 
+                <p>{BookDetailDummy.description}</p>                
             </section>
-          )}
+
+            {/* 구매 버튼 / 장바구니 버튼 */}
+            <div className="book-actions">
+            {/* 구매하기 버튼 결제 페이지와 연결고리 필요 */}
+                <Button variant="secondary"
+                        size="md" type="button"
+                        onClick={() => setIsModalOpen(true)}>구매하기</Button> 
+                <Button variant="secondary"
+                        size="md" type="button"
+                        onClick={() => setIsCartModalOpen("true")}>장바구니에 넣기</Button>
+            </div>
+            </div>
         </div>
-      </div>
-    </>
-  );
+                {/* 추후 API 요청으로 해당 책의 상세정보 가져오기 */}
+                {/* 제목, 저자, 가격, 설명  등 혹은 정해진 내용으로 */}
+    </main>
+    </div>
+                {/* 구매 확인 */}
+            <Modal
+          isOpen={isModalOpen}
+          title="구매 확인"
+          onClose={() => setIsModalOpen(false)}
+          footer={
+            <>
+              <Button variant="primary" size="md" onClick={handleConfirmPurchase}>
+                확인
+              </Button>
+              <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+                취소
+              </Button>
+            </>
+          }
+        >
+          <p>구매하시겠습니까?</p>
+        </Modal>
+
+        {/* 장바구니 확인 */}
+        <Modal
+            isOpen={isCartModalOpen}
+            title="장바구니 확인"
+            onClose={() => setIsCartModalOpen(false)}
+            footer={
+                <>
+                <Button variant="primary" size="md" onClick={handleAddToCart}>
+                    확인
+                </Button>
+                <Button variant="primary" size="md" onClick={() => handleAddToCart(false)}>
+                    취소
+                </Button>
+                </>
+            }
+            >
+                <p>장바구니에 추가하시겠습니까?</p>
+        </Modal>
+        </div>
+    <Footer />
+</>
+    );
 }
 
 export default BookDetail;

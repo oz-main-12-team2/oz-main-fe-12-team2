@@ -2,29 +2,46 @@ import { useEffect, useState, useMemo } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { FaCalendarDay, FaCalendarWeek, FaChartBar } from "react-icons/fa";
 import Loading from "../../components/common/Loading";
-import { getDashboardStats } from "../../api/admin";
-import useTitle from "../../hooks/useTitle";
 
 function Dashboard() {
-  useTitle("대시보드");
   const [stats, setStats] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [chartType, setChartType] = useState("quantity");
 
   useEffect(() => {
-    const loadDashboard = async () => {
+    setIsLoading(true);
+    async function fetchData() {
       try {
-        setIsLoading(true);
-        const data = await getDashboardStats();
-        setStats(data);
-      } catch (e) {
-        console.error("대시보드 데이터 로딩 실패 : ", e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        const dummyData = {
+          total_users: 42,
+          total_revenue: "12500000.00",
+          total_stock: 320,
+          today_orders: 5,
+          daily_sales: { quantity: 30, revenue: "150000.00" },
+          weekly_sales: { quantity: 210, revenue: "1050000.00" },
+          monthly_sales: { quantity: 1050, revenue: "5250000.00" },
+          trend: [
+            { date: "2025-09-01", quantity: 12, revenue: "65000.00" },
+            { date: "2025-09-02", quantity: 20, revenue: "98000.00" },
+            { date: "2025-09-03", quantity: 15, revenue: "72000.00" },
+            { date: "2025-09-04", quantity: 25, revenue: "120000.00" },
+            { date: "2025-09-05", quantity: 30, revenue: "150000.00" },
+            { date: "2025-09-06", quantity: 28, revenue: "142000.00" },
+            { date: "2025-09-07", quantity: 35, revenue: "175000.00" },
+          ],
+        };
 
-    loadDashboard();
+        setTimeout(() => {
+          setStats(dummyData);
+          setIsLoading(false);
+        }, 500);
+      } catch (e) {
+        console.error("대시보드 데이터 로딩 실패", e);
+      } finally {
+        // setIsLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   const chartData = useMemo(() => {
@@ -63,10 +80,7 @@ function Dashboard() {
         </div>
         <div className="dashboard-card">
           <p className="dashboard-card-title">재고 상태</p>
-          <p className="dashboard-card-value">
-            {" "}
-            {Number(stats.total_stock).toLocaleString()}
-          </p>
+          <p className="dashboard-card-value">{stats.total_stock}</p>
         </div>
         <div className="dashboard-card">
           <p className="dashboard-card-title">오늘 주문 수</p>
@@ -102,7 +116,7 @@ function Dashboard() {
         {/* 오른쪽 판매 추이 그래프 */}
         <div className="dashboard-chart">
           <div className="dashboard-chart-header">
-            <span>월간 판매추이</span>
+            <span>판매 추이</span>
             <div className="dashboard-chart-toggle">
               <button
                 className={chartType === "quantity" ? "active" : ""}

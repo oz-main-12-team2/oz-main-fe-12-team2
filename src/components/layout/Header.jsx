@@ -2,157 +2,78 @@ import "../../styles/header.scss";
 
 import { LuShoppingCart } from "react-icons/lu";
 import {
-  FaSearch, //검색 임시 숨김
+  //   FaSearch, //검색 임시 숨김
   FaBars,
   FaTimes,
   FaUserCircle,
+  FaHome,
 } from "react-icons/fa";
 // import NavBar from "./NavBar"; //검색 임시 숨김
 import { useEffect, useState } from "react";
 import HeaderUserDropdown from "./HeaderUserDropdown";
 import Button from "../common/Button";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import useUserStore from "../../stores/userStore";
-import { alertComfirm, alertSuccess } from "../../utils/alert";
-import { logout } from "../../api/user";
-import { AiOutlineUser } from "react-icons/ai";
-import useDebounce from "../../hooks/useDebounce";
-import useCartStore from "../../stores/cartStore";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
+  //   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); //검색 임시 숨김
   const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(3); // 3개로 일단 가정
 
-  const user = useUserStore((state) => state.user);
-  const clearUser = useUserStore((state) => state.clearUser);
-
-  const isLogin = !!user; // user가 있으면 로그인 상태
-
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get("query") || "";
-  const [searchValue, setSearchValue] = useState(query);
-  const debouncedSearch = useDebounce(searchValue, 500);
-
-  const setCartItems = useCartStore((state) => state.setCartItems);
-  const cartCount = useCartStore((state) => state.cartCount);
-
-  // 항상 searchValue를 url query와 동기화
   useEffect(() => {
-    setSearchValue(query);
-  }, [query]);
+    const token = "fffffffff"; // 임시
+    if (token) setIsLoggedIn(true);
+  }, []);
 
-  const handleLogout = async () => {
-    try {
-      const alert = await alertComfirm(
-        "로그아웃",
-        "정말 로그아웃 하시겠습니까?"
-      );
-      if (!alert.isConfirmed) return;
-      setCartItems([]);
-      clearUser();
-      await logout();
-      await alertSuccess("로그아웃 성공", "로그아웃이 완료되었습니다");
-      navigate("/", { replace: true });
-    } catch (e) {
-      console.error("로그아웃 실패 : ", e);
-    } finally {
-      setIsMobileMenuOpen(false);
-    }
+  const user = {
+    name: "테스트",
+    email: "test@example.com",
   };
 
-  const handleSearch = () => {
-    if (!searchValue.trim()) return;
-
-    navigate(`/search?query=${encodeURIComponent(searchValue)}`);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setIsMobileMenuOpen(false);
+    setCartCount(0);
   };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch();
-  };
-
-  // 검색어 입력 멈춤 디바운스 처리
-  useEffect(() => {
-    const trimmed = debouncedSearch.trim();
-
-    if (trimmed) {
-      // 검색어가 있으면 검색 페이지로 이동
-      navigate(`/search?query=${encodeURIComponent(trimmed)}`, {
-        replace: location.pathname.startsWith("/search"),
-      });
-    } else {
-      // 검색창이 비워졌고 현재 검색 페이지면 메인 이동
-      if (location.pathname.startsWith("/search")) {
-        navigate("/", { replace: true });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
 
   return (
     <header className="header">
       <div className="header-wrap">
         <Link to="/" className="header-logo">
-          <img src="/new-logo.svg" alt="로고" />
+          <img src="/logo.svg" alt="로고" />
         </Link>
 
-        {/* PC 검색 (기존 그대로, pc-only 클래스 추가) */}
-        <div className="header-search-wrap pc-only">
-          <FaSearch
-            className="header-search-icon"
-            onClick={handleSearch}
-            aria-hidden="true"
-          />
-          <input
-            type="text"
-            className="header-search-input"
-            placeholder="도서를 검색해보세요"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-
-        {/* 모바일 검색 (768px 이하에서만 노출) */}
-        <div
-          className={`mobile-search-wrap mobile-only ${
-            isMobileSearchOpen ? "active" : ""
-          }`}
+        {/* 모바일 검색 */}
+        {/* <div
+          className={`header-search-wrap ${isMobileSearchOpen ? "active" : ""}`}
           onKeyDown={(e) => {
             if (e.key === "Escape") setIsMobileSearchOpen(false);
           }}
         >
           <FaSearch
-            className="mobile-search-icon"
+            className="header-search-icon"
             onClick={() => setIsMobileSearchOpen((s) => !s)}
+            aria-hidden="true"
           />
           <input
             type="text"
-            className="mobile-search-input"
-            placeholder="도서를 검색해보세요"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={handleKeyDown}
+            className="header-search-input"
+            placeholder="도서 검색"
           />
-        </div>
-
+        </div> */}
         {/* 우측 영역 */}
         <div className="header-right">
           {/* PC 아이콘 + 로그인 */}
           <div className="header-icon-wrap pc-only">
-            <Link to="/cart" className="header-cart">
+            <Link to="/mypage/cart" className="header-cart">
               <LuShoppingCart className="header-cart-icon" />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
 
             <div className="header-actions">
-              {isLogin ? (
+              {isLoggedIn ? (
                 <HeaderUserDropdown user={user} onLogout={handleLogout} />
               ) : (
                 <>
@@ -175,7 +96,7 @@ function Header() {
               //   setIsMobileSearchOpen(false);
             }}
           >
-            <FaBars size={22} />
+            <FaBars size={22} color={"#888"} />
           </button>
         </div>
       </div>
@@ -190,6 +111,7 @@ function Header() {
         <div
           className="mobile-menu-overlay"
           onClick={() => setIsMobileMenuOpen(false)}
+          role="presentation"
         >
           <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-menu-header">
@@ -203,7 +125,7 @@ function Header() {
 
             <div className="mobile-menu-body">
               {/* 로그인 상태에 따른 상단 영역 */}
-              {isLogin ? (
+              {isLoggedIn ? (
                 <div className="mobile-user-info">
                   <FaUserCircle size={40} />
                   <div>
@@ -227,29 +149,27 @@ function Header() {
                   <LuShoppingCart
                     size={28}
                     className="mobile-action-icon"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      navigate("/cart");
-                    }}
+                    onClick={() => navigate("/mypage/cart")}
                   />
                   {cartCount > 0 && (
                     <span className="cart-badge">{cartCount}</span>
                   )}
                 </div>
 
-                <AiOutlineUser
+                <FaHome
                   size={26}
                   className="mobile-action-icon"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    navigate("/mypage");
-                  }}
+                  onClick={() => navigate("/mypage")}
                 />
               </div>
 
               {/* 로그인 상태에 따라 버튼 변경 */}
-              {isLogin ? (
-                <Button variant="primary" size="md" onClick={handleLogout}>
+              {isLoggedIn ? (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleLogout}
+                >
                   로그아웃
                 </Button>
               ) : (

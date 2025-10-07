@@ -9,36 +9,32 @@ import {
 import { GiHamburgerMenu } from "react-icons/gi"; // 햄버거 아이콘
 import { AiFillHome } from "react-icons/ai";
 import { IoPowerSharp, IoClose } from "react-icons/io5";
-import { alertComfirm, alertSuccess } from "../../utils/alert";
-import useUserStore from "../../stores/userStore";
-import { logout } from "../../api/user";
-import { MdPayment } from "react-icons/md";
+import { alertComfirm } from "../../utils/alert";
 
 function AdminSidebar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const handleCloseMenu = () => setMenuOpen(false);
-  const clearUser = useUserStore((state) => state.clearUser);
 
   const handleGoHome = () => {
     navigate("/admin");
     setMenuOpen(false);
   };
 
+  const handleCloseMenu = () => setMenuOpen(false);
+
+  const handleUserHome = () => {
+    navigate("/");
+    setMenuOpen(false);
+  };
+
   const handleLogout = async () => {
-    try {
-      const confirm = await alertComfirm(
-        "로그아웃",
-        "정말 로그아웃 하시겠습니까?"
-      );
-      if (!confirm.isConfirmed) return;
-      clearUser();
-      await logout();
-      await alertSuccess("로그아웃 성공", "로그아웃 되었습니다.");
-      handleGoHome();
-    } catch (e) {
-      console.error("로그아웃 실패 : ", e);
-    }
+    const logout = await alertComfirm(
+      "로그아웃",
+      "정말 로그아웃 하시겠습니까?"
+    );
+    if (!logout.isConfirmed) return;
+    localStorage.removeItem("token");
+    handleUserHome();
   };
 
   return (
@@ -46,7 +42,7 @@ function AdminSidebar() {
       {/* 사이드바 pc전용 */}
       <aside className="admin-sidebar">
         <div className="logo" onClick={handleGoHome}>
-          <img className="logo-image" src="/new-logo.svg" alt="로고" />
+          LOV2LY
         </div>
 
         {/* 모바일 햄버거 버튼 */}
@@ -72,10 +68,6 @@ function AdminSidebar() {
           <Link to="/admin/orders">
             <LuShoppingCart className="nav-icon" />
             <span>주문관리</span>
-          </Link>
-          <Link to="/admin/payments">
-            <MdPayment className="nav-icon" />
-            <span>결제관리</span>
           </Link>
         </nav>
       </aside>
@@ -107,15 +99,11 @@ function AdminSidebar() {
                 <LuShoppingCart className="nav-icon" />
                 <span>주문관리</span>
               </Link>
-              <Link to="/admin/payments" onClick={handleCloseMenu}>
-                <MdPayment className="nav-icon" />
-                <span>결제관리</span>
-              </Link>
             </nav>
 
             {/* 모바일 패널 아래 홈/로그아웃 버튼 */}
             <div className="panel-footer">
-              <AiFillHome className="icon-btn" onClick={() => navigate('/')} />
+              <AiFillHome className="icon-btn" onClick={handleUserHome} />
               <IoPowerSharp className="icon-btn" onClick={handleLogout} />
             </div>
           </div>
