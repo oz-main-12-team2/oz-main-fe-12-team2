@@ -44,3 +44,23 @@ export async function getProducts({
     };
   }
 }
+
+// cdh - 만들기 API( 특정 상품 1개 조회용 )
+export const getProductItem = async (id) => {
+  try {
+    //API res.data식으로 여기서 작업하기 스웨거서 정보를 확인하고 진행하기 ( 엔드포인트가 어디인지 + 받아오는 데이터가 무엇인지 ) 
+    const res = await api.get(`/products/${id}/`);
+    return res.data;
+  } catch (e) {
+    if (e.response) {
+      throw {
+        message: e.response.data?.error || "상품정보를 갖고오지 못했습니다.",
+        code: e.response.status,
+      };
+    }
+    throw {
+      message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      code: "NETWORK_ERROR",
+    };
+  }
+};

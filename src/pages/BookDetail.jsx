@@ -1,95 +1,265 @@
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "../components/common/Button";
 import "../styles/cdh/book-Detail.scss";
-import { alertComfirm, alertSuccess } from "../utils/alert";
+import { alertComfirm, alertSuccess, alertError } from "../utils/alert";
+import { getProductItem } from "../api/products.js";
+import { addCart, getCart } from "../api/cart";
+import useCartStore from "../stores/cartStore";
+import useBuyMove from "../hooks/useBuyMove";
+
+// ⭐️ DEFAULT_IMAGE 상수 정의 (public 폴더의 no-image.jpg를 가리킴)
+const DEFAULT_IMAGE = "/no-image.jpg";
+
+const formatPrice = (price) => {
+  const numericPrice = Number(price);
+  if (isNaN(numericPrice)) {
+    return "가격 미정";
+  }
+  return numericPrice.toLocaleString("ko-KR", {
+    maximumFractionDigits: 0,
+  });
+};
+
 function BookDetail() {
   const { id } = useParams();
 
+  const [bookDetail, setBookDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const setStoreCartItems = useCartStore((state) => state.setCartItems);
+  const navigateToCheckout = useBuyMove();
+
+  useEffect(() => {
+    if (!id) {
+      setError("도서 ID가 유효하지 않습니다.");
+      setLoading(false);
+      return;
+    }
+
+    const loadBookDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await getProductItem(id);
+        setBookDetail(res);
+      } catch (e) {
+        console.error(`도서(ID: ${id}) 정보 불러오기 실패 : `, e);
+        setError(
+          e.message || "도서 상세 정보를 불러오는 중 오류가 발생했습니다."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBookDetail();
+  }, [id]);
+
+  if (loading)
+    return (
+      <div className="book-detail-page">
+        <Header />
+        <div className="base-container">
+          <main className="book-detail-container">
+            <p>도서 정보를 불러오는 중입니다...</p>
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="book-detail-page">
+        <Header />
+        <div className="base-container">
+          <main className="book-detail-container">
+            <p className="error-message">오류 발생: {error}</p>
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+
+  if (!bookDetail)
+    return (
+      <div className="book-detail-page">
+        <Header />
+        <div className="base-container">
+          <main className="book-detail-container">
+            <p>요청하신 도서 정보를 찾을 수 없습니다.</p>
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+
+  const book = bookDetail;
+
+  const descriptionLines = book.description
+    ? book.description
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<\/p>/gi, "\n")
+        .replace(/<\/div>/gi, "\n")
+        .replace(/\n\s*\n/g, "\n")
+        .split("\n")
+        .filter((line) => line.trim() !== "")
+    : [];
+
+  const PREVIEW_LINE_COUNT = 3;
+  const previewLines = descriptionLines.slice(0, PREVIEW_LINE_COUNT);
+  const previewDescription = previewLines.join("\n");
+  const remainingLines = descriptionLines.slice(PREVIEW_LINE_COUNT);
+  const remainingDescription = remainingLines.join("\n");
+
+  let bottomContent = null;
+
+  if (remainingDescription) {
+    bottomContent = <p className="description-rest">{remainingDescription}</p>;
+  } else {
+    const formattedPrice = formatPrice(book.price);
+    const fallbackText = `${
+      book.name || "이 도서"
+    }은 독자 여러분들의 많은 관심과 기대를 바라며 정가: ${formattedPrice}원에 기다리고 있습니다.`;
+
+    bottomContent = (
+      <div className="book-metadata-fallback">
+        <p className="fallback-message">{fallbackText}</p>
+      </div>
+    );
+  }
+
+  // 장바구니 추가 핸들러 (API 호출 및 Zustand 갱신)
   const handleCartAdd = async () => {
-    // 1. 확인창 (alertComfirm)
-    const alert = await alertComfirm("장바구니에 담겠습니까?", "예를 누르면 장바구니에 상품이 담깁니다");
+    const alert = await alertComfirm(
+      "장바구니에 담겠습니까?",
+      "예를 누르면 장바구니에 상품이 담깁니다"
+    );
     if (!alert.isConfirmed) return;
-    
-    console.log("API호출경로: 장바구니 추가");
-    // API 호출 성공 시:
-    
-    // 2. 성공 알림창 (alertSuccess)
-    await alertSuccess("장바구니", "선택하신 도서가 장바구니에 담겼습니다.");
+
+    try {
+      await addCart({ productId: book.id, quantity: 1 });
+
+      const res = await getCart();
+      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+
+      const mappedItems = items.map((item) => ({
+        book: {
+          id: item.product_id,
+          name: item.product_name,
+          category: item.product_category,
+          author: item.product_author,
+          publisher: item.product_publisher,
+          price: Number(item.product_price),
+          stock: item.product_stock,
+          image_url: item.product_image, // API 응답 필드에 따라 조정
+        },
+        quantity: item.quantity,
+      }));
+
+      setStoreCartItems(mappedItems);
+
+      await alertSuccess(
+        "장바구니",
+        `선택하신 도서(${book.name})가 장바구니에 담겼습니다.`
+      );
+    } catch (e) {
+      console.error("장바구니 추가 실패:", e);
+      alertError(
+        "장바구니 오류",
+        "상품을 장바구니에 추가하는 중 오류가 발생했습니다."
+      );
+    }
   };
 
+  // 구매하기 핸들러 (useBuyMove 연결)
   const handlebuyAdd = async () => {
-    // 1. 확인창 (alertComfirm)
-    const alert = await alertComfirm("상품을 구매하시겠습니까?", "예를 누르면 상품구매를 진행합니다");
+    const alert = await alertComfirm(
+      "상품을 구매하시겠습니까?",
+      "예를 누르면 상품구매를 진행합니다"
+    );
     if (!alert.isConfirmed) return;
-    
-    // 구매 로직 (API 호출 등)
-    console.log("구매 API 호출");
-    
-    // 2. 성공 알림창 (alertSuccess)
-    await alertSuccess("구매 완료", "선택하신 도서의 구매가 완료되었습니다.");
-  };
 
-  const BookDetailDummy = {
-    id,
-    title: "도서 제목",
-    author: "저자",
-    publisher: "출판사",
-    price: 15000,
-    salePrice: 12000,
-    image: "/no-image.jpg",
-    description: "책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...책에 대한 설명 글...",
-    summary: "이 책은 주인공이 겪는 시련과 성장을 중심으로 전개됩니다. 어릴 적 꿈을 찾아 떠난 긴 여정 속에서 예상치 못한 친구들을 만나고, 그들과 함께 세상을 변화시키는 거대한 임무를 수행하게 됩니다. 독자들에게 깊은 감동과 함께 삶의 의미를 되새기게 하는 역작입니다. 이 줄거리 내용이 버튼 아래에 새로운 공간으로 표시됩니다.이 책은 주인공이 겪는 시련과 성장을 중심으로 전개됩니다. 어릴 적 꿈을 찾아 떠난 긴 여정 속에서 예상치 못한 친구들을 만나고, 그들과 함께 세상을 변화시키는 거대한 임무를 수행하게 됩니다. 독자들에게 깊은 감동과 함께 삶의 의미를 되새기게 하는 역작입니다. 이 줄거리 내용이 버튼 아래에 새로운 공간으로 표시됩니다.이 책은 주인공이 겪는 시련과 성장을 중심으로 전개됩니다. 어릴 적 꿈을 찾아 떠난 긴 여정 속에서 예상치 못한 친구들을 만나고, 그들과 함께 세상을 변화시키는 거대한 임무를 수행하게 됩니다. 독자들에게 깊은 감동과 함께 삶의 의미를 되새기게 하는 역작입니다. 이 줄거리 내용이 버튼 아래에 새로운 공간으로 표시됩니다.이 책은 주인공이 겪는 시련과 성장을 중심으로 전개됩니다. 어릴 적 꿈을 찾아 떠난 긴 여정 속에서 예상치 못한 친구들을 만나고, 그들과 함께 세상을 변화시키는 거대한 임무를 수행하게 됩니다. 독자들에게 깊은 감동과 함께 삶의 의미를 되새기게 하는 역작입니다. 이 줄거리 내용이 버튼 아래에 새로운 공간으로 표시됩니다.",
+    const productsToBuy = [
+      {
+        book: book,
+        quantity: 1,
+      },
+    ];
+
+    console.log(`즉시 구매 이동 호출: 도서 ID ${book.id}`);
+    navigateToCheckout(productsToBuy, "direct");
   };
 
   return (
     <>
       <div className="book-detail-page">
         <div className="base-container">
-
-          <main className="book-detail-container"> 
+          <main className="book-detail-container">
             <div className="book-detail-image">
-              <img src={BookDetailDummy.image} alt={BookDetailDummy.title} />
+              {/* ⭐️ [수정] 이미지가 없을 경우 DEFAULT_IMAGE로 대체 */}
+              <img
+                src={book.image || DEFAULT_IMAGE} // book.image가 없으면 DEFAULT_IMAGE 사용
+                alt={book.name}
+                // ⭐️ [추가] 이미지 로드 실패 시 DEFAULT_IMAGE로 대체하는 onError 핸들러
+                onError={(e) => {
+                  e.currentTarget.src = DEFAULT_IMAGE;
+                }}
+              />
             </div>
 
             <div className="book-detail">
               <div className="book-detail-up">
-                <h1>{BookDetailDummy.title}</h1>
+                <h1>{book.name}</h1>
                 <p>
-                  저자: {BookDetailDummy.author} | 출판사: {BookDetailDummy.publisher}
+                  저자: {book.author} | 출판사: {book.publisher}
                 </p>
               </div>
 
               <div className="book-detail-bottom">
-                
                 <section className="book-detail-description">
                   <h2 className="book-introduction">소 개</h2>
-                  <p>{BookDetailDummy.description}</p>
+                  <p className="description-preview">{previewDescription}</p>
                 </section>
 
                 <div className="bottom-flex-wrapper">
-                  
                   <div className="price-area-wrapper">
                     <section className="book-price">
                       <span className="original-price">
-                        가격: {BookDetailDummy.price.toLocaleString()}원
+                        가격: {formatPrice(book.price)}원
                       </span>
                     </section>
                   </div>
-                  
+
                   <div className="book-actions">
-                    <Button onClick={handleCartAdd} size="lg" variant="secondary">장바구니</Button>
-                    <Button onClick={handlebuyAdd} size="lg" variant="primary">구매하기</Button>
+                    <Button
+                      onClick={handleCartAdd}
+                      size="lg"
+                      variant="secondary"
+                    >
+                      장바구니
+                    </Button>
+                    <Button onClick={handlebuyAdd} size="lg" variant="primary">
+                      구매하기
+                    </Button>
                   </div>
-                  
                 </div>
               </div>
             </div>
           </main>
-          
-          <section className="book-summary-section full-width-section">
-            <h2 className="book-summary-title">줄 거 리</h2>
-            <p>{BookDetailDummy.summary}</p>
-          </section>
+
+          {book.description && (
+            <section className="book-summary-section full-width-section">
+              <h2 className="book-summary">상세 정보</h2>
+              {bottomContent}
+
+              {book.summary && (
+                <p className="summary-original">{book.summary}</p>
+              )}
+            </section>
+          )}
         </div>
       </div>
     </>
