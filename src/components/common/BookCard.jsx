@@ -1,6 +1,7 @@
 import { memo } from "react";
 import "../../styles/bookcardcol.scss";
 import "../../styles/bookcardrow.scss";
+import { Link } from "react-router-dom";
 
 // 기본 이미지 대체
 const DEFAULT_IMAGE = "/no-image.jpg";
@@ -41,7 +42,12 @@ export function BookCardCol({ book, onClick, actions }) {
 }
 
 // 가로형 카드 (장바구니/주문내역)
-export const BookCardRow = memo(function BookCardRow({ book, onClick, children, left }) {
+export const BookCardRow = memo(function BookCardRow({
+  book,
+  onClick,
+  children,
+  left,
+}) {
   const handleImgError = (e) => {
     e.currentTarget.src = DEFAULT_IMAGE;
   };
@@ -62,7 +68,9 @@ export const BookCardRow = memo(function BookCardRow({ book, onClick, children, 
       </div>
 
       <div className="book-card-row-content">
-        <h3 className="book-title">{book.name}</h3>
+        <h3 className="book-title">
+          <Link to={`/book/${book.id}`}>{book.name}</Link>
+        </h3>
         <p className="book-category">{book.category}</p>
         <p className="book-author">{`${book.author} · ${book.publisher}`}</p>
         <p className="book-price">{(book.price ?? 0).toLocaleString()}원</p>
@@ -72,4 +80,3 @@ export const BookCardRow = memo(function BookCardRow({ book, onClick, children, 
     </div>
   );
 });
-

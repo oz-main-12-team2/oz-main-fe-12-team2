@@ -27,7 +27,7 @@ function Orders() {
         setIsLoading(true);
         setError(null);
 
-        const res = await getOrders({ page: currentPage, size: 10 });
+        const res = await getOrders({ page: currentPage, size: 8 });
 
         setOrders(res.results);
         setTotalPages(Math.ceil(res.count / 10)); // count 기반 페이지 수 계산
