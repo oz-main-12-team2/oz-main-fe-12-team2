@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+// ⭐️ InfiniteScroll 라이브러리 임포트 추가
+import InfiniteScroll from 'react-infinite-scroll-component';
 import NavBar from "../components/layout/NavBar";
 import Loading from "../components/common/Loading";
 import MainBanner from "../components/MainBanner";
@@ -105,7 +107,7 @@ function MainPage() {
 
   const navigate = useNavigate();
   const bookListRef = useRef(null);
-  const observerRef = useRef(null);
+  // ⭐️ observerRef 제거됨
   const autoScrollIntervalRef = useRef(null);
 
   /* 도서 클릭 -> 상세 페이지 이동 */
@@ -142,7 +144,7 @@ function MainPage() {
           behavior: "smooth",
         });
       }
-    }, [books.length]);
+    }, [books.length, currentIndex]); // currentIndex 의존성 추가
 
     // 마우스 휠로 이동 (기존 로직 유지)
     useEffect(() => {
@@ -243,32 +245,37 @@ function MainPage() {
   };
 
   /* 전체 도서 무한 스크롤 (API 호출 적용) */
-const fetchAllBooks = useCallback(async (pageNum) => {
-  if (loading || !hasMore) return;
+  // ⭐️ page 상태를 증가시키며 다음 페이지를 로드합니다.
+  const fetchAllBooks = useCallback(async () => {
+    const nextPage = page + 1;
+    
+    if (loading || !hasMore) return; 
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const data = await getProducts({ page: pageNum, size: 20 });
-    const newBooks = data.results;
+    try {
+      const data = await getProducts({ page: nextPage, size: 8 });
+      const newBooks = data.results;
 
-    setAllBooks((prev) => [...prev, ...newBooks]);
-    setHasMore(!!data.next);
-  } catch (error) {
-    console.error("전체 도서 목록 호출 실패:", error);
-    setHasMore(false);
-  } finally {
-    setLoading(false);
-  }
-}, [loading, hasMore]); 
+      setAllBooks((prev) => [...prev, ...newBooks]);
+      setPage(nextPage); // ⭐️ 성공 시에만 페이지 증가
+      
+      // 다음 페이지가 있는지 여부를 서버 응답(data.next)을 보고 판단합니다.
+      setHasMore(!!data.next); 
+      
+    } catch (error) {
+      console.error("전체 도서 목록 호출 실패:", error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, hasMore, page]);
 
   /* 초기 데이터 로드 (베스트셀러와 첫 페이지 전체 도서) */
   useEffect(() => {
     // 1. 베스트셀러 데이터 호출
     const fetchBestBooks = async () => {
       try {
-        // getProducts 호출: ordering을 판매량 내림차순('-stock')으로 지정
-        // 판매량 기준이 재고 필드 stock과 연관되었다고 가정합니다.
         const data = await getProducts({
           page: 1,
           size: 10,
@@ -281,32 +288,26 @@ const fetchAllBooks = useCallback(async (pageNum) => {
       }
     };
 
+    // 2. 전체 도서 목록 첫 페이지(page=1) 로드
+    const fetchInitialBooks = async () => {
+        try {
+            const data = await getProducts({ page: 1, size: 20 });
+            setAllBooks(data.results);
+            setPage(1); // 초기 페이지는 1로 설정
+            setHasMore(!!data.next);
+        } catch (error) {
+            console.error("초기 도서 목록 호출 실패:", error);
+            setAllBooks([]);
+            setHasMore(false);
+        }
+    };
+    
     fetchBestBooks();
+    fetchInitialBooks();
+
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
-  /* 무한 스크롤 옵저버 */
-  const handleObserver = useCallback(
-    (entries) => {
-      const target = entries[0];
-      if (target.isIntersecting && hasMore && !loading) {
-        setPage((prev) => prev + 1);
-      }
-    },
-    [hasMore, loading]
-  );
-
-  useEffect(() => {
-    const option = { threshold: 1.0 };
-    const observerTarget = observerRef.current;
-    const observer = new IntersectionObserver(handleObserver, option);
-    if (observerTarget) observer.observe(observerTarget);
-    return () => observer.disconnect();
-  }, [handleObserver]);
-
-  useEffect(() => {
-    // page가 1 이상일 때 데이터 호출 시작 (첫 로드 시 page=1이므로 실행됨)
-    if (page >= 1) fetchAllBooks(page);
-  }, [page, fetchAllBooks]);
+  // ⭐️ 기존 Intersection Observer 관련 useEffect 로직은 제거되었습니다.
 
   useEffect(() => {
     return () => {
@@ -318,7 +319,6 @@ const fetchAllBooks = useCallback(async (pageNum) => {
   /* 렌더링 */
   return (
     <>
-      <Header />
       <MainBanner
         image="main-banner.jpg"
         title="책으로 여는 하루"
@@ -335,23 +335,26 @@ const fetchAllBooks = useCallback(async (pageNum) => {
             <BookListRowLoop books={bestBooks} onCardClick={handleCardClick} />
           </div>
 
-          {/* 전체 도서 */}
+          {/* 전체 도서 - InfiniteScroll 적용 */}
           <section className="book-list" ref={bookListRef}>
             <h2>전체 도서</h2>
-            <BookListCol books={allBooks} onCardClick={handleCardClick} />
-
-            {/* 로딩 중 메시지 */}
-            {loading && hasMore && <Loading />}
-
-            {/* 무한 스크롤 트리거 */}
-            <div ref={observerRef} style={{ height: "20px" }} />
-
-            {/* 마지막 도서 메시지 */}
-            {!hasMore && !loading && allBooks.length > 0 && (
-              <p className="status-message no-more-books">마지막 도서입니다.</p>
-            )}
+            
+            <InfiniteScroll
+              dataLength={allBooks.length}         // 현재 목록의 아이템 개수
+              next={fetchAllBooks}                  // 스크롤 시 호출할 다음 데이터 로드 함수
+              hasMore={hasMore}                     // 더 로드할 데이터가 있는지 여부
+              loader={<Loading />}                  // 로딩 중 표시할 컴포넌트
+              endMessage={
+                <p className="status-message no-more-books">
+                  <b>마지막 도서입니다.</b>
+                </p>
+              }
+            >
+              <BookListCol books={allBooks} onCardClick={handleCardClick} />
+            </InfiniteScroll>
 
             {/* 초기 로딩 실패/데이터 없음 메시지 */}
+            {/* loading 상태 확인 로직을 좀 더 단순화합니다. */}
             {!loading && allBooks.length === 0 && (
               <p className="status-message error-message">
                 도서 목록을 불러오는 데 실패했거나 데이터가 없습니다.
@@ -359,7 +362,6 @@ const fetchAllBooks = useCallback(async (pageNum) => {
             )}
           </section>
         </div>
-        <Footer />
       </div>
     </>
   );
