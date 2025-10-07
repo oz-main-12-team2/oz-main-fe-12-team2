@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "../components/common/Button";
 import "../styles/cdh/book-Detail.scss";
-import { alertComfirm, alertSuccess, alertError } from "../utils/alert"; // alertError 추가
-// API 함수 import (경로는 프로젝트 구조에 맞게 수정하세요)
+import { alertComfirm, alertSuccess, alertError } from "../utils/alert";
 import { getProductItem } from "../api/products.js";
-// 장바구니 API 함수 import (경로 확인 필수)
 import { addCart, getCart } from "../api/cart";
-// Zustand 스토어 및 useBuyMove 훅 import
 import useCartStore from "../stores/cartStore";
 import useBuyMove from "../hooks/useBuyMove";
 
-// formatPrice 함수 (이전과 동일)
+// ⭐️ DEFAULT_IMAGE 상수 정의 (public 폴더의 no-image.jpg를 가리킴)
+const DEFAULT_IMAGE = "/no-image.jpg";
+
 const formatPrice = (price) => {
   const numericPrice = Number(price);
   if (isNaN(numericPrice)) {
@@ -29,7 +28,6 @@ function BookDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Zustand 상태 액션 및 useBuyMove 훅 호출
   const setStoreCartItems = useCartStore((state) => state.setCartItems);
   const navigateToCheckout = useBuyMove();
 
@@ -59,7 +57,6 @@ function BookDetail() {
     loadBookDetail();
   }, [id]);
 
-  // --- 로딩/오류/데이터 없음 처리 UI (이전과 동일) ---
   if (loading)
     return (
       <div className="book-detail-page">
@@ -101,7 +98,6 @@ function BookDetail() {
 
   const book = bookDetail;
 
-  // 3. Description 내용 나누기 로직 (이전과 동일)
   const descriptionLines = book.description
     ? book.description
         .replace(/<br\s*\/?>/gi, "\n")
@@ -118,7 +114,6 @@ function BookDetail() {
   const remainingLines = descriptionLines.slice(PREVIEW_LINE_COUNT);
   const remainingDescription = remainingLines.join("\n");
 
-  // 4. 하단 상세 정보 콘텐츠 로직 (이전과 동일)
   let bottomContent = null;
 
   if (remainingDescription) {
@@ -127,7 +122,7 @@ function BookDetail() {
     const formattedPrice = formatPrice(book.price);
     const fallbackText = `${
       book.name || "이 도서"
-    }은 저자 여러분들의 많은 관심과 기대를 바라며 정가: ${formattedPrice}원에 기다리고 있습니다.`;
+    }은 독자 여러분들의 많은 관심과 기대를 바라며 정가: ${formattedPrice}원에 기다리고 있습니다.`;
 
     bottomContent = (
       <div className="book-metadata-fallback">
@@ -136,7 +131,6 @@ function BookDetail() {
     );
   }
 
-  // --- 핸들러 및 최종 렌더링 수정 ---
   // 장바구니 추가 핸들러 (API 호출 및 Zustand 갱신)
   const handleCartAdd = async () => {
     const alert = await alertComfirm(
@@ -146,13 +140,11 @@ function BookDetail() {
     if (!alert.isConfirmed) return;
 
     try {
-      await addCart({ productId: book.id, quantity: 1 }); // 객체 형태로 인자 전달 (cart.js 정의에 따름)
+      await addCart({ productId: book.id, quantity: 1 });
 
-      // 2. 전체 장바구니 데이터 다시 불러오기
       const res = await getCart();
       const items = Array.isArray(res[0]?.items) ? res[0].items : [];
 
-      // 3. Zustand 상태 갱신을 위해 API 응답을 클라이언트 상태 형태로 매핑 (CartPage와 동일한 형식)
       const mappedItems = items.map((item) => ({
         book: {
           id: item.product_id,
@@ -162,12 +154,11 @@ function BookDetail() {
           publisher: item.product_publisher,
           price: Number(item.product_price),
           stock: item.product_stock,
-          image_url: item.product_image,
+          image_url: item.product_image, // API 응답 필드에 따라 조정
         },
         quantity: item.quantity,
       }));
 
-      // 4. Zustand 스토어 갱신 (헤더 카운트 동기화)
       setStoreCartItems(mappedItems);
 
       await alertSuccess(
@@ -193,12 +184,11 @@ function BookDetail() {
 
     const productsToBuy = [
       {
-        book: book, // 현재 도서 상세 정보 객체
-        quantity: 1, // 상세 페이지에서 '바로 구매'는 수량 1개로 가정
+        book: book,
+        quantity: 1,
       },
     ];
 
-    // 'direct' 모드로 설정하여 재고 확인 없이 바로 이동
     console.log(`즉시 구매 이동 호출: 도서 ID ${book.id}`);
     navigateToCheckout(productsToBuy, "direct");
   };
@@ -209,7 +199,15 @@ function BookDetail() {
         <div className="base-container">
           <main className="book-detail-container">
             <div className="book-detail-image">
-              <img src={book.image} alt={book.name} />
+              {/* ⭐️ [수정] 이미지가 없을 경우 DEFAULT_IMAGE로 대체 */}
+              <img
+                src={book.image || DEFAULT_IMAGE} // book.image가 없으면 DEFAULT_IMAGE 사용
+                alt={book.name}
+                // ⭐️ [추가] 이미지 로드 실패 시 DEFAULT_IMAGE로 대체하는 onError 핸들러
+                onError={(e) => {
+                  e.currentTarget.src = DEFAULT_IMAGE;
+                }}
+              />
             </div>
 
             <div className="book-detail">
@@ -236,7 +234,6 @@ function BookDetail() {
                   </div>
 
                   <div className="book-actions">
-                    {/* 수정된 handleCartAdd 함수 연결 */}
                     <Button
                       onClick={handleCartAdd}
                       size="lg"
@@ -244,7 +241,6 @@ function BookDetail() {
                     >
                       장바구니
                     </Button>
-                    {/* 수정된 handlebuyAdd 함수 연결 */}
                     <Button onClick={handlebuyAdd} size="lg" variant="primary">
                       구매하기
                     </Button>
@@ -254,7 +250,6 @@ function BookDetail() {
             </div>
           </main>
 
-          {/* 하단 '상세 정보' 섹션 */}
           {book.description && (
             <section className="book-summary-section full-width-section">
               <h2 className="book-summary">상세 정보</h2>

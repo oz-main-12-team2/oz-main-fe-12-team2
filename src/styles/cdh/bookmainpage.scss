@@ -10,140 +10,232 @@ $light-gray: #f5f5f5;
 
 // Daily Best Carousel 
 .book-daily-best {
-  margin: 3rem 0;
+    margin: 3rem 0;
 }
 
 .enhanced-carousel-wrapper {
-  position: relative;
-  overflow: hidden;
-  padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 0;
+    
+    // 배경 데코레이션 (UX 향상 목적의 가상의 스타일)
+    .background-decoration {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0.1;
+        pointer-events: none;
+    }
+    .decoration-1 { top: 0; left: 0; background: radial-gradient(circle at 10% 20%, $golden, transparent 60%); }
+    .decoration-2 { bottom: 0; right: 0; background: radial-gradient(circle at 90% 80%, $bangladesh-green, transparent 60%); }
+}
+
+.enhanced-carousel-container {
+    position: relative;
+    
+    // 좌우 페이드 효과를 위한 오버레이
+    .gradient-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100px;
+        z-index: 5;
+        pointer-events: none;
+    }
+    .left { left: 0; background: linear-gradient(to right, $warm-white, transparent); }
+    .right { right: 0; background: linear-gradient(to left, $warm-white, transparent); }
 }
 
 .carousel-section-header {
-  text-align: center;
-  margin-bottom: 1.2rem;
+    text-align: center;
+    margin-bottom: 1.2rem;
 
-  .carousel-section-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: $rich-black;
+    .carousel-section-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: $rich-black;
+        display: inline-flex;
+        align-items: center;
 
-    .title-icon-before,
-    .title-icon-after {
-      margin: 0 0.4rem;
+        .title-icon-before {
+             // 아이콘 또는 장식적인 스타일
+             content: '';
+             display: block;
+             width: 10px;
+             height: 10px;
+             background: $golden;
+             border-radius: 50%;
+             margin-right: 10px;
+        }
     }
-  }
 }
 
 .enhanced-carousel-track {
-  display: flex;
-  gap: 1rem;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  padding: 1rem 0;
+    display: flex;
+    gap: 20px; /* 기존 1rem -> 20px로 통일 */
+    overflow-x: scroll; /* 스크롤바는 숨기지만 기능은 유지 */
+    scroll-behavior: smooth;
+    padding: 1rem 0;
+    
+    // 스크롤바 숨기기 (선택 사항)
+    &::-webkit-scrollbar { display: none; }
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .enhanced-book-card {
-  flex: 0 0 300px;
-  background: $light-gray;
-  border-radius: 12px;
-  padding: 1rem;
-  position: relative;
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-  }
-
-  .bestseller-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: $bangladesh-green;
-    color: $rich-black;
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    z-index: 1;
-  }
-
-  .enhanced-book-image {
-    height: 20rem;
-    width: 20rem;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.05);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex: 0 0 300px; // 카드 너비를 300px로 고정
+    background: $light-gray;
+    border-radius: 12px;
+    padding: 1rem;
     position: relative;
-    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    
+    // 카드 내부의 빛나는 효과 (가상)
+    .card-glow {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        border-radius: inherit;
+        box-shadow: 0 0 15px $golden inset;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
 
-    .book-placeholder {
-      text-align: center;
-      color: $dark-gray;
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        .card-glow { opacity: 0.2; }
+    }
 
-      .book-icon {
-        font-size: 2rem;
-        margin-bottom: 0.3rem;
-      }
-
-      .image-not-available-text {
+    .bestseller-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: $bangladesh-green;
+        color: $warm-white; /* 뱃지 텍스트 색상을 대비되게 변경 */
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
         font-size: 0.85rem;
-        opacity: 0.7;
-      }
-    }
-  }
-
-  .enhanced-book-details {
-    h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      color: $deep-green;
+        font-weight: bold;
+        z-index: 10;
+        border: 2px solid $golden;
     }
 
-    .enhanced-book-price {
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 0.2rem;
-      display: inline-block;
-      padding: 0.3rem 0.5rem;
-      color: $warm-white;
-      background-color: $bangladesh-green;
-      border-radius: 6px;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+    .enhanced-book-image {
+        height: 20rem;
+        width: 100%; /* 부모 카드 너비를 꽉 채우도록 변경 */
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.05);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 이미지 비율 유지하며 컨테이너에 맞춤 */
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        
+        // 추가된 데코레이션 스타일
+        .image-decoration {
+            position: absolute;
+            pointer-events: none;
+        }
+        .decoration-float { opacity: 0; } // 현재 예시에서는 비활성화
+        .decoration-morph { opacity: 0; } // 현재 예시에서는 비활성화
     }
 
-    .enhanced-book-category,
-    .enhanced-book-author {
-      font-size: 0.85rem;
-      color: $dark-gray;
+    .enhanced-book-details {
+        text-align: center;
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: $deep-green;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .enhanced-book-price {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block; // 블록으로 변경하여 중앙 정렬 가능하게 함
+            color: $rich-black; 
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .enhanced-book-category,
+        .enhanced-book-author {
+            font-size: 0.85rem;
+            color: $dark-gray;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
     }
-  }
 }
 
 // 도트 인디케이터
 .dot-indicators {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
 
-  .dot-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: $light-gray;
-    margin: 0 4px;
-    border: none;
-    cursor: pointer;
+    .dot-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: $light-gray;
+        margin: 0 6px;
+        border: 2px solid $bangladesh-green;
+        cursor: pointer;
+        transition: all 0.3s ease;
 
-    &.active {
-      background: $bangladesh-green;
+        &:hover {
+            background: rgba($bangladesh-green, 0.5);
+        }
+
+        &.active {
+            background: $bangladesh-green;
+            transform: scale(1.2);
+            border-color: $golden;
+        }
     }
-  }
+}
+
+// 전체 도서 목록 섹션 스타일 (BookListCol이 포함됨)
+.book-list {
+    margin-top: 4rem;
+    padding-top: 1rem;
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: $rich-black;
+        border-left: 5px solid $bangladesh-green;
+        padding-left: 15px;
+        font-weight: 700;
+    }
+}
+
+.status-message {
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 1.1rem;
+    color: $dark-gray;
+}
+
+.no-more-books {
+    color: $bangladesh-green;
+    font-weight: 500;
 }
