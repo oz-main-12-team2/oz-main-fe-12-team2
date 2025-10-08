@@ -110,7 +110,7 @@ function PaymentDetail() {
             <li>
               <strong>결제상태:</strong> 
               {/* {payment.status} */}
-              <span className={`status-text ${order.status}`}>{order.status}</span>
+              <span className={`status-text ${payment.status}`}>{payment.status}</span>
             </li>
             {/* <li><strong>결제금액:</strong> {Number(payment.total_price).toLocaleString()}원</li> */}
             <li><strong>결제금액:</strong> {KRW(payment.total_price)}원</li>

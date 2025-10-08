@@ -34,6 +34,22 @@
           display: inline-block;
           color: #444;
         }
+
+        .status-text {
+          font-weight: 700;
+          &.대기 {
+            color: $gray-500;
+          }
+          &.성공 {
+            color: $main-color;
+          }
+          &.실패 {
+            color: orange;
+          }
+          &.취소 {
+            color: $red-500;
+          }
+        }
       }
     }
 
