@@ -75,11 +75,11 @@ function Header() {
         "정말 로그아웃 하시겠습니까?"
       );
       if (!alert.isConfirmed) return;
+      navigate("/", { replace: true });
+      await logout();
       setCartItems([]);
       clearUser();
-      await logout();
       await alertSuccess("로그아웃 성공", "로그아웃이 완료되었습니다");
-      navigate("/", { replace: true });
     } catch (e) {
       console.error("로그아웃 실패 : ", e);
     } finally {
@@ -172,7 +172,11 @@ function Header() {
           <div className="header-icon-wrap pc-only">
             <Link to="/cart" className="header-cart">
               <LuShoppingCart className="header-cart-icon" />
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              {cartCount > 0 && (
+                <span className="cart-badge">
+                  {cartCount >= 10 ? "9+" : cartCount}
+                </span>
+              )}
             </Link>
 
             <div className="header-actions">
@@ -257,7 +261,9 @@ function Header() {
                     }}
                   />
                   {cartCount > 0 && (
-                    <span className="cart-badge">{cartCount}</span>
+                    <span className="cart-badge">
+                      {cartCount >= 10 ? "9+" : cartCount}
+                    </span>
                   )}
                 </div>
 

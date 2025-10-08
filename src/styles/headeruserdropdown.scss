@@ -92,6 +92,12 @@
           transition: color 0.2s ease;
         }
       }
+
+      .dropdown-item:last-child {
+        border-top: 1px solid $gray-300;
+        border-radius: 0;
+        padding-top: 1rem;
+      }
     }
   }
 }

@@ -28,6 +28,7 @@ import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import Layout from "./pages/Layout";
 import PaymentLog from "./components/mypage/PaymentLog";
 import PaymentDetail from "./components/mypage/PaymentDetail";
+import UserProtectedRoute from "./routes/UserProtectedRoute";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -76,7 +77,11 @@ function App() {
         { path: "activate", element: <ConfirmEmail /> },
         {
           path: "mypage",
-          element: <MyPage />,
+          element: (
+            <UserProtectedRoute>
+              <MyPage />
+            </UserProtectedRoute>
+          ),
           children: [
             {
               path: "",
@@ -92,35 +97,69 @@ function App() {
         { path: "search", element: <SearchPage /> },
         {
           path: "cart",
-          element: <MyPage />, // 사이드바 유지
+          element: (
+            <UserProtectedRoute>
+              <MyPage />
+            </UserProtectedRoute>
+          ),
           children: [{ index: true, element: <CartPage /> }],
         },
-        { path: "checkout", element: <CheckoutPage /> },
-        { path: "/checkout/success", element: <PaymentSuccessPage /> },
+        {
+          path: "checkout",
+          element: (
+            <UserProtectedRoute>
+              <CheckoutPage />
+            </UserProtectedRoute>
+          ),
+        },
+        {
+          path: "/checkout/success",
+          element: (
+            <UserProtectedRoute>
+              <PaymentSuccessPage />
+            </UserProtectedRoute>
+          ),
+        },
 
         // 주문 내역
         {
           path: "/orderlog",
-          element: <MyPage />,
+          element: (
+            <UserProtectedRoute>
+              <MyPage />
+            </UserProtectedRoute>
+          ),
           children: [{ index: true, element: <OrderLog /> }],
         },
 
         {
           path: "/orderlog/:id",
-          element: <MyPage />,
+          element: (
+            <UserProtectedRoute>
+              <MyPage />
+            </UserProtectedRoute>
+          ),
           children: [{ index: true, element: <OrderDetailPage /> }],
         },
 
         // 결제 내역
         {
           path: "payments",
-          element: <MyPage />,
+          element: (
+            <UserProtectedRoute>
+              <MyPage />
+            </UserProtectedRoute>
+          ),
           children: [{ index: true, element: <PaymentLog /> }],
         },
 
         {
           path: "payments/:id",
-          element: <MyPage />,
+          element: (
+            <UserProtectedRoute>
+              <MyPage />
+            </UserProtectedRoute>
+          ),
           children: [{ index: true, element: <PaymentDetail /> }],
         },
       ],
@@ -130,11 +169,18 @@ function App() {
     { path: "/login", element: <LoginPage /> },
     { path: "/signup", element: <SignUpPage /> },
     { path: "/find-password", element: <FindPasswordPage /> },
-    { path: "/password-reset/confirm", element: <ResetPasswordPage /> },    
+    {
+      path: "/password-reset/confirm",
+      element: (
+        <UserProtectedRoute>
+          <MyPage />
+        </UserProtectedRoute>
+      ),
+    },
 
     // 관리자라우트
     ...adminRoutes,
-    
+
     { path: "*", element: <NotFoundPage /> }, //404낫파운드
   ]);
 
