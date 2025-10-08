@@ -261,7 +261,7 @@ const BookListRowLoop = ({ books, onCardClick }) => {
   return (
     <>
       <MainBanner
-        image="main-banner.jpg"
+        image="main-banner2.jpg"
         title="책으로 여는 하루"
         subtitle="좋은 책과 함께 오늘을 시작하세요.."
         buttonText="전체 도서 보기"
