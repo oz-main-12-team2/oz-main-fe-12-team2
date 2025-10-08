@@ -7,8 +7,6 @@ import Loading from "../common/Loading";
 import "../../styles/paymentdetail.scss";
 import KRW from "../../utils/krw";
 
-const NO_IMG = "/no-image.jpg";
-
 function PaymentDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,29 +16,6 @@ function PaymentDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelling, setIsCancelling] = useState(false);
   const [error, setError] = useState("");
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       setError("");
-
-  //       const paymentRes = await fetchPaymentById(id);
-  //       setPayment(paymentRes);
-
-  //       if (paymentRes?.order_id) {
-  //         const orderRes = await fetchOrderById(paymentRes.order_id);
-  //         setOrder(orderRes);
-  //       }
-  //     } catch (e) {
-  //       setError(e.message || "결제 상세를 불러오지 못했습니다.");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [id]);
 
   // 결제/주문 재조회 (취소 후에도 사용)
   const reload = useCallback(async () => {
@@ -104,17 +79,15 @@ function PaymentDetail() {
         <section className="receipt-section">
           <h2>결제 정보</h2>
           <ul>
-            <li><strong>결제번호:</strong> {payment.transaction_id}</li>
-            <li><strong>주문번호:</strong> {payment.order_id}</li>
-            <li><strong>결제수단:</strong> {payment.method}</li>
+            <li><strong>결제번호</strong> {payment.transaction_id}</li>
+            <li><strong>주문번호</strong> {payment.order_id}</li>
+            <li><strong>결제수단</strong> {payment.method}</li>
             <li>
-              <strong>결제상태:</strong> 
-              {/* {payment.status} */}
+              <strong>결제상태</strong> 
               <span className={`status-text ${payment.status}`}>{payment.status}</span>
             </li>
-            {/* <li><strong>결제금액:</strong> {Number(payment.total_price).toLocaleString()}원</li> */}
-            <li><strong>결제금액:</strong> {KRW(payment.total_price)}원</li>
-            <li><strong>결제일시:</strong> {new Date(payment.created_at).toLocaleString()}</li>
+            <li><strong>결제금액</strong> {KRW(payment.total_price)}원</li>
+            <li><strong>결제일시</strong> {new Date(payment.created_at).toLocaleString()}</li>
           </ul>
         </section>
       )}
@@ -124,11 +97,11 @@ function PaymentDetail() {
         <section className="receipt-section">
           <h2>주문 정보</h2>
           <ul>
-            <li><strong>주문번호:</strong> {order.order_number}</li>
-            <li><strong>수취인:</strong> {order.recipient_name}</li>
-            <li><strong>주소:</strong> {order.recipient_address}</li>
-            <li><strong>전화번호:</strong> {order.recipient_phone}</li>
-            <li><strong>주문상태:</strong> {order.status}</li>
+            <li><strong>주문번호</strong> {order.order_number}</li>
+            <li><strong>수취인</strong> {order.recipient_name}</li>
+            <li><strong>주소</strong> {order.recipient_address}</li>
+            <li><strong>전화번호</strong> {order.recipient_phone}</li>
+            <li><strong>주문상태</strong> {order.status}</li>
           </ul>
 
           <div className="order-items">

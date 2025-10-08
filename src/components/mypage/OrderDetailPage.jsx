@@ -57,13 +57,13 @@ export default function OrderDetailPage() {
         </ul>
 
         <div className="order-summary">
-          <strong>합계: {subtotal.toLocaleString()}원</strong>
+          <strong>합계 {subtotal.toLocaleString()}원</strong>
         </div>
       </section>
       
       <div className="go-back">
           <Button
-            onClick={() => navigate("/orderlog")}
+            onClick={() => navigate(-1)}
           >
             뒤로가기
           </Button>
