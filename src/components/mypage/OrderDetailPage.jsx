@@ -29,6 +29,12 @@ export default function OrderDetailPage() {
   if (loading) return <Loading loadingText="주문 상세 불러오는 중..." size={40} />;
   if (!order) return <p>주문 정보를 찾을 수 없습니다.</p>;
 
+  // ✅ 소계 합계 계산
+  const subtotal = order.items.reduce(
+    (acc, item) => acc + Number(item.total_price || 0),
+    0
+  );
+
   return (
     <div className="order-detail">
       <h1>주문 상세 #{order.order_number}</h1>
@@ -49,11 +55,15 @@ export default function OrderDetailPage() {
             </li>
           ))}
         </ul>
+
+        <div className="order-summary">
+          <strong>합계 {subtotal.toLocaleString()}원</strong>
+        </div>
       </section>
       
       <div className="go-back">
           <Button
-            onClick={() => navigate("/orderlog")}
+            onClick={() => navigate(-1)}
           >
             뒤로가기
           </Button>

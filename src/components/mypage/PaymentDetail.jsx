@@ -1,0 +1,145 @@
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { fetchOrderById, fetchPaymentById, cancelPayment } from "../../api/order";
+import { alertComfirm, alertError, alertSuccess } from "../../utils/alert";
+import Button from "../common/Button";
+import Loading from "../common/Loading";
+import "../../styles/paymentdetail.scss";
+import KRW from "../../utils/krw";
+
+function PaymentDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [payment, setPayment] = useState(null);
+  const [order, setOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [error, setError] = useState("");
+
+  // 결제/주문 재조회 (취소 후에도 사용)
+  const reload = useCallback(async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const p = await fetchPaymentById(id);
+      setPayment(p);
+
+      if (p?.order_id) {
+        const o = await fetchOrderById(p.order_id);
+        setOrder(o);
+      } else {
+        setOrder(null);
+      }
+    } catch (e) {
+      setError(e.message || "결제 상세를 불러오지 못했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  const canCancel = useMemo(() => {
+    if (!payment) return false;
+    return payment.status === "대기" || payment.status === "성공";
+  }, [payment]);
+
+  const handleCancel = async () => {
+    if (!payment?.id) return;
+    const { isConfirmed } = await alertComfirm(
+      "결제 취소",
+      "해당 결제를 취소하시겠습니까?"
+    );
+    if (!isConfirmed) return;
+
+    try {
+      setIsCancelling(true);
+      await cancelPayment(payment.id);
+      await alertSuccess("취소 완료", "결제가 성공적으로 취소되었습니다.");
+      await reload(); // 상태/화면 최신화
+    } catch (e) {
+      await alertError("결제 취소 실패", e.message || "취소 처리 중 오류가 발생했습니다.");
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
+  if (isLoading) return <Loading loadingText="결제 내역 불러오는 중" size={40} />;
+  if (error) return <p className="error">{error}</p>;
+
+  return (
+    <div className="payment-detail">
+      <h1 className="detail-title">결제 상세 내역</h1>
+
+      {/* 결제 정보 */}
+      {payment && (
+        <section className="receipt-section">
+          <h2>결제 정보</h2>
+          <ul>
+            <li><strong>결제번호</strong> {payment.transaction_id}</li>
+            <li><strong>주문번호</strong> {payment.order_id}</li>
+            <li><strong>결제수단</strong> {payment.method}</li>
+            <li>
+              <strong>결제상태</strong> 
+              <span className={`status-text ${payment.status}`}>{payment.status}</span>
+            </li>
+            <li><strong>결제금액</strong> {KRW(payment.total_price)}원</li>
+            <li><strong>결제일시</strong> {new Date(payment.created_at).toLocaleString()}</li>
+          </ul>
+        </section>
+      )}
+
+      {/* 주문 정보 */}
+      {order && (
+        <section className="receipt-section">
+          <h2>주문 정보</h2>
+          <ul>
+            <li><strong>주문번호</strong> {order.order_number}</li>
+            <li><strong>수취인</strong> {order.recipient_name}</li>
+            <li><strong>주소</strong> {order.recipient_address}</li>
+            <li><strong>전화번호</strong> {order.recipient_phone}</li>
+            <li><strong>주문상태</strong> {order.status}</li>
+          </ul>
+
+          <div className="order-items">
+            {order.items.map((item) => (
+              <div key={item.id} className="order-item">
+                <img
+                  src={item.product?.image || "/no-image.jpg"}
+                  alt={item.product?.name || ""}
+                />
+                <div className="item-info">
+                  <p className="name">{item.product?.name}</p>
+                  <p className="qty">수량: {item.quantity}개</p>
+                  <p className="price">
+                    {/* {Number(item.total_price).toLocaleString()}원 */}
+                    {KRW(item.total_price)}원
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className="button-group">
+        <Button onClick={() => navigate(`/orderlog/${order.id}`)}>
+          주문 상세 보기
+        </Button>
+        <Button variant="secondary" onClick={() => navigate(-1)}>
+          목록으로 돌아가기
+        </Button>
+        {canCancel && (
+          <Button variant="danger" onClick={handleCancel} disabled={isCancelling}>
+            {isCancelling ? "취소 중..." : "결제 취소"}
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default PaymentDetail;

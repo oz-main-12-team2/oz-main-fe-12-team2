@@ -26,6 +26,8 @@ import OrderLog from "./components/mypage/OrderLog";
 import OrderDetailPage from "./components/mypage/OrderDetailPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import Layout from "./pages/Layout";
+import PaymentLog from "./components/mypage/PaymentLog";
+import PaymentDetail from "./components/mypage/PaymentDetail";
 
 function App() {
   const getUserFromStore = useUserStore((state) => state.getUser);
@@ -107,6 +109,19 @@ function App() {
           path: "/orderlog/:id",
           element: <MyPage />,
           children: [{ index: true, element: <OrderDetailPage /> }],
+        },
+
+        // 결제 내역
+        {
+          path: "payments",
+          element: <MyPage />,
+          children: [{ index: true, element: <PaymentLog /> }],
+        },
+
+        {
+          path: "payments/:id",
+          element: <MyPage />,
+          children: [{ index: true, element: <PaymentDetail /> }],
         },
       ],
     },
