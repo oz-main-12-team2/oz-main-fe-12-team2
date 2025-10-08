@@ -102,7 +102,7 @@ function PaymentLog() {
 
   return (
     <div className="mypayments-page">
-      <h1 className="mypayments-title">결제 내역</h1>
+      <p className="mypayments-title">결제내역</p>
 
       <div className="payments-meta">
         <span className="payments-total">총 {totalCount.toLocaleString()}건</span>

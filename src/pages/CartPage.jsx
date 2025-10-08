@@ -245,7 +245,7 @@ function CartPage() {
 
   return (
     <div className="cart-page">
-      <h2>장바구니</h2>
+      <p className="cart-title">장바구니</p>
 
       <div className="cart-tabs">
         <div

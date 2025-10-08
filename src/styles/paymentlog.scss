@@ -1,16 +1,12 @@
 @import "./var.scss";
 
 .mypayments-page {
-  padding: 1rem 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 0;
 
   .mypayments-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #1e293b;
+    font-size: 1.25rem; 
+    font-weight: bold;
+    padding: 0.5rem 0;
   }
 
   // 상단 필터
@@ -147,9 +143,6 @@
     font-size: 0.85rem;
     color: #64748b;
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
-    background: #f9fafb;
-    border-radius: 6px 6px 0 0;
 
     .h {
       text-align: left;
@@ -163,18 +156,18 @@
   .payments-list {
     display: flex;
     flex-direction: column;
+    margin-bottom: 1rem;
     gap: 0.5rem;
-    margin-top: 0.5rem;
 
     .payment-row {
       display: grid;
       grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 1fr;
       align-items: center;
-      font-size: 0.9rem;
       background: #fff;
       padding: 0.7rem;
       border-radius: 6px;
       border: 1px solid #f1f5f9;
+      cursor: pointer;
       transition: background-color 0.2s ease, transform 0.15s ease;
 
       &:hover {

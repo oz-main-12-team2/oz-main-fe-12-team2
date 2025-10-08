@@ -16,6 +16,7 @@ export default function OrderTableHeader({ compact = false, className = "" }) {
       <span className="h h--qty">수량</span>
       <span className="h h--total">총액</span>
       <span className="h h--status">상태</span>
+      <span className="h h--items">상품</span>
     </div>
   );
 }
