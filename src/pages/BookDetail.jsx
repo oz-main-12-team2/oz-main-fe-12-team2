@@ -60,39 +60,33 @@ function BookDetail() {
   if (loading)
     return (
       <div className="book-detail-page">
-        <Header />
         <div className="base-container">
           <main className="book-detail-container">
             <p>도서 정보를 불러오는 중입니다...</p>
           </main>
         </div>
-        <Footer />
       </div>
     );
 
   if (error)
     return (
       <div className="book-detail-page">
-        <Header />
         <div className="base-container">
           <main className="book-detail-container">
             <p className="error-message">오류 발생: {error}</p>
           </main>
         </div>
-        <Footer />
       </div>
     );
 
   if (!bookDetail)
     return (
       <div className="book-detail-page">
-        <Header />
         <div className="base-container">
           <main className="book-detail-container">
             <p>요청하신 도서 정보를 찾을 수 없습니다.</p>
           </main>
         </div>
-        <Footer />
       </div>
     );
 

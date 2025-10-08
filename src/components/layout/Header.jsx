@@ -43,6 +43,26 @@ function Header() {
   const setCartItems = useCartStore((state) => state.setCartItems);
   const cartCount = useCartStore((state) => state.cartCount);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.querySelector(".header");
+      const scrollY = window.scrollY;
+      const fixPoint = 200;
+
+      if (scrollY > fixPoint) {
+        header.classList.add("fixed");
+      } else {
+        header.classList.remove("fixed");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   // 항상 searchValue를 url query와 동기화
   useEffect(() => {
     setSearchValue(query);
@@ -71,6 +91,8 @@ function Header() {
     if (!searchValue.trim()) return;
 
     navigate(`/search?query=${encodeURIComponent(searchValue)}`);
+
+    setIsMobileSearchOpen(false); // 모바일 검색창 닫기
   };
 
   const handleKeyDown = (e) => {
@@ -86,11 +108,13 @@ function Header() {
       navigate(`/search?query=${encodeURIComponent(trimmed)}`, {
         replace: location.pathname.startsWith("/search"),
       });
+      setIsMobileSearchOpen(false); // 모바일 검색창 닫기
     } else {
       // 검색창이 비워졌고 현재 검색 페이지면 메인 이동
       if (location.pathname.startsWith("/search")) {
         navigate("/", { replace: true });
       }
+      setIsMobileSearchOpen(false); // 모바일 검색창 닫기
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
