@@ -194,7 +194,7 @@ function PaymentLog() {
 
               <span className="c c--tid">{pay.transaction_id || "-"}</span>
               <span className="c c--method">{pay.method}</span>
-              <span className="c c--status">{pay.status}</span>
+              <span className={`c c--status ${pay.status}`}>{pay.status}</span>
               <span className="c c--total">
                 {(Number(pay.total_price) || 0).toLocaleString()}원
               </span>

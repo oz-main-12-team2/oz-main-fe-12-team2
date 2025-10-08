@@ -104,6 +104,24 @@ export const fetchPayments = async (params = {}) => {
 
 // 세부 결제 조회
 export const fetchPaymentById = async (id) => {
-  const res = await api.get(`/payments/${id}`);
+  const res = await api.get(`/payments/${id}/`);
   return res.data;
+};
+
+// 결제 취소
+export const cancelPayment = async (id) => {
+  try {
+    const res = await api.post(`/payments/${id}/cancel/`);
+    return res.data; // 보통 { id, status, ... } 형태 갱신값 반환
+  } catch (e) {
+    if (e.response?.data) {
+      const data = e.response.data;
+      const msgs = [];
+      for (const k in data) {
+        msgs.push(Array.isArray(data[k]) ? data[k].join(", ") : String(data[k]));
+      }
+      throw new Error(msgs.join("\n") || "결제 취소에 실패했습니다.");
+    }
+    throw new Error(e.message || "결제 취소 중 오류가 발생했습니다.");
+  }
 };

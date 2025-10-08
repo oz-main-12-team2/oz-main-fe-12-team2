@@ -142,7 +142,7 @@
   // 헤더
   .paymentrow-header {
     display: grid;
-    grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
+    grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 1fr;
     font-weight: 600;
     font-size: 0.85rem;
     color: #64748b;
@@ -168,7 +168,7 @@
 
     .payment-row {
       display: grid;
-      grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
+      grid-template-columns: 60px 1fr 1fr 1fr 1fr 1fr 1fr;
       align-items: center;
       font-size: 0.9rem;
       background: #fff;
@@ -263,10 +263,9 @@
 
     .paymentrow-header,
     .payment-row {
-      grid-template-columns: 50px 1fr 1fr;
       grid-template-areas:
         "thumb items items"
-        "tid method"
+        "tid order method"
         "status total date";
 
       .h--thumb,

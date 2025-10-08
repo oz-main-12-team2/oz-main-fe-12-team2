@@ -57,7 +57,7 @@ export default function OrderDetailPage() {
         </ul>
 
         <div className="order-summary">
-          <strong>총 소계: {subtotal.toLocaleString()}원</strong>
+          <strong>합계: {subtotal.toLocaleString()}원</strong>
         </div>
       </section>
       
