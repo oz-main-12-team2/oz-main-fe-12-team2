@@ -36,6 +36,7 @@
         }
 
         .status-text {
+          margin-left: 0.2rem;
           font-weight: 700;
           &.대기 {
             color: $gray-500;
