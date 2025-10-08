@@ -172,7 +172,11 @@ function Header() {
           <div className="header-icon-wrap pc-only">
             <Link to="/cart" className="header-cart">
               <LuShoppingCart className="header-cart-icon" />
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              {cartCount > 0 && (
+                <span className="cart-badge">
+                  {cartCount >= 10 ? "9+" : cartCount}
+                </span>
+              )}
             </Link>
 
             <div className="header-actions">
@@ -257,7 +261,9 @@ function Header() {
                     }}
                   />
                   {cartCount > 0 && (
-                    <span className="cart-badge">{cartCount}</span>
+                    <span className="cart-badge">
+                      {cartCount >= 10 ? "9+" : cartCount}
+                    </span>
                   )}
                 </div>
 
