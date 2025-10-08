@@ -75,11 +75,11 @@ function Header() {
         "정말 로그아웃 하시겠습니까?"
       );
       if (!alert.isConfirmed) return;
+      navigate("/", { replace: true });
+      await logout();
       setCartItems([]);
       clearUser();
-      await logout();
       await alertSuccess("로그아웃 성공", "로그아웃이 완료되었습니다");
-      navigate("/", { replace: true });
     } catch (e) {
       console.error("로그아웃 실패 : ", e);
     } finally {

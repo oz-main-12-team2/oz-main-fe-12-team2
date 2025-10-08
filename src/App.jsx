@@ -104,8 +104,22 @@ function App() {
           ),
           children: [{ index: true, element: <CartPage /> }],
         },
-        { path: "checkout", element: <CheckoutPage /> },
-        { path: "/checkout/success", element: <PaymentSuccessPage /> },
+        {
+          path: "checkout",
+          element: (
+            <UserProtectedRoute>
+              <CheckoutPage />
+            </UserProtectedRoute>
+          ),
+        },
+        {
+          path: "/checkout/success",
+          element: (
+            <UserProtectedRoute>
+              <PaymentSuccessPage />
+            </UserProtectedRoute>
+          ),
+        },
 
         // 주문 내역
         {

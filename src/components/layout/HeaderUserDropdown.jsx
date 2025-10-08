@@ -4,6 +4,8 @@ import "../../styles/headeruserdropdown.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LuShoppingCart, LuLogOut } from "react-icons/lu";
 import { AiOutlineUser } from "react-icons/ai";
+import { MdPayment } from "react-icons/md";
+import { RiFileList2Line } from "react-icons/ri";
 
 function HeaderUserDropdown({ user, onLogout }) {
   const [open, setOpen] = useState(false);
@@ -26,7 +28,7 @@ function HeaderUserDropdown({ user, onLogout }) {
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
-  
+
   return (
     <div className="header-user-dropdown" ref={dropdownRef}>
       <FaUserCircle
@@ -52,6 +54,14 @@ function HeaderUserDropdown({ user, onLogout }) {
             <div className="dropdown-item" onClick={() => navigate("/cart")}>
               <LuShoppingCart className="dropdown-item-icon" />
               <span className="dropdown-item-text">장바구니</span>
+            </div>
+            <div className="dropdown-item" onClick={() => navigate("/orderlog")}>
+              <RiFileList2Line className="dropdown-item-icon" />
+              <span className="dropdown-item-text">주문내역</span>
+            </div>
+            <div className="dropdown-item" onClick={() => navigate("/payments")}>
+              <MdPayment className="dropdown-item-icon" />
+              <span className="dropdown-item-text">결제내역</span>
             </div>
             <div className="dropdown-item" onClick={onLogout}>
               <LuLogOut className="dropdown-item-icon" />
