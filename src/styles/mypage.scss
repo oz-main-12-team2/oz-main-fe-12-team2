@@ -169,7 +169,13 @@
   top: 0;
   background: #fff;
   z-index: 5;
-  padding-top: 0.25rem;
+  padding-top: 0.5rem;
+
+  p {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+  }
 }
 
 .mypage-tabs {
@@ -198,7 +204,7 @@
 
     &.is-active {
       color: #111827;
-      border-bottom-color: #111827;
+      border-bottom: 3px solid #03624c;
     }
   }
 }

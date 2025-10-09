@@ -329,11 +329,11 @@
     flex: 2;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
     height: 100%;
 
     .product-detail-name {
-      font-size: 1.5rem;
+      font-size: 1.125rem;
       font-weight: bold;
       width: 350px;
       white-space: normal; // 자동 줄바꿈 허용
@@ -353,15 +353,14 @@
     }
 
     .product-detail-meta {
-      font-size: 0.95rem;
+      font-size: 0.8rem;
       color: $gray-500;
       margin-bottom: 0.5rem;
     }
 
     .product-detail-price {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 700;
-      color: #333;
     }
 
     .product-detail-stock {
@@ -369,15 +368,39 @@
       color: $gray-500;
       margin-bottom: 0.5rem;
     }
+  }
+}
 
-    .product-detail-description {
-      font-size: 0.95rem;
-      color: #333;
-      line-height: 1.5;
-      white-space: pre-wrap; // 줄바꿈 유지
-      border-top: 1px solid $gray-500;
-      padding-top: 1rem;
-    }
+.product-detail-description-wrap {
+  margin: 1rem 0 2rem 0;
+  border-top: 1px solid $gray-300;
+  padding: 1rem 0 1rem 0.5rem;
+
+  .sub-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    padding-left: 0.6rem;
+    position: relative;
+  }
+
+  .sub-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 52%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.2rem;
+    background-color: $main-color;
+  }
+
+  .product-detail-description {
+    font-size: 0.8rem;
+    color: $gray-500;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: keep-all;
   }
 }
 

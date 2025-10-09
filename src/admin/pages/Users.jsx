@@ -114,7 +114,11 @@ function Users() {
       { header: "ID", accessorKey: "id" },
       { header: "이메일", accessorKey: "email" },
       { header: "이름", accessorKey: "name" },
-      { header: "주소", accessorKey: "address" },
+      {
+        header: "주소",
+        accessorKey: "address",
+        cell: (info) => info.getValue() || "-",
+      },
       {
         header: "소셜로그인",
         accessorKey: "is_social",
@@ -131,14 +135,23 @@ function Users() {
         cell: (info) => formatDateShort(info.getValue()),
       },
       {
-        header: "수정일",
+        header: "수정일자",
         accessorKey: "updated_at",
         cell: (info) => formatDateShort(info.getValue()),
       },
       {
         header: "활성화",
         accessorKey: "is_active",
-        cell: (info) => (info.getValue() ? "활성" : "비활성"),
+        cell: (info) => (
+          <span
+            style={{
+              color: info.getValue() ? "blue" : "red",
+              fontWeight: "600",
+            }}
+          >
+            {info.getValue() ? "활성" : "비활성"}
+          </span>
+        ),
       },
     ],
     []

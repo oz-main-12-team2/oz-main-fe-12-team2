@@ -307,7 +307,7 @@ function BookListRowLoop({ books, onCardClick }) {
     };
 
     const handleImgError = (e) => (e.currentTarget.src = DEFAULT_IMAGE);
-
+    
     return (
         <div
             className="enhanced-carousel-wrapper"
@@ -369,7 +369,7 @@ function BookListRowLoop({ books, onCardClick }) {
     );
 }
 
-    // MainPage 컴포넌트 (ESLint 경고 처리됨)
+   // MainPage 컴포넌트 (ESLint 경고 처리됨)
 function MainPage() {
     useTitle();
     const [bestBooks, setBestBooks] = useState([]);

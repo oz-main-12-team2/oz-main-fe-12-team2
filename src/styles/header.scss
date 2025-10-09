@@ -1,9 +1,19 @@
 @import "./var.scss";
 
+.header.fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
 .header {
   background-color: #fff;
   border-bottom: 1px solid #e5e7eb;
   padding: 1rem;
+  position: relative; /* 기본 위치 */
+  transition: all 0.3s ease;
 
   .header-wrap {
     max-width: 1280px;
@@ -75,7 +85,7 @@
   .mobile-search-wrap {
     position: absolute;
     left: 1rem;
-    top: 50%;
+    top: 52%;
     transform: translateY(-50%);
     z-index: 200;
 
@@ -128,7 +138,7 @@
     font-size: 0.65rem;
     font-weight: bold;
     padding: 1px 4px;
-    border-radius: 9999px;
+    border-radius: 50%;
     min-width: 14px;
     height: 16px;
     line-height: 1;

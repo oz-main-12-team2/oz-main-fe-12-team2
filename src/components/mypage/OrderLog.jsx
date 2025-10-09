@@ -54,7 +54,7 @@ function OrderLog() {
   return (
     <>
       <div className="myorders-page">
-        <h1 className="myorders-title">주문 내역</h1>
+        <p className="myorders-title">주문내역</p>
         <div className="orders-meta">
           <span className="orders-total">총 {totalCount.toLocaleString()}건</span>
         </div>
@@ -111,29 +111,6 @@ function OrderLog() {
               )
             })
           }
-
-          {/* {!isLoading &&
-            !error &&
-            orders.map((order) => {
-              const qty = (order.items || []).reduce(
-                (acc, it) => acc + Number(it.quantity || 0),
-                0
-              );
-              const total = Number(order.total_price || 0);
-              return (
-                <div key={order.id} className="order-row" onClick={() => navigate(`/orderlog/${order.id}`)}>
-                  <span className="c c--id">{order.order_number}</span>
-                  <span className="c c--date">
-                    {new Date(order.created_at).toLocaleDateString()}
-                  </span>
-                  <span className="c c--recipient">{order.recipient_name}</span>
-                  <span className="c c--qty">{qty}개</span>
-                  <span className="c c--total">{total.toLocaleString()}원</span>
-                  <span className="c c--status">{order.status}</span>
-                  <span className="c c--chev">▶</span>
-                </div>
-              );
-            })} */}
         </div>
         
         <Pagination
