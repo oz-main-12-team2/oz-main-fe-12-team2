@@ -127,7 +127,7 @@ function Payments() {
         accessorKey: "transaction_id",
         cell: (info) => info.getValue() || "-",
       },
-      { header: "주문번호", accessorKey: "order_id" },
+      { header: "주문 ID", accessorKey: "order_id" },
       {
         header: "회원 ID",
         accessorKey: "user",
