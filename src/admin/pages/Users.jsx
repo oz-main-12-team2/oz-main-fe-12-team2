@@ -131,14 +131,23 @@ function Users() {
         cell: (info) => formatDateShort(info.getValue()),
       },
       {
-        header: "수정일",
+        header: "수정일자",
         accessorKey: "updated_at",
         cell: (info) => formatDateShort(info.getValue()),
       },
       {
         header: "활성화",
         accessorKey: "is_active",
-        cell: (info) => (info.getValue() ? "활성" : "비활성"),
+        cell: (info) => (
+          <span
+            style={{
+              color: info.getValue() ? "blue" : "red",
+              fontWeight: "600",
+            }}
+          >
+            {info.getValue() ? "활성" : "비활성"}
+          </span>
+        ),
       },
     ],
     []
