@@ -114,7 +114,11 @@ function Users() {
       { header: "ID", accessorKey: "id" },
       { header: "이메일", accessorKey: "email" },
       { header: "이름", accessorKey: "name" },
-      { header: "주소", accessorKey: "address" },
+      {
+        header: "주소",
+        accessorKey: "address",
+        cell: (info) => info.getValue() || "-",
+      },
       {
         header: "소셜로그인",
         accessorKey: "is_social",
