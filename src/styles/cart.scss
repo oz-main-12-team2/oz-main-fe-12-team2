@@ -77,9 +77,10 @@
       font-size: 0.9rem;
     }
 
-    .btn--secondary:hover {
+    .btn--secondary:not(:disabled):hover {
       background-color: $red-500 !important;
       color: #fff;
+      cursor: pointer; // disabled 아닌 경우만 포인터 커서 적용
     }
   }
 
