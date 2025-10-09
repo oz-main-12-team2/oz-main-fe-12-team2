@@ -69,19 +69,11 @@ export async function getBestSellerProducts() {
   try {
     // '/api/stats/rankings/' 엔드포인트 호출
   const res = await api.get(`/stats/rankings/`);
-
-    // 서버 응답이 배열 자체이거나 { rankings: [...] } 객체일 수 있으므로
-    // MainPage.jsx에서 안전하게 처리할 수 있도록 응답을 반환합니다.
-    // DRF의 경우 대부분 배열을 포함한 객체 형태이므로, 일반적으로는 res.data.rankings를 사용합니다.
-    // 하지만 현재는 오류 해결을 위해 MainPage에서 처리하도록 res.data를 반환합니다.
     return res.data; 
-
   } catch (e) {
     if (e.response) {
       throw {
-        message:
-          e.response.data?.error ||
-          "일간 베스트셀러 목록을 불러오는 중 오류가 발생했습니다.",
+        message:e.response.data?.error || "일간 베스트셀러 목록을 불러오는 중 오류가 발생했습니다.",
         code: e.response.status,
       };
     }
