@@ -171,11 +171,7 @@ function App() {
     { path: "/find-password", element: <FindPasswordPage /> },
     {
       path: "/password-reset/confirm",
-      element: (
-        <UserProtectedRoute>
-          <MyPage />
-        </UserProtectedRoute>
-      ),
+      element: <ResetPasswordPage />,
     },
 
     // 관리자라우트
