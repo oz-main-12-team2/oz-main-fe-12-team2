@@ -1,70 +1,97 @@
-// 기존 색상 변수 그대로
+// 테마 색상 변수
 $rich-black: #000f31;
-$dark-gray: #032221;
+$dark-green: #012221;
 $bangladesh-green: #016d4d;
-$deep-green: #014034;
-$golden: #cdaa5f;
+$mountain-meadow: #20cc99;
+$caribbean-green: #00d181;
+$anti-flash-white: #f0f7f6;
 $warm-white: #fdfaf6;
-$light-gray: #f5f5f5;
 
-// ✅ 기존 book-daily-best 스타일 유지 (자동/수동 스크롤 반영)
+// Secondary colors
+$pine: #062028;
+$basil: #04553a;
+$forest: #095544;
+$frog: #178f69;
+$mint: #2f968c;
+$stone: #7d7d7d;
+$pistachio: #a4cbc4;
+
 .book-daily-best {
-  margin: 3rem 0;
+  margin: 4rem 0;
+  padding: 0 2rem;
+
   .enhanced-carousel-wrapper {
     position: relative;
     overflow: hidden;
-    padding: 2rem 0;
+    padding: 3rem 0;
+    background: $warm-white;
+    border-radius: 0;
   }
 
   .enhanced-carousel-container {
     position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
 
     .gradient-overlay {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 100px;
+      width: 120px;
       z-index: 5;
       pointer-events: none;
 
       &.left {
         left: 0;
-        background: linear-gradient(to right, $warm-white, transparent);
+        background: linear-gradient(to right, $anti-flash-white, transparent);
       }
       &.right {
         right: 0;
-        background: linear-gradient(to left, $warm-white, transparent);
+        background: linear-gradient(to left, $anti-flash-white, transparent);
       }
     }
   }
 
+  // 일간 베스트 제목 스타일
   .carousel-section-header {
-    text-align: center;
-    margin-bottom: 1.2rem;
+    text-align: left;
+    margin-bottom: 2.5rem;
+    padding: 0 0 1rem 0; // 하단 여백을 위해 padding-bottom만 유지
+    position: relative;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    background: none;
+    border-left: none;
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: 2px solid $pistachio;
 
     .carousel-section-title {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: $rich-black;
-      display: inline-flex;
-      align-items: center;
-
-      .title-icon-before {
-        width: 10px;
-        height: 10px;
-        background: $golden;
-        border-radius: 50%;
-        margin-right: 10px;
+      font-size: 2rem;
+      font-weight: 600;
+      color: $bangladesh-green;
+      margin-bottom: 0; // margin-bottom을 padding-bottom으로 대체했으므로 0으로 설정
+      letter-spacing: -0.5px;
+      font-family: 'Axiforma', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: block; // flex 제거
+      
+      &::before {
+        content: none;
       }
+    }
+
+    &::after {
+      content: none;
     }
   }
 
   .enhanced-carousel-track {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     overflow-x: scroll;
     scroll-behavior: smooth;
-    padding: 1rem 0;
+    padding: 2rem 3rem;
     touch-action: pan-x;
     cursor: grab;
     flex-wrap: nowrap;
@@ -82,76 +109,209 @@ $light-gray: #f5f5f5;
   }
 
   .enhanced-book-card {
-    flex: 0 0 300px;
+    flex: 0 0 280px;
     flex-shrink: 0;
-    background: $light-gray;
+    background: white;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.5rem;
     position: relative;
     cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 12px rgba($bangladesh-green, 0.1);
+    border: 2px solid transparent;
 
     &:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba($bangladesh-green, 0.2);
+      border-color: $caribbean-green;
     }
 
     .bestseller-badge {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: -8px;
+      left: -8px;
       background: $bangladesh-green;
-      color: $warm-white;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      border: 2px solid $golden;
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 800;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba($bangladesh-green, 0.35);
+      border: 3px solid white;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid $mountain-meadow;
+      }
     }
 
     .enhanced-book-image {
-      height: 20rem;
+      height: 22rem;
       width: 100%;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      background: $anti-flash-white;
+      border: 1px solid rgba($pistachio, 0.2);
 
       img {
         width: 100%;
         height: 100%;
         object-fit: contain;
-        border-radius: 8px;
+        border-radius: 4px;
+        transition: transform 0.3s ease;
       }
+    }
+
+    &:hover .enhanced-book-image img {
+      transform: scale(1.02);
     }
 
     .enhanced-book-details {
-      text-align: center;
+      text-align: left;
+      padding-top: 0.5rem;
 
       h3 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: $deep-green;
-        white-space: nowrap;
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: $dark-green;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+        min-height: 2.8rem;
       }
 
-      .enhanced-book-price {
-        font-size: 1rem;
-        font-weight: bold;
-        color: $rich-black;
-      }
+      p {
+        font-size: 0.875rem;
+        color: $stone;
+        margin-bottom: 0.4rem;
+        line-height: 1.5;
 
-      .enhanced-book-author {
-        font-size: 0.85rem;
-        color: $dark-gray;
-        opacity: 0.8;
+        &.enhanced-book-price {
+          font-size: 1.125rem;
+          font-weight: 700;
+          color: $bangladesh-green;
+          margin-top: 0.75rem;
+          letter-spacing: -0.3px;
+        }
       }
     }
   }
+
+  //도트 인디케이터
+  .dot-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2rem;
+    padding: 1rem 0;
+
+    .dot-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: rgba($mint, 0.25);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: transparent;
+        transition: background 0.3s ease;
+      }
+
+      &:hover {
+        background-color: rgba($mountain-meadow, 0.5);
+        transform: scale(1.15);
+
+        &::after {
+          background: rgba($mountain-meadow, 0.1);
+        }
+      }
+
+      &.active {
+        background-color: $bangladesh-green;
+        width: 24px;
+        height: 8px;
+        border-radius: 4px;
+        box-shadow: 0 0 12px rgba($bangladesh-green, 0.3);
+      }
+
+      &:focus {
+        outline: none;
+
+        &::after {
+          background: rgba($mountain-meadow, 0.15);
+        }
+      }
+    }
+  }
+}
+
+// 전체 도서
+.book-list {
+  padding: 3rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: $bangladesh-green;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $pistachio;
+    letter-spacing: -0.5px;
+    font-family: 'Axiforma', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .status-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: $stone;
+    font-size: 1rem;
+    
+    &.no-more-books {
+      color: $mint;
+      font-weight: 500;
+    }
+
+    &.error-message {
+      color: $stone;
+    }
+  }
+}
+
+// 메인 페이지 컨테이너 배경
+.main-page-container {
+  background: linear-gradient(to bottom, $warm-white, white);
+  min-height: 100vh;
+}
+
+.base-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
