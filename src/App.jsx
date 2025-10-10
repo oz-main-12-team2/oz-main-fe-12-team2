@@ -173,7 +173,7 @@ function App() {
       path: "/password-reset/confirm",
       element: (
         <UserProtectedRoute>
-          <MyPage />
+          <ResetPasswordPage />
         </UserProtectedRoute>
       ),
     },
