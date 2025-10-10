@@ -12,7 +12,7 @@ function NotFoundPage() {
   return (
     <div className="notfound-page">
       <div className="notfound-content">
-        <img src="/logo.svg" alt="로고" className="notfound-logo" />
+        <img src="/new-logo.svg" alt="로고" className="notfound-logo" />
 
         <h1 className="notfound-title">404</h1>
         <h2 className="notfound-sub-title">페이지를 찾을 수 없습니다</h2>
