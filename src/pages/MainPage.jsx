@@ -307,7 +307,7 @@ function BookListRowLoop({ books, onCardClick }) {
     };
 
     const handleImgError = (e) => (e.currentTarget.src = DEFAULT_IMAGE);
-    
+
     return (
         <div
             className="enhanced-carousel-wrapper"
@@ -369,7 +369,7 @@ function BookListRowLoop({ books, onCardClick }) {
     );
 }
 
-   // MainPage 컴포넌트 (ESLint 경고 처리됨)
+    // MainPage 컴포넌트 (ESLint 경고 처리됨)
 function MainPage() {
     useTitle();
     const [bestBooks, setBestBooks] = useState([]);
@@ -457,7 +457,7 @@ function MainPage() {
         <>
             
             <MainBanner
-                image="main-banner.jpg"
+                image="main-banner2.jpg"
                 title="책으로 여는 하루"
                 subtitle="좋은 책과 함께 오늘을 시작하세요.."
                 buttonText="전체 도서 보기"
