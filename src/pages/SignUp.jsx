@@ -3,12 +3,13 @@ import FormGroup from "../components/common/FormGroup";
 import Button from '../components/common/Button';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AddressAutoComplete from '../components/AddressAutoComplete';
 import { register } from '../api/user';
 import { alertError, alertSuccess } from '../utils/alert';
 
 function SignUpPage() {
+  const navigate = useNavigate(); 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -101,6 +102,7 @@ function SignUpPage() {
       const res = await register(email, name, inputPassword, confirmInputPassword, address);
 
       await alertSuccess("회원가입 성공", res.message);
+      navigate("/");
     } catch (e) {
       await alertError("회원가입 실패", e.message)
     }
