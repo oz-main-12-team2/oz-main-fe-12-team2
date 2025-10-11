@@ -9,7 +9,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { BookListRow } from "../components/common/BookListRow";
 import phoneFormat from "../utils/phoneFormat";
 import useCartStore from "../stores/cartStore";
-import { getCart } from "../api/cart";
+import { addCart, getCart } from "../api/cart";
 import { Radio } from "../components/common/CheckRadio";
 
 const METHODS = ["카드", "계좌이체", "휴대폰 결제"];
@@ -23,16 +23,22 @@ function CheckoutPage() {
 
   // ✅ CartPage에서 넘어온 선택 상품들: [{ book, quantity }]
   const buyProducts = useMemo(
-    () => (Array.isArray(location.state?.buyProducts) ? location.state.buyProducts : []),
+    () =>
+      Array.isArray(location.state?.buyProducts)
+        ? location.state.buyProducts
+        : [],
     [location.state]
-  )
+  );
+
+  const buyPath = location.state.path;
 
   // 주문 API에 보낼 선택 아이템 ID 배열
   // 백엔드가 '장바구니 아이템 ID'를 요구한다면 여기에서 p.cart_item_id 같은 필드로 바꾸세요.
   const selectedItemIds = useMemo(
-    () => buyProducts
-      .map((p) => p.book?.id ?? p.id) // book.id 우선, 없으면 p.id
-      .filter(Boolean),
+    () =>
+      buyProducts
+        .map((p) => p.book?.id ?? p.id) // book.id 우선, 없으면 p.id
+        .filter(Boolean),
     [buyProducts]
   );
 
@@ -47,11 +53,40 @@ function CheckoutPage() {
 
   // state가 없거나 비었으면 장바구니로 돌려보내기
   useEffect(() => {
-    if (!Array.isArray(buyProducts) || buyProducts.length === 0) {
-      alertError("선택된 상품이 없습니다.", "장바구니에서 상품을 선택해주세요.");
-      navigate("/cart", { replace: true });
-    }
-  }, [buyProducts, navigate]);
+    // direct로 진입한 경우에만 장바구니 추가
+    const autoAddToCartIfDirect = async () => {
+      if (buyPath === "direct" && buyProducts.length > 0) {
+        try {
+          // 현재 장바구니 상품 id 조회
+          const cartData = await getCart();
+          const cartId = Array.isArray(cartData[0]?.items)
+            ? cartData[0].items.map((item) => item.product_id)
+            : [];
+
+          // 선택상품 중 장바구니에 없는 것만 추가
+          await Promise.all(
+            buyProducts.map(async (item) => {
+              if (!cartId.includes(item.book.id)) {
+                await addCart({
+                  productId: item.book.id,
+                  quantity: item.quantity,
+                });
+              }
+            })
+          );
+          // 장바구니 상품 재적재 등 필요에 따라 추가
+        } catch (e) {
+          alertError(
+            "장바구니 추가 오류",
+            e.message || "장바구니에 상품을 담는 중 오류가 발생했습니다."
+          );
+          navigate("/cart", { replace: true });
+        }
+      }
+    };
+
+    autoAddToCartIfDirect();
+  }, [buyPath, buyProducts, navigate]);
 
   // 👉 BookListRow가 기대하는 형태로 매핑 (row 카드 규격)
   //    - image_url, name, price, id 등은 book 객체에서 꺼냄
@@ -65,7 +100,7 @@ function CheckoutPage() {
         author: item.book.author,
         publisher: item.book.publisher,
         price: Number(item.book.price || 0),
-        image_url: item.book.image_url,
+        image: item.book.image,
         isSoldOut: item.book.stock === 0,
       })),
     [buyProducts]
@@ -125,8 +160,8 @@ function CheckoutPage() {
           }
         }
 
-        setDisplayAddress(fullAddress);  // 최종 주소를 상태로 저장 input표시용
-        setAddress(fullAddress);   // 주소 검증용 state도 함께 갱신
+        setDisplayAddress(fullAddress); // 최종 주소를 상태로 저장 input표시용
+        setAddress(fullAddress); // 주소 검증용 state도 함께 갱신
       },
     }).open();
   };
@@ -153,11 +188,14 @@ function CheckoutPage() {
   };
 
   const onClickCancel = () => {
-    navigate("/cart")
-  }
+    navigate("/cart");
+  };
 
   const onConfirmPay = async () => {
-    const { isConfirmed } = await alertComfirm("결제 진행", `선택한 결제수단: ${method}\n계속 진행할까요?`);
+    const { isConfirmed } = await alertComfirm(
+      "결제 진행",
+      `선택한 결제수단: ${method}\n계속 진행할까요?`
+    );
     if (!isConfirmed) return;
 
     try {
@@ -181,26 +219,31 @@ function CheckoutPage() {
         method,
       });
 
-      await alertSuccess("주문 접수", `주문번호 #${order.order_number}로 접수되었습니다.\n결제상태: ${payment.status}\n결제금액: ${Number(payment.total_price||0).toLocaleString()}원`);
+      await alertSuccess(
+        "주문 접수",
+        `주문번호 #${order.order_number}로 접수되었습니다.\n결제상태: ${
+          payment.status
+        }\n결제금액: ${Number(payment.total_price || 0).toLocaleString()}원`
+      );
       // await alertSuccess("주문 접수", `주문번호로 접수되었습니다.`);
       // TODO: navigate(`/orders/${orderId}`);
 
-      const res = await getCart();
-      const items = Array.isArray(res[0]?.items) ? res[0].items : [];
-      const mapped = items.map((item) => ({
-        book: {
-          id: item.product_id,
-          name: item.product_name,
-          category: item.product_category,
-          author: item.product_author,
-          publisher: item.product_publisher,
-          price: Number(item.product_price),
-          stock: item.product_stock,
-          image_url: item.product_image,
-        },
-        quantity: item.quantity,
-      }));
-      setStoreCartItems(mapped);  // ✅ 헤더 카운트 갱신 포인트
+        const res = await getCart();
+        const items = Array.isArray(res[0]?.items) ? res[0].items : [];
+        const mapped = items.map((item) => ({
+          book: {
+            id: item.product_id,
+            name: item.product_name,
+            category: item.product_category,
+            author: item.product_author,
+            publisher: item.product_publisher,
+            price: Number(item.product_price),
+            stock: item.product_stock,
+            image_url: item.product_image,
+          },
+          quantity: item.quantity,
+        }));
+        setStoreCartItems(mapped); // ✅ 헤더 카운트 갱신 포인트
 
       const payload = {
         orderId,
@@ -213,14 +256,16 @@ function CheckoutPage() {
           name: p.book.name,
           price: Number(p.book.price || 0),
           qty: Number(p.quantity || 0),
-          image_url: p.book.image_url,
+          image_url: p.book.image,
         })),
       };
-
       sessionStorage.setItem("last_payment_success", JSON.stringify(payload));
       navigate("/checkout/success", { replace: true, state: payload });
     } catch (e) {
-      await alertError("결제 실패", e.message || "주문/결제 처리 중 문제가 발생했습니다.");
+      await alertError(
+        "결제 실패",
+        e.message || "주문/결제 처리 중 문제가 발생했습니다."
+      );
     } finally {
       setSubmitting(false);
       setOpenPayModal(false);
@@ -243,7 +288,9 @@ function CheckoutPage() {
               //   <button onClick={() => console.log("삭제:", book.id)}>삭제</button>
               // )}
               // ✅ 여기서 qtyMap으로 안전하게 수량 뱃지 표시
-              leftActions={(b) => <span className="qty-badge">x{qtyMap.get(b.id) || 0}</span>}
+              leftActions={(b) => (
+                <span className="qty-badge">x{qtyMap.get(b.id) || 0}</span>
+              )}
               // leftActions={(book) => (
               //   <input
               //     type="checkbox"
@@ -288,16 +335,11 @@ function CheckoutPage() {
               label="주소"
               value={displayAddress}
               onChange={(e) => {
-                  setDisplayAddress(e.target.value);
-                  setAddress(e.target.value);
-                }
-              }
+                setDisplayAddress(e.target.value);
+                setAddress(e.target.value);
+              }}
             />
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={handleAddressSearch}
-            >
+            <Button variant="secondary" size="md" onClick={handleAddressSearch}>
               주소 검색
             </Button>
 
@@ -310,11 +352,7 @@ function CheckoutPage() {
               >
                 {submitting ? "처리 중..." : "결제하기"}
               </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={onClickCancel}
-              >
+              <Button variant="secondary" size="lg" onClick={onClickCancel}>
                 취소하기
               </Button>
             </div>
@@ -327,16 +365,16 @@ function CheckoutPage() {
             // onClose={() => !submitting && setOpenPayModal(false)}
             footer={
               <>
-                <Button 
-                  variant="secondary" 
+                <Button
+                  variant="secondary"
                   // onClick={() => setOpenPayModal(false)} disabled={submitting}
                   onClick={() => setOpenPayModal(false)}
                 >
                   취소
                 </Button>
-                <Button 
-                  variant="primary" 
-                  onClick={onConfirmPay} 
+                <Button
+                  variant="primary"
+                  onClick={onConfirmPay}
                   disabled={submitting}
                 >
                   {submitting ? "처리 중..." : "확인"}
@@ -359,7 +397,7 @@ function CheckoutPage() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default CheckoutPage;

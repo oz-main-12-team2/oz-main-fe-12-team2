@@ -59,7 +59,7 @@ function CartPage() {
             publisher: item.product_publisher,
             price: Number(item.product_price),
             stock: item.product_stock,
-            image_url: item.product_image,
+            image: item.product_image,
           },
           quantity: item.quantity,
         }));
