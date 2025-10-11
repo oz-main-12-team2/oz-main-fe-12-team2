@@ -45,6 +45,7 @@ function AccountDelete() {
       await deleteUserMe();
       await alertSuccess("탈퇴 완료", "그동안 이용해주셔서 감사합니다.");
       navigate("/");
+      window.location.reload();
     } catch (e) {
       await alertError("탈퇴 실패", e.message);
     } finally {
