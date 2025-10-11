@@ -61,7 +61,7 @@ export const BookCardRow = memo(function BookCardRow({
 
       <div className="book-card-row-image">
         <img
-          src={book.image_url || DEFAULT_IMAGE}
+          src={book.image || DEFAULT_IMAGE}
           alt={book.name}
           onError={handleImgError}
         />

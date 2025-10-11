@@ -7,7 +7,9 @@ function useBuyMove() {
 
   async function navigateToCheckout(products, flag) {
     if (flag === "direct") {
-      navigate("/checkout", { state: { buyProducts: products } });
+      navigate("/checkout", {
+        state: { buyProducts: products, path: "direct" },
+      });
       return;
     }
 
@@ -32,7 +34,7 @@ function useBuyMove() {
       });
 
       // 이상 없으면 checkout 페이지로 이동
-      navigate("/checkout", { state: { buyProducts: products } });
+      navigate("/checkout", { state: { buyProducts: products, path: "cart" } });
     } catch {
       alertError("상품 구매 오류", "재고 확인 중 문제가 발생했습니다.");
     }
