@@ -9,7 +9,7 @@ export default function PaymentSuccessPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
-
+  console.log(state);
   // state 우선 → 없으면 sessionStorage에서 백업 읽기
   useEffect(() => {
     if (state && typeof state === "object") {
@@ -28,7 +28,10 @@ export default function PaymentSuccessPage() {
 
   const subtotal = useMemo(() => {
     if (!data?.items) return 0;
-    return data.items.reduce((acc, it) => acc + (Number(it.price) || 0) * (Number(it.qty) || 0), 0);
+    return data.items.reduce(
+      (acc, it) => acc + (Number(it.price) || 0) * (Number(it.qty) || 0),
+      0
+    );
   }, [data]);
 
   if (!data) {
@@ -38,7 +41,10 @@ export default function PaymentSuccessPage() {
           <h1>결제가 완료되었습니다.</h1>
           <p className="dim">주문 정보가 확인되지 않아 홈으로 이동합니다.</p>
           <div className="actions">
-            <Button variant="primary" onClick={() => navigate("/", { replace: true })}>
+            <Button
+              variant="primary"
+              onClick={() => navigate("/", { replace: true })}
+            >
               홈으로
             </Button>
           </div>
@@ -53,7 +59,8 @@ export default function PaymentSuccessPage() {
         <div className="success-head">
           <h1>결제가 완료되었습니다 🎉</h1>
           <p className="dim">
-            주문번호 <b>#{data.orderId ?? "-"}</b> / 결제수단 {data.method ?? "-"} / 결제일{" "}
+            주문번호 <b>#{data.orderId ?? "-"}</b> / 결제수단{" "}
+            {data.method ?? "-"} / 결제일{" "}
             {data.when ? new Date(data.when).toLocaleString() : "-"}
           </p>
         </div>
@@ -102,13 +109,17 @@ export default function PaymentSuccessPage() {
 
         <div className="actions">
           <Link to="/orderlog">
-            <Button variant="primary" size="md">주문내역 보기</Button>
+            <Button variant="primary" size="md">
+              주문내역 보기
+            </Button>
           </Link>
           <Link to="/">
-            <Button variant="secondary" size="md">계속 쇼핑하기</Button>
+            <Button variant="secondary" size="md">
+              계속 쇼핑하기
+            </Button>
           </Link>
         </div>
       </div>
     </>
-  )
+  );
 }
