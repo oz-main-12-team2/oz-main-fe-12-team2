@@ -100,7 +100,7 @@ function CheckoutPage() {
         author: item.book.author,
         publisher: item.book.publisher,
         price: Number(item.book.price || 0),
-        image_url: item.book.image,
+        image: item.book.image,
         isSoldOut: item.book.stock === 0,
       })),
     [buyProducts]
