@@ -423,12 +423,43 @@
     gap: 0.4rem;
 
     .image-upload-row {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 1rem; // input과 미리보기 사이 간격
+      gap: 1rem;
 
       .file-input {
-        flex-shrink: 0;
+       display: none;
+      }
+
+      label.custom-file-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100px;
+        height: 30px;
+        background-color: $gray-500;
+        font-size: 0.875rem;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $gray-700;
+        }
+      }
+
+      // 선택된 파일명
+      .file-name {
+        font-size: 0.875rem;
+        max-width: 200px;
+        color: $main-color;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .image-preview {

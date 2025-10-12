@@ -5,7 +5,17 @@ import { alertError } from "../utils/alert";
 function useBuyMove() {
   const navigate = useNavigate();
 
-  async function navigateToCheckout(products, flag) {
+  const navigateToCheckout = async (products, flag) => {
+    const directStockCheck = products[0].book.stock;
+
+    if (directStockCheck === 0) {
+      alertError(
+        "상품 재고 부족",
+        `${products[0].book.name} 상품 재고가 부족합니다. 재고: ${directStockCheck}`
+      );
+      return;
+    }
+    
     if (flag === "direct") {
       navigate("/checkout", {
         state: { buyProducts: products, path: "direct" },
@@ -38,7 +48,7 @@ function useBuyMove() {
     } catch {
       alertError("상품 구매 오류", "재고 확인 중 문제가 발생했습니다.");
     }
-  }
+  };
 
   return navigateToCheckout;
 }

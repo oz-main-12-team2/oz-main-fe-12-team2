@@ -97,7 +97,7 @@ function Orders() {
           return (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <img
-                src={firstItem.product.image_url || "/no-image.jpg"}
+                src={firstItem.product.image || "/no-image.jpg"}
                 alt={firstItem.product.name}
                 style={{
                   width: 40,

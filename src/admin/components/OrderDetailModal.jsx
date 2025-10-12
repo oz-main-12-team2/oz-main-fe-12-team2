@@ -259,7 +259,7 @@ function OrderDetailModal({ order, isOpen, onClose, onDelete, onUpdate }) {
               >
                 <td>
                   <img
-                    src={item.product.image_url || "/no-image.jpg"}
+                    src={item.product.image || "/no-image.jpg"}
                     alt={item.product.name}
                     style={{
                       width: 40,

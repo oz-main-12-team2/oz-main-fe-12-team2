@@ -28,15 +28,18 @@ const categories = [
 
 function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
   const [previewUrl, setPreviewUrl] = useState(selectedBook.image || "");
+  const [fileName, setFileName] = useState("");
 
   // 파일 선택 시 미리보기 URL 생성
   useEffect(() => {
     if (selectedBook.imageFile) {
       const objectUrl = URL.createObjectURL(selectedBook.imageFile);
       setPreviewUrl(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl); // 메모리 누수 방지
+      setFileName(selectedBook.imageFile.name);
+      return () => URL.revokeObjectURL(objectUrl);
     } else {
       setPreviewUrl(selectedBook.image || "");
+      setFileName("");
     }
   }, [selectedBook.imageFile, selectedBook.image]);
 
@@ -44,6 +47,7 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedBook({ ...selectedBook, imageFile: file });
+      setFileName(file.name);
     }
   };
 
@@ -75,7 +79,7 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
           </option>
         ))}
       </Select>
-      
+
       {/* 상품 설명 */}
       <FormGroup
         label="상품 설명"
@@ -154,12 +158,20 @@ function ProductEditForm({ selectedBook, setSelectedBook, errors }) {
           )}
 
           {/* 파일선택 버튼 오른쪽 */}
+
           <input
             type="file"
+            id="file-upload"
             accept="image/*"
             onChange={handleFileChange}
             className="file-input"
           />
+          <label htmlFor="file-upload" className="custom-file-label">
+            이미지 선택
+          </label>
+
+          {/* 선택된 파일명 표시 */}
+          {fileName && <span className="file-name">{fileName}</span>}
         </div>
 
         {errors.imageFile && <p className="form-error">{errors.imageFile}</p>}
